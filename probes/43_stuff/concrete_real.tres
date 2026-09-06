@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="StuffKind" format=3 uid="uid://c43stuffreal"]
+
+[ext_resource type="Script" uid="uid://8apnsw1eqxke" path="res://probes/43_stuff/Stuff.gd" id="1_s"]
+
+[sub_resource type="StandardMaterial3D" id="Body"]
+albedo_color = Color(0.66, 0.64, 0.6, 1)
+roughness = 0.9
+
+[sub_resource type="PhysicsMaterial" id="Rubble"]
+friction = 0.95
+bounce = 0.02
+
+[sub_resource type="StandardMaterial3D" id="Shard"]
+albedo_color = Color(0.78, 0.76, 0.72, 1)
+roughness = 0.97
+
+[resource]
+script = ExtResource("1_s")
+title = "бетон настоящий"
+toughness = 120.0
+strength = 120.0
+flaw = 0.35
+density = 2350.0
+grit = 8e-06
+crater_bound = true
+body_look = SubResource("Body")
+shard_look = SubResource("Shard")
+rubble = SubResource("Rubble")

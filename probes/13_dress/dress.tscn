@@ -1,0 +1,226 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/13_dress/World.gd" id="1_world"]
+[ext_resource type="Script" path="res://probes/13_dress/Gen.gd" id="2_gen"]
+
+[sub_resource type="Resource" id="Cfg"]
+script = ExtResource("2_gen")
+width = 41
+height = 27
+room_tries = 90
+room_min = 4
+room_max = 8
+loops = 3
+prefabs = 3
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_1"]
+sky_top_color = Color(0.13, 0.14, 0.19, 1)
+sky_horizon_color = Color(0.28, 0.28, 0.32, 1)
+ground_bottom_color = Color(0.08, 0.08, 0.1, 1)
+ground_horizon_color = Color(0.28, 0.28, 0.32, 1)
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("SkyMaterial_1")
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 2
+sky = SubResource("Sky_1")
+tonemap_mode = 2
+ssao_enabled = true
+ssao_intensity = 1.4
+ssao_radius = 0.8
+ambient_light_source = 3
+ambient_light_energy = 0.5
+
+[sub_resource type="BoxMesh" id="FloorMesh"]
+size = Vector3(0.98, 0.1, 0.98)
+
+[sub_resource type="BoxMesh" id="PlainMesh"]
+size = Vector3(1, 0.6, 1)
+
+[sub_resource type="BoxMesh" id="SlabMesh"]
+size = Vector3(1, 0.7, 0.22)
+
+[sub_resource type="BoxMesh" id="PostMesh"]
+size = Vector3(0.3, 0.85, 0.3)
+
+[sub_resource type="CylinderMesh" id="PillarMesh"]
+top_radius = 0.22
+bottom_radius = 0.3
+height = 1.3
+radial_segments = 10
+
+[sub_resource type="BoxMesh" id="WaterMesh"]
+size = Vector3(0.98, 0.06, 0.98)
+
+[sub_resource type="BoxMesh" id="BeamMesh"]
+size = Vector3(1.05, 0.25, 0.3)
+
+[sub_resource type="StandardMaterial3D" id="MatFloor"]
+albedo_color = Color(0.62, 0.63, 0.66, 1)
+roughness = 0.95
+vertex_color_use_as_albedo = true
+
+[sub_resource type="StandardMaterial3D" id="MatPlain"]
+albedo_color = Color(0.7, 0.72, 0.76, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="MatStone"]
+albedo_color = Color(0.63, 0.64, 0.68, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="MatPost"]
+albedo_color = Color(0.5, 0.5, 0.54, 1)
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="MatPillar"]
+albedo_color = Color(0.78, 0.72, 0.6, 1)
+roughness = 0.7
+
+[sub_resource type="StandardMaterial3D" id="MatWater"]
+albedo_color = Color(0.12, 0.24, 0.34, 1)
+roughness = 0.08
+metallic = 0.4
+
+[sub_resource type="MultiMesh" id="MmFloor"]
+transform_format = 1
+use_colors = true
+mesh = SubResource("FloorMesh")
+
+[sub_resource type="MultiMesh" id="MmPlain"]
+transform_format = 1
+mesh = SubResource("PlainMesh")
+
+[sub_resource type="MultiMesh" id="MmSlab"]
+transform_format = 1
+mesh = SubResource("SlabMesh")
+
+[sub_resource type="MultiMesh" id="MmPost"]
+transform_format = 1
+mesh = SubResource("PostMesh")
+
+[sub_resource type="MultiMesh" id="MmPillar"]
+transform_format = 1
+mesh = SubResource("PillarMesh")
+
+[sub_resource type="MultiMesh" id="MmWater"]
+transform_format = 1
+mesh = SubResource("WaterMesh")
+
+[sub_resource type="MultiMesh" id="MmBeam"]
+transform_format = 1
+mesh = SubResource("BeamMesh")
+
+[node name="DressScene" type="Node3D"]
+script = ExtResource("1_world")
+cfg = SubResource("Cfg")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-58, -34, 0)
+light_energy = 1.1
+light_color = Color(1, 0.96, 0.9, 1)
+shadow_enabled = true
+
+[node name="Board" type="Node3D" parent="."]
+
+[node name="floor" type="MultiMeshInstance3D" parent="Board"]
+multimesh = SubResource("MmFloor")
+material_override = SubResource("MatFloor")
+
+[node name="plain" type="MultiMeshInstance3D" parent="Board"]
+multimesh = SubResource("MmPlain")
+material_override = SubResource("MatPlain")
+
+[node name="slab" type="MultiMeshInstance3D" parent="Board"]
+multimesh = SubResource("MmSlab")
+material_override = SubResource("MatStone")
+
+[node name="post" type="MultiMeshInstance3D" parent="Board"]
+multimesh = SubResource("MmPost")
+material_override = SubResource("MatPost")
+
+[node name="pillar" type="MultiMeshInstance3D" parent="Board"]
+multimesh = SubResource("MmPillar")
+material_override = SubResource("MatPillar")
+
+[node name="water" type="MultiMeshInstance3D" parent="Board"]
+multimesh = SubResource("MmWater")
+material_override = SubResource("MatWater")
+
+[node name="beam" type="MultiMeshInstance3D" parent="Board"]
+multimesh = SubResource("MmBeam")
+material_override = SubResource("MatPost")
+
+[node name="Camera" type="Camera3D" parent="."]
+projection = 1
+size = 30.0
+far = 400.0
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Hud" type="Control" parent="Ui"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Big" type="Label" parent="Ui/Hud"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = -104.0
+offset_right = 500.0
+offset_bottom = -40.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.94)
+theme_override_font_sizes/font_size = 44
+text = "SEED 3"
+vertical_alignment = 1
+
+[node name="Detail" type="RichTextLabel" parent="Ui/Hud"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+grow_vertical = 0
+offset_left = 34.0
+offset_top = -330.0
+offset_right = 700.0
+offset_bottom = -112.0
+theme_override_colors/default_color = Color(1, 1, 1, 0.8)
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+scroll_active = false
+
+[node name="Hint" type="Label" parent="Ui/Hud"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -620.0
+offset_top = -186.0
+offset_right = -26.0
+offset_bottom = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.55)
+theme_override_font_sizes/font_size = 14
+text = "1 2 3 peel the layers    SPACE new seed    LEFT RIGHT seed -1 +1
+WASD pans    WHEEL zooms
+
+same seed all three times. only the dressing changes.
+
+the pieces are in the scene under Board, one MultiMesh each.
+swap a mesh there and the whole dungeon changes clothes."
+horizontal_alignment = 2
+vertical_alignment = 2

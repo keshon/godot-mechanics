@@ -1,0 +1,102 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/27_crowd/Run.gd" id="1_r"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.12, 0.15, 0.22, 1)
+sky_horizon_color = Color(0.34, 0.37, 0.43, 1)
+ground_horizon_color = Color(0.34, 0.37, 0.43, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+tonemap_mode = 2
+ambient_light_source = 3
+ambient_light_energy = 1.1
+
+[sub_resource type="StandardMaterial3D" id="MatFloor"]
+albedo_color = Color(0.16, 0.17, 0.2, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="MatAgent"]
+vertex_color_use_as_albedo = true
+roughness = 0.6
+
+[sub_resource type="StandardMaterial3D" id="MatPillar"]
+albedo_color = Color(0.42, 0.4, 0.44, 1)
+roughness = 0.9
+
+[sub_resource type="PlaneMesh" id="Floor"]
+size = Vector2(48, 48)
+
+[sub_resource type="CylinderMesh" id="AgentMesh"]
+top_radius = 0.4
+bottom_radius = 0.4
+height = 1.1
+radial_segments = 10
+rings = 1
+
+[sub_resource type="CylinderMesh" id="PillarMesh"]
+top_radius = 1.0
+bottom_radius = 1.0
+height = 2.0
+radial_segments = 20
+rings = 1
+
+[sub_resource type="MultiMesh" id="MMAgents"]
+transform_format = 1
+use_colors = true
+mesh = SubResource("AgentMesh")
+
+[sub_resource type="MultiMesh" id="MMPillars"]
+transform_format = 1
+mesh = SubResource("PillarMesh")
+
+[node name="CrowdRun" type="Node3D"]
+script = ExtResource("1_r")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-58, -40, 0)
+light_energy = 1.15
+shadow_enabled = true
+
+[node name="Cam" type="Camera3D" parent="."]
+fov = 55.0
+far = 400.0
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("Floor")
+material_override = SubResource("MatFloor")
+
+[node name="Pillars" type="MultiMeshInstance3D" parent="."]
+material_override = SubResource("MatPillar")
+multimesh = SubResource("MMPillars")
+
+[node name="Agents" type="MultiMeshInstance3D" parent="."]
+material_override = SubResource("MatAgent")
+multimesh = SubResource("MMAgents")
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Info" type="RichTextLabel" parent="Ui"]
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
+offset_left = 26.0
+offset_top = 22.0
+offset_right = 700.0
+offset_bottom = -22.0
+theme_override_colors/default_color = Color(1, 1, 1, 0.92)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+scroll_active = false
+mouse_filter = 2

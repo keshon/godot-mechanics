@@ -1,0 +1,174 @@
+[gd_scene format=3 uid="uid://byvwlkieygj0"]
+
+[sub_resource type="Animation" id="AnimPlay"]
+resource_name = "play"
+length = 0.5
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sparks")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"restart"
+}]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Dust")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.01),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"restart"
+}]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Flash:light_energy")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.05),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [2.5, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="Lib"]
+_data = {
+&"play": SubResource("AnimPlay")
+}
+
+[sub_resource type="StandardMaterial3D" id="MatSpark"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(1, 0.9, 0.7, 1)
+disable_receive_shadows = true
+use_particle_trails = true
+
+[sub_resource type="Gradient" id="RampSpark"]
+offsets = PackedFloat32Array(0, 0.12, 0.45, 1)
+colors = PackedColorArray(1, 0.98, 0.85, 1, 1, 0.75, 0.25, 1, 1, 0.32, 0.06, 0.8, 0.4, 0.06, 0.02, 0)
+
+[sub_resource type="GradientTexture1D" id="RampSparkTex"]
+gradient = SubResource("RampSpark")
+
+[sub_resource type="Curve" id="CurveSpark"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.7, 0.9), 0.0, 0.0, 0, 0, Vector2(1, 0.2), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveSparkTex"]
+curve = SubResource("CurveSpark")
+
+[sub_resource type="ParticleProcessMaterial" id="ProcSpark"]
+direction = Vector3(0, 1, 0)
+spread = 50.0
+initial_velocity_min = 6.0
+initial_velocity_max = 18.0
+gravity = Vector3(0, -18, 0)
+damping_min = 6.0
+damping_max = 14.0
+scale_min = 0.4
+scale_curve = SubResource("CurveSparkTex")
+color_ramp = SubResource("RampSparkTex")
+
+[sub_resource type="RibbonTrailMesh" id="Ribbon"]
+size = 0.05
+sections = 4
+section_segments = 1
+
+[sub_resource type="Gradient" id="SpriteGrad"]
+offsets = PackedFloat32Array(0, 0.6, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.5, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="Sprite"]
+gradient = SubResource("SpriteGrad")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="MatDust"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = SubResource("Sprite")
+disable_receive_shadows = true
+billboard_mode = 1
+
+[sub_resource type="Gradient" id="RampDust"]
+offsets = PackedFloat32Array(0, 0.2, 1)
+colors = PackedColorArray(0.4, 0.37, 0.33, 0, 0.32, 0.3, 0.27, 0.22, 0.22, 0.21, 0.2, 0)
+
+[sub_resource type="GradientTexture1D" id="RampDustTex"]
+gradient = SubResource("RampDust")
+
+[sub_resource type="Curve" id="CurveDust"]
+_data = [Vector2(0, 0.3), 0.0, 0.0, 0, 0, Vector2(0.4, 1), 0.0, 0.0, 0, 0, Vector2(1, 1.15), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveDustTex"]
+curve = SubResource("CurveDust")
+
+[sub_resource type="ParticleProcessMaterial" id="ProcDust"]
+emission_shape = 1
+emission_sphere_radius = 0.05
+angle_min = -180.0
+angle_max = 180.0
+direction = Vector3(0, 1, 0)
+spread = 70.0
+initial_velocity_min = 0.5
+initial_velocity_max = 1.6
+gravity = Vector3(0, 0.4, 0)
+damping_min = 2.0
+damping_max = 4.0
+scale_min = 0.12
+scale_max = 0.3
+scale_curve = SubResource("CurveDustTex")
+color_ramp = SubResource("RampDustTex")
+
+[sub_resource type="QuadMesh" id="Quad"]
+
+[node name="Ricochet" type="Node3D" unique_id=948480615]
+
+[node name="Anim" type="AnimationPlayer" parent="." unique_id=72999257]
+libraries/ = SubResource("Lib")
+
+[node name="Flash" type="OmniLight3D" parent="." unique_id=18794390]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+light_color = Color(1, 0.85, 0.55, 1)
+light_energy = 2.5
+omni_range = 3.0
+
+[node name="Sparks" type="GPUParticles3D" parent="." unique_id=215713951]
+material_override = SubResource("MatSpark")
+emitting = false
+amount = 16
+lifetime = 0.35
+one_shot = true
+explosiveness = 1.0
+trail_enabled = true
+trail_lifetime = 0.06
+process_material = SubResource("ProcSpark")
+draw_pass_1 = SubResource("Ribbon")
+
+[node name="Dust" type="GPUParticles3D" parent="." unique_id=1108815488]
+material_override = SubResource("MatDust")
+emitting = false
+amount = 5
+lifetime = 0.45
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ProcDust")
+draw_pass_1 = SubResource("Quad")

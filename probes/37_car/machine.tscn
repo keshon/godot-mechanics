@@ -1,0 +1,171 @@
+[gd_scene load_steps=17 format=3]
+
+[ext_resource type="Script" path="res://probes/37_car/Car.gd" id="1_car"]
+[ext_resource type="Script" path="res://probes/37_car/Wheel.gd" id="2_wheel"]
+
+[sub_resource type="BoxShape3D" id="Hull"]
+size = Vector3(2, 1, 5)
+
+[sub_resource type="StandardMaterial3D" id="Paint"]
+albedo_color = Color(0.66, 0.2, 0.17, 1)
+metallic = 0.3
+roughness = 0.4
+
+[sub_resource type="StandardMaterial3D" id="Shade"]
+albedo_color = Color(0.24, 0.25, 0.26, 1)
+metallic = 0.35
+roughness = 0.6
+
+[sub_resource type="StandardMaterial3D" id="Dark"]
+albedo_color = Color(0.12, 0.13, 0.12, 1)
+metallic = 0.3
+roughness = 0.6
+
+[sub_resource type="BoxMesh" id="FrameMesh"]
+material = SubResource("Shade")
+size = Vector3(1.564, 0.34, 3.7)
+
+[sub_resource type="BoxMesh" id="BeltMesh"]
+material = SubResource("Paint")
+size = Vector3(1.464, 0.34, 2.8)
+
+[sub_resource type="BoxMesh" id="NoseMesh"]
+material = SubResource("Paint")
+size = Vector3(1.464, 0.3, 1.2)
+
+[sub_resource type="BoxMesh" id="TailMesh"]
+material = SubResource("Paint")
+size = Vector3(1.464, 0.3, 1)
+
+[sub_resource type="BoxMesh" id="FloorMesh"]
+material = SubResource("Dark")
+size = Vector3(1.264, 0.12, 1.5)
+
+[sub_resource type="BoxMesh" id="SeatMesh"]
+material = SubResource("Dark")
+size = Vector3(0.44, 0.44, 0.12)
+
+[sub_resource type="StandardMaterial3D" id="ArmMat"]
+albedo_color = Color(0.12, 0.13, 0.12, 1)
+metallic = 0.3
+roughness = 0.7
+
+[sub_resource type="BoxMesh" id="ArmMesh"]
+material = SubResource("ArmMat")
+size = Vector3(1, 0.12, 0.34)
+
+[sub_resource type="StandardMaterial3D" id="SpringMat"]
+albedo_color = Color(0.95, 0.62, 0.08, 1)
+metallic = 0.25
+roughness = 0.5
+
+[sub_resource type="CylinderMesh" id="SpringMesh"]
+material = SubResource("SpringMat")
+top_radius = 0.1
+bottom_radius = 0.1
+height = 1.0
+radial_segments = 8
+
+[node name="Car" type="RigidBody3D"]
+script = ExtResource("1_car")
+
+[node name="Hull" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
+shape = SubResource("Hull")
+
+[node name="Shell" type="Node3D" parent="."]
+
+[node name="Frame" type="MeshInstance3D" parent="Shell"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6437, 0)
+mesh = SubResource("FrameMesh")
+
+[node name="Belt" type="MeshInstance3D" parent="Shell"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9637, 0.1)
+mesh = SubResource("BeltMesh")
+
+[node name="Nose" type="MeshInstance3D" parent="Shell"]
+transform = Transform3D(1, 0, 0, 0, 0.93969, -0.34202, 0, 0.34202, 0.93969, 0, 0.8037, -2.22)
+mesh = SubResource("NoseMesh")
+
+[node name="Tail" type="MeshInstance3D" parent="Shell"]
+transform = Transform3D(1, 0, 0, 0, 0.9703, 0.24192, 0, -0.24192, 0.9703, 0, 0.8437, 2.15)
+mesh = SubResource("TailMesh")
+
+[node name="Floor" type="MeshInstance3D" parent="Shell"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1437, 0.3)
+mesh = SubResource("FloorMesh")
+
+[node name="SeatLeft" type="MeshInstance3D" parent="Shell"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 1.3637, 0.62)
+mesh = SubResource("SeatMesh")
+
+[node name="SeatRight" type="MeshInstance3D" parent="Shell"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 1.3637, 0.62)
+mesh = SubResource("SeatMesh")
+
+[node name="Wheels" type="Node3D" parent="."]
+
+[node name="FrontLeft" type="Node3D" parent="Wheels"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.15, 0.62, -1.6)
+script = ExtResource("2_wheel")
+front = true
+driven = true
+radius = 0.55
+width = 0.45
+
+[node name="FrontRight" type="Node3D" parent="Wheels"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.15, 0.62, -1.6)
+script = ExtResource("2_wheel")
+front = true
+driven = true
+radius = 0.55
+width = 0.45
+
+[node name="RearLeft" type="Node3D" parent="Wheels"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.15, 0.62, 1.6)
+script = ExtResource("2_wheel")
+front = false
+driven = true
+radius = 0.55
+width = 0.45
+
+[node name="RearRight" type="Node3D" parent="Wheels"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.15, 0.62, 1.6)
+script = ExtResource("2_wheel")
+front = false
+driven = true
+radius = 0.55
+width = 0.45
+
+[node name="FrontLeftArm" type="MeshInstance3D" parent="Wheels"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.69, 0.42, -1.6)
+mesh = SubResource("ArmMesh")
+
+[node name="FrontLeftSpring" type="MeshInstance3D" parent="Wheels"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9544999999999999, 0.7, -2.12)
+mesh = SubResource("SpringMesh")
+
+[node name="FrontRightArm" type="MeshInstance3D" parent="Wheels"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.69, 0.42, -1.6)
+mesh = SubResource("ArmMesh")
+
+[node name="FrontRightSpring" type="MeshInstance3D" parent="Wheels"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9544999999999999, 0.7, -2.12)
+mesh = SubResource("SpringMesh")
+
+[node name="RearLeftArm" type="MeshInstance3D" parent="Wheels"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.69, 0.42, 1.6)
+mesh = SubResource("ArmMesh")
+
+[node name="RearLeftSpring" type="MeshInstance3D" parent="Wheels"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9544999999999999, 0.7, 2.12)
+mesh = SubResource("SpringMesh")
+
+[node name="RearRightArm" type="MeshInstance3D" parent="Wheels"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.69, 0.42, 1.6)
+mesh = SubResource("ArmMesh")
+
+[node name="RearRightSpring" type="MeshInstance3D" parent="Wheels"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9544999999999999, 0.7, 2.12)
+mesh = SubResource("SpringMesh")
+

@@ -1,0 +1,110 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/20_spec/Bench.gd" id="1_bench"]
+[ext_resource type="Script" path="res://probes/20_spec/SpecBar.gd" id="2_bar"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.1, 0.11, 0.16, 1)
+sky_horizon_color = Color(0.23, 0.24, 0.29, 1)
+ground_bottom_color = Color(0.06, 0.06, 0.08, 1)
+ground_horizon_color = Color(0.23, 0.24, 0.29, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+tonemap_mode = 2
+glow_enabled = true
+glow_bloom = 0.1
+ambient_light_source = 3
+ambient_light_energy = 0.5
+
+[sub_resource type="StandardMaterial3D" id="MatGround"]
+albedo_color = Color(0.28, 0.3, 0.34, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="MatDummy"]
+albedo_color = Color(0.72, 0.5, 0.36, 1)
+roughness = 0.7
+
+[sub_resource type="StandardMaterial3D" id="MatHunter"]
+albedo_color = Color(0.55, 0.75, 0.5, 1)
+roughness = 0.55
+
+[sub_resource type="CylinderMesh" id="Ground"]
+top_radius = 9.0
+bottom_radius = 9.5
+height = 0.4
+
+[sub_resource type="CapsuleMesh" id="Dummy"]
+radius = 0.9
+height = 3.0
+
+[sub_resource type="CapsuleMesh" id="Hunter"]
+radius = 0.45
+height = 1.8
+
+[node name="SpecScene" type="Node3D"]
+script = ExtResource("1_bench")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-52, -40, 0)
+light_energy = 1.15
+shadow_enabled = true
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.2, 0)
+mesh = SubResource("Ground")
+material_override = SubResource("MatGround")
+
+[node name="Dummy" type="MeshInstance3D" parent="."]
+position = Vector3(6, 1.5, -1.5)
+mesh = SubResource("Dummy")
+material_override = SubResource("MatDummy")
+
+[node name="Hunter" type="MeshInstance3D" parent="."]
+position = Vector3(1.4, 0.95, 2.2)
+mesh = SubResource("Hunter")
+material_override = SubResource("MatHunter")
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(0.97, -0.09, 0.22, 0, 0.93, 0.37, -0.24, -0.36, 0.9, 6.2, 4.4, 12.5)
+fov = 40.0
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Info" type="RichTextLabel" parent="Ui"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_left = 36.0
+offset_top = 28.0
+offset_right = -36.0
+offset_bottom = -160.0
+theme_override_colors/default_color = Color(1, 1, 1, 0.84)
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+scroll_active = false
+mouse_filter = 2
+
+[node name="Bar" type="Control" parent="Ui"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -262.0
+offset_top = -132.0
+offset_right = 262.0
+offset_bottom = -26.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+script = ExtResource("2_bar")

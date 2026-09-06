@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://jfck8rs0div5"
+path="res://.godot/imported/fft_butterfly.glsl-6d2c9efb304288f0e8e5653305cec5df.res"
+
+[deps]
+
+source_file="res://addons/ocean_waves_fft/shaders/compute/fft_butterfly.glsl"
+dest_files=["res://.godot/imported/fft_butterfly.glsl-6d2c9efb304288f0e8e5653305cec5df.res"]
+
+[params]
+

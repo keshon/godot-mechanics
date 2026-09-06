@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="StuffRound" load_steps=2 format=3 uid="uid://c43shotrifl"]
+
+[ext_resource type="Script" path="res://probes/43_stuff/Round.gd" id="1_r"]
+
+[resource]
+script = ExtResource("1_r")
+title = "винтовочный"
+calibre = 0.01
+energy = 60.0
+momentum = 12.0
+crater_width = 3.0

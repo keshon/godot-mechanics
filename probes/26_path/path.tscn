@@ -1,0 +1,105 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/26_path/Run.gd" id="1_r"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.1, 0.13, 0.2, 1)
+sky_horizon_color = Color(0.3, 0.34, 0.4, 1)
+ground_horizon_color = Color(0.3, 0.34, 0.4, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+tonemap_mode = 2
+ambient_light_source = 3
+ambient_light_energy = 1.1
+
+[sub_resource type="StandardMaterial3D" id="MatCells"]
+vertex_color_use_as_albedo = true
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="MatAgent"]
+albedo_color = Color(1, 0.55, 0.25, 1)
+emission_enabled = true
+emission = Color(0.5, 0.2, 0.02, 1)
+emission_energy_multiplier = 0.5
+
+[sub_resource type="StandardMaterial3D" id="MatGoal"]
+albedo_color = Color(0.4, 1, 0.6, 1)
+emission_enabled = true
+emission = Color(0.15, 0.7, 0.3, 1)
+emission_energy_multiplier = 1.2
+
+[sub_resource type="BoxMesh" id="Cell"]
+size = Vector3(1, 1, 1)
+
+[sub_resource type="CylinderMesh" id="Agent"]
+top_radius = 0.22
+bottom_radius = 0.28
+height = 0.9
+radial_segments = 8
+rings = 1
+
+[sub_resource type="SphereMesh" id="GoalMesh"]
+radius = 0.7
+height = 1.4
+radial_segments = 16
+rings = 8
+
+[sub_resource type="MultiMesh" id="MMCells"]
+transform_format = 1
+use_colors = true
+mesh = SubResource("Cell")
+
+[sub_resource type="MultiMesh" id="MMAgents"]
+transform_format = 1
+mesh = SubResource("Agent")
+
+[node name="PathRun" type="Node3D"]
+script = ExtResource("1_r")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-62, -38, 0)
+light_energy = 1.1
+shadow_enabled = true
+
+[node name="Cam" type="Camera3D" parent="."]
+fov = 55.0
+far = 400.0
+
+[node name="Ground" type="MultiMeshInstance3D" parent="."]
+material_override = SubResource("MatCells")
+multimesh = SubResource("MMCells")
+
+[node name="Agents" type="MultiMeshInstance3D" parent="."]
+material_override = SubResource("MatAgent")
+multimesh = SubResource("MMAgents")
+
+[node name="Goal" type="MeshInstance3D" parent="."]
+mesh = SubResource("GoalMesh")
+material_override = SubResource("MatGoal")
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Info" type="RichTextLabel" parent="Ui"]
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
+offset_left = 26.0
+offset_top = 22.0
+offset_right = 700.0
+offset_bottom = -22.0
+theme_override_colors/default_color = Color(1, 1, 1, 0.92)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+scroll_active = false
+mouse_filter = 2

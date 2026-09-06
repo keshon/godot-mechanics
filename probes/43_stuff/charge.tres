@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="StuffRound" format=3 uid="uid://c43bigchar"]
+
+[ext_resource type="Script" uid="uid://clbmjb4pefrot" path="res://probes/43_stuff/Round.gd" id="1_r"]
+
+[resource]
+script = ExtResource("1_r")
+title = "подрывной заряд"
+calibre = 0.25
+energy = 4000.0
+momentum = 12000.0
+crater_width = 4.0
+blast = 4.5

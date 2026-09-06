@@ -1,0 +1,196 @@
+[gd_scene load_steps=25 format=3 uid="uid://c42vor0n0i001"]
+
+[ext_resource type="Script" path="res://probes/42_voronoi/Rig.gd" id="1_rig"]
+[ext_resource type="Script" path="res://probes/42_voronoi/Solid.gd" id="2_solid"]
+
+[sub_resource type="ProceduralSkyMaterial" id="Sky_1"]
+sky_top_color = Color(0.29, 0.38, 0.52, 1)
+sky_horizon_color = Color(0.58, 0.62, 0.66, 1)
+ground_bottom_color = Color(0.24, 0.24, 0.25, 1)
+ground_horizon_color = Color(0.44, 0.44, 0.45, 1)
+
+[sub_resource type="Sky" id="Sky_2"]
+sky_material = SubResource("Sky_1")
+
+[sub_resource type="Environment" id="Env_1"]
+background_mode = 2
+sky = SubResource("Sky_2")
+ambient_light_source = 3
+ambient_light_color = Color(0.56, 0.62, 0.72, 1)
+ambient_light_energy = 1.1
+tonemap_mode = 2
+tonemap_white = 3.0
+ssao_enabled = true
+ssao_intensity = 1.2
+ssao_radius = 0.6
+
+[sub_resource type="BoxMesh" id="Ground_mesh"]
+size = Vector3(80, 0.4, 80)
+
+[sub_resource type="BoxShape3D" id="Ground_shape"]
+size = Vector3(80, 0.4, 80)
+
+[sub_resource type="StandardMaterial3D" id="Ground_mat"]
+albedo_color = Color(0.33, 0.335, 0.35, 1)
+roughness = 0.95
+
+[sub_resource type="BoxMesh" id="Show_mesh"]
+size = Vector3(2.2, 2.2, 2.2)
+
+[sub_resource type="BoxShape3D" id="Show_shape"]
+size = Vector3(2.2, 2.2, 2.2)
+
+[sub_resource type="StandardMaterial3D" id="Show_mat"]
+albedo_color = Color(0.5, 0.54, 0.6, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="Show_shard"]
+albedo_color = Color(0.626, 0.645, 0.67, 1)
+roughness = 0.95
+
+[sub_resource type="BoxMesh" id="Column_mesh"]
+size = Vector3(0.7, 4, 0.7)
+
+[sub_resource type="BoxShape3D" id="Column_shape"]
+size = Vector3(0.7, 4, 0.7)
+
+[sub_resource type="StandardMaterial3D" id="Column_mat"]
+albedo_color = Color(0.62, 0.6, 0.56, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="Column_shard"]
+albedo_color = Color(0.704, 0.684, 0.644, 1)
+roughness = 0.95
+
+[sub_resource type="BoxMesh" id="Slab_mesh"]
+size = Vector3(3.4, 0.4, 2.6)
+
+[sub_resource type="BoxShape3D" id="Slab_shape"]
+size = Vector3(3.4, 0.4, 2.6)
+
+[sub_resource type="StandardMaterial3D" id="Slab_mat"]
+albedo_color = Color(0.58, 0.55, 0.5, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="Slab_shard"]
+albedo_color = Color(0.678, 0.652, 0.605, 1)
+roughness = 0.95
+
+[sub_resource type="BoxMesh" id="Block_mesh"]
+size = Vector3(1.8, 1.8, 1.8)
+
+[sub_resource type="BoxShape3D" id="Block_shape"]
+size = Vector3(1.8, 1.8, 1.8)
+
+[sub_resource type="StandardMaterial3D" id="Block_mat"]
+albedo_color = Color(0.55, 0.5, 0.46, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="Block_shard"]
+albedo_color = Color(0.659, 0.619, 0.579, 1)
+roughness = 0.95
+
+[node name="Rig" type="Node3D"]
+script = ExtResource("1_rig")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.86, -0.32, 0.4, 0, 0.78, 0.62, -0.51, -0.53, 0.67, 0, 14, 0)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 1.0
+shadow_enabled = true
+
+[node name="World" type="WorldEnvironment" parent="."]
+environment = SubResource("Env_1")
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 2.9, 8.6)
+fov = 68.0
+
+[node name="Ground" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Ground"]
+mesh = SubResource("Ground_mesh")
+material_override = SubResource("Ground_mat")
+
+[node name="Shape" type="CollisionShape3D" parent="Ground"]
+shape = SubResource("Ground_shape")
+
+[node name="Show" type="RigidBody3D" parent="." groups=["solid"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.4, 2.4, 0)
+freeze = true
+script = ExtResource("2_solid")
+cells = 32
+bias = 0.0
+held = true
+shard_look = SubResource("Show_shard")
+scatter_seed = 3
+
+[node name="Mesh" type="MeshInstance3D" parent="Show"]
+mesh = SubResource("Show_mesh")
+material_override = SubResource("Show_mat")
+
+[node name="Shape" type="CollisionShape3D" parent="Show"]
+shape = SubResource("Show_shape")
+
+[node name="Column" type="RigidBody3D" parent="." groups=["solid"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+mass = 1800.0
+freeze = true
+script = ExtResource("2_solid")
+cells = 32
+health = 50.0
+shard_look = SubResource("Column_shard")
+scatter_seed = 11
+
+[node name="Mesh" type="MeshInstance3D" parent="Column"]
+mesh = SubResource("Column_mesh")
+material_override = SubResource("Column_mat")
+
+[node name="Shape" type="CollisionShape3D" parent="Column"]
+shape = SubResource("Column_shape")
+
+[node name="Slab" type="RigidBody3D" parent="." groups=["solid"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 1.2, 0)
+mass = 2400.0
+freeze = true
+script = ExtResource("2_solid")
+cells = 32
+health = 50.0
+shard_look = SubResource("Slab_shard")
+scatter_seed = 23
+
+[node name="Mesh" type="MeshInstance3D" parent="Slab"]
+mesh = SubResource("Slab_mesh")
+material_override = SubResource("Slab_mat")
+
+[node name="Shape" type="CollisionShape3D" parent="Slab"]
+shape = SubResource("Slab_shape")
+
+[node name="Block" type="RigidBody3D" parent="." groups=["solid"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0.9, -4.5)
+mass = 1500.0
+freeze = true
+script = ExtResource("2_solid")
+cells = 32
+health = 50.0
+shard_look = SubResource("Block_shard")
+scatter_seed = 37
+
+[node name="Mesh" type="MeshInstance3D" parent="Block"]
+mesh = SubResource("Block_mesh")
+material_override = SubResource("Block_mat")
+
+[node name="Shape" type="CollisionShape3D" parent="Block"]
+shape = SubResource("Block_shape")
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Info" type="RichTextLabel" parent="Ui"]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 900.0
+offset_bottom = 340.0
+mouse_filter = 2
+bbcode_enabled = true
+scroll_active = false
+theme_override_colors/default_color = Color(0.92, 0.94, 0.96, 1)

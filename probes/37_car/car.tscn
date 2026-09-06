@@ -1,0 +1,88 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://probes/37_car/Drive.gd" id="1_drive"]
+[ext_resource type="PackedScene" path="res://probes/37_car/track.tscn" id="2_track"]
+[ext_resource type="PackedScene" path="res://probes/37_car/machine.tscn" id="3_machine"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.32, 0.45, 0.68, 1)
+sky_horizon_color = Color(0.66, 0.71, 0.76, 1)
+ground_bottom_color = Color(0.18, 0.18, 0.19, 1)
+ground_horizon_color = Color(0.5, 0.5, 0.52, 1)
+sun_angle_max = 20.0
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+ambient_light_source = 3
+ambient_light_energy = 0.55
+tonemap_mode = 2
+ssao_enabled = false
+
+[node name="CarScene" type="Node3D"]
+script = ExtResource("1_drive")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.87, -0.31, 0.38, 0, 0.77, 0.63, -0.49, -0.55, 0.67, 0, 30, 0)
+light_energy = 1.15
+light_color = Color(1, 0.96, 0.9, 1)
+shadow_enabled = true
+directional_shadow_max_distance = 120.0
+
+[node name="Track" parent="." instance=ExtResource("2_track")]
+
+[node name="Car" parent="." instance=ExtResource("3_machine")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 20)
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 27)
+fov = 70.0
+far = 400.0
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Hud" type="RichTextLabel" parent="Ui"]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 560.0
+offset_bottom = 200.0
+mouse_filter = 2
+bbcode_enabled = true
+theme_override_colors/default_color = Color(0.9, 0.93, 0.96, 1)
+
+[node name="Keys" type="Label" parent="Ui"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -420.0
+offset_top = -230.0
+offset_right = -24.0
+offset_bottom = -20.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+horizontal_alignment = 2
+vertical_alignment = 2
+theme_override_colors/font_color = Color(0.82, 0.85, 0.88, 1)
+
+[node name="Title" type="Label" parent="Ui"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = -64.0
+offset_right = 620.0
+offset_bottom = -20.0
+grow_vertical = 0
+mouse_filter = 2
+text = "перенос веса, крен и клевок здесь НЕ НАПИСАНЫ — они последствия четырёх пружин.
+колесо на пределе сцепления краснеет: срыв всегда начинается с одного."
+theme_override_colors/font_color = Color(0.62, 0.68, 0.74, 1)

@@ -1,0 +1,173 @@
+[gd_scene format=3]
+
+[sub_resource type="Gradient" id="SpriteGrad"]
+offsets = PackedFloat32Array(0, 0.55, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.55, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="Sprite"]
+gradient = SubResource("SpriteGrad")
+width = 64
+height = 64
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="QuadMesh" id="Quad"]
+size = Vector2(1, 1)
+
+[sub_resource type="Curve" id="CurveSpark"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.15), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveSparkTex"]
+curve = SubResource("CurveSpark")
+
+[sub_resource type="Gradient" id="RampSpark"]
+offsets = PackedFloat32Array(0, 0.4, 1)
+colors = PackedColorArray(1, 0.92, 0.6, 0.9, 1, 0.5, 0.14, 0.7, 0.6, 0.12, 0.04, 0)
+
+[sub_resource type="GradientTexture1D" id="RampSparkTex"]
+gradient = SubResource("RampSpark")
+
+[sub_resource type="ParticleProcessMaterial" id="ProcSpark"]
+emission_shape = 1
+emission_sphere_radius = 0.15
+spread = 180.0
+initial_velocity_min = 4.0
+initial_velocity_max = 11.0
+gravity = Vector3(0, -13, 0)
+damping_min = 1.0
+damping_max = 3.0
+scale_min = 0.06
+scale_max = 0.16
+scale_curve = SubResource("CurveSparkTex")
+color_ramp = SubResource("RampSparkTex")
+
+[sub_resource type="StandardMaterial3D" id="MatSpark"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+albedo_texture = SubResource("Sprite")
+billboard_mode = 1
+vertex_color_use_as_albedo = true
+disable_receive_shadows = true
+
+[sub_resource type="Curve" id="CurveSmoke"]
+_data = [Vector2(0, 0.4), 0.0, 0.0, 0, 0, Vector2(0.3, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.9), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveSmokeTex"]
+curve = SubResource("CurveSmoke")
+
+[sub_resource type="Gradient" id="RampSmoke"]
+offsets = PackedFloat32Array(0, 0.25, 1)
+colors = PackedColorArray(0.4, 0.36, 0.32, 0, 0.24, 0.23, 0.22, 0.55, 0.15, 0.15, 0.15, 0)
+
+[sub_resource type="GradientTexture1D" id="RampSmokeTex"]
+gradient = SubResource("RampSmoke")
+
+[sub_resource type="ParticleProcessMaterial" id="ProcSmoke"]
+emission_shape = 1
+emission_sphere_radius = 0.25
+spread = 180.0
+initial_velocity_min = 0.6
+initial_velocity_max = 1.8
+gravity = Vector3(0, 0.9, 0)
+damping_min = 1.0
+damping_max = 2.0
+scale_min = 0.5
+scale_max = 1.1
+scale_curve = SubResource("CurveSmokeTex")
+color_ramp = SubResource("RampSmokeTex")
+
+[sub_resource type="StandardMaterial3D" id="MatSmoke"]
+transparency = 1
+shading_mode = 0
+albedo_texture = SubResource("Sprite")
+billboard_mode = 1
+vertex_color_use_as_albedo = true
+disable_receive_shadows = true
+
+[sub_resource type="Animation" id="AnimPlay"]
+resource_name = "play"
+length = 1.3
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sparks")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"restart"
+}]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Smoke")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.02),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"restart"
+}]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Flash:light_energy")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.09),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [7.0, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="Lib"]
+_data = {
+&"play": SubResource("AnimPlay")
+}
+
+[node name="Spark" type="Node3D"]
+
+[node name="Anim" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("Lib")
+}
+
+[node name="Flash" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+light_color = Color(1, 0.78, 0.45, 1)
+light_energy = 0.0
+omni_range = 9.0
+
+[node name="Sparks" type="GPUParticles3D" parent="."]
+emitting = false
+amount = 40
+lifetime = 0.7
+one_shot = true
+explosiveness = 1.0
+local_coords = false
+process_material = SubResource("ProcSpark")
+draw_pass_1 = SubResource("Quad")
+material_override = SubResource("MatSpark")
+
+[node name="Smoke" type="GPUParticles3D" parent="."]
+emitting = false
+amount = 14
+lifetime = 1.1
+one_shot = true
+explosiveness = 1.0
+local_coords = false
+process_material = SubResource("ProcSmoke")
+draw_pass_1 = SubResource("Quad")
+material_override = SubResource("MatSmoke")

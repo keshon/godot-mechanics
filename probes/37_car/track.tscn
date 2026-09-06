@@ -1,0 +1,50 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://probes/37_car/Track.gd" id="1_track"]
+
+[sub_resource type="PlaneMesh" id="GroundMesh"]
+size = Vector2(400, 400)
+
+[sub_resource type="BoxShape3D" id="GroundShape"]
+size = Vector3(400, 2, 400)
+
+[sub_resource type="StandardMaterial3D" id="RampMat"]
+albedo_color = Color(0.3, 0.32, 0.34, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="RampMesh"]
+material = SubResource("RampMat")
+size = Vector3(9, 1, 16)
+
+[sub_resource type="BoxShape3D" id="RampShape"]
+size = Vector3(9, 1, 16)
+
+[node name="Track" type="Node3D"]
+script = ExtResource("1_track")
+
+[node name="Asphalt" type="MeshInstance3D" parent="."]
+mesh = SubResource("GroundMesh")
+
+[node name="Body" type="StaticBody3D" parent="Asphalt"]
+
+[node name="Shape" type="CollisionShape3D" parent="Asphalt/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+shape = SubResource("GroundShape")
+
+[node name="Skidpad" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 62, 0, -60)
+
+[node name="Slalom" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, 0, -20)
+
+[node name="Washboard" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0, -10)
+
+[node name="Ramp" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.98769, -0.156434, 0, 0.156434, 0.98769, -72, 0.4, -50)
+mesh = SubResource("RampMesh")
+
+[node name="Body" type="StaticBody3D" parent="Ramp"]
+
+[node name="Shape" type="CollisionShape3D" parent="Ramp/Body"]
+shape = SubResource("RampShape")

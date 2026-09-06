@@ -1,0 +1,102 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/28_phys/Pit.gd" id="1_p"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.14, 0.17, 0.24, 1)
+sky_horizon_color = Color(0.36, 0.38, 0.44, 1)
+ground_horizon_color = Color(0.36, 0.38, 0.44, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+tonemap_mode = 2
+ambient_light_source = 3
+ambient_light_energy = 1.0
+
+[sub_resource type="StandardMaterial3D" id="MatFloor"]
+albedo_color = Color(0.2, 0.22, 0.26, 1)
+roughness = 0.95
+
+[sub_resource type="BoxMesh" id="FloorMesh"]
+size = Vector3(30, 1, 30)
+
+[sub_resource type="BoxShape3D" id="FloorShape"]
+size = Vector3(30, 1, 30)
+
+[sub_resource type="BoxShape3D" id="WallShape"]
+size = Vector3(1, 12, 30)
+
+[sub_resource type="BoxShape3D" id="WallShape2"]
+size = Vector3(30, 12, 1)
+
+[node name="Pit" type="Node3D"]
+script = ExtResource("1_p")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-54, -36, 0)
+light_energy = 1.15
+shadow_enabled = true
+
+[node name="Cam" type="Camera3D" parent="."]
+fov = 55.0
+far = 300.0
+
+[node name="Floor" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+
+[node name="Shape" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("FloorShape")
+
+[node name="Vis" type="MeshInstance3D" parent="Floor"]
+mesh = SubResource("FloorMesh")
+material_override = SubResource("MatFloor")
+
+[node name="WallA" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 6, 0)
+
+[node name="Shape" type="CollisionShape3D" parent="WallA"]
+shape = SubResource("WallShape")
+
+[node name="WallB" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 6, 0)
+
+[node name="Shape" type="CollisionShape3D" parent="WallB"]
+shape = SubResource("WallShape")
+
+[node name="WallC" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, -15)
+
+[node name="Shape" type="CollisionShape3D" parent="WallC"]
+shape = SubResource("WallShape2")
+
+[node name="WallD" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 15)
+
+[node name="Shape" type="CollisionShape3D" parent="WallD"]
+shape = SubResource("WallShape2")
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Info" type="RichTextLabel" parent="Ui"]
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
+offset_left = 26.0
+offset_top = 22.0
+offset_right = 700.0
+offset_bottom = -22.0
+theme_override_colors/default_color = Color(1, 1, 1, 0.92)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+scroll_active = false
+mouse_filter = 2

@@ -1,0 +1,148 @@
+[gd_scene format=3 uid="uid://m800b5xjfaeb"]
+
+[ext_resource type="Script" uid="uid://doskgl2tnnam8" path="res://probes/23_fft/Ocean.gd" id="1_o"]
+[ext_resource type="Shader" uid="uid://btbg68o42yx2e" path="res://probes/23_fft/sines.gdshader" id="2_s"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.18, 0.34, 0.6, 1)
+sky_horizon_color = Color(0.68, 0.76, 0.84, 1)
+ground_bottom_color = Color(0.1, 0.12, 0.16, 1)
+ground_horizon_color = Color(0.68, 0.76, 0.84, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+ambient_light_source = 3
+tonemap_mode = 2
+glow_enabled = true
+glow_bloom = 0.06
+
+[sub_resource type="ShaderMaterial" id="MatSines"]
+render_priority = 0
+shader = ExtResource("2_s")
+shader_parameter/wn = 48
+shader_parameter/steepness = 0.4
+shader_parameter/wave_time = 0.0
+shader_parameter/wdirs = PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/wks = PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/wamps = PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/wphs = PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/womg = PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/wmr = PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/wmp = PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/deep = Color(0.008, 0.1, 0.15, 1)
+shader_parameter/shallow = Color(0.05, 0.38, 0.42, 1)
+shader_parameter/crest_col = Color(0.28, 0.8, 0.7, 1)
+shader_parameter/deep_storm = Color(0.03, 0.07, 0.07, 1)
+shader_parameter/shallow_storm = Color(0.13, 0.22, 0.2, 1)
+shader_parameter/crest_storm = Color(0.3, 0.4, 0.36, 1)
+shader_parameter/foam_col = Color(0.95, 0.98, 0.99, 1)
+shader_parameter/sky_tint = Color(0.6, 0.78, 0.88, 1)
+shader_parameter/storm = 0.0
+shader_parameter/fold = 0.86
+shader_parameter/fresnel_power = 5.0
+shader_parameter/haze_dist = 430.0
+shader_parameter/haze_max = 0.72
+shader_parameter/sun_dir = Vector3(-0.45, -0.62, -0.65)
+shader_parameter/sun_energy = 1.3
+shader_parameter/sss_on = 1.0
+shader_parameter/sss_col = Color(0.2, 0.72, 0.48, 1)
+shader_parameter/sss_gain = 1.6
+shader_parameter/sss_power = 5.0
+shader_parameter/wave_h = 3.0
+
+[sub_resource type="PlaneMesh" id="SeaMesh"]
+size = Vector2(1200, 1200)
+subdivide_width = 320
+subdivide_depth = 320
+
+[sub_resource type="FastNoiseLite" id="Noise"]
+noise_type = 2
+frequency = 0.006
+fractal_octaves = 5
+
+[sub_resource type="Gradient" id="SandRamp"]
+offsets = PackedFloat32Array(0, 1)
+colors = PackedColorArray(0.62, 0.6, 0.54, 1, 1, 1, 0.96, 1)
+
+[sub_resource type="NoiseTexture2D" id="SandTex"]
+width = 512
+height = 512
+seamless = true
+color_ramp = SubResource("SandRamp")
+noise = SubResource("Noise")
+
+[sub_resource type="StandardMaterial3D" id="Sand"]
+albedo_color = Color(0.76, 0.68, 0.5, 1)
+albedo_texture = SubResource("SandTex")
+roughness = 0.95
+uv1_scale = Vector3(22, 22, 1)
+
+[sub_resource type="CylinderMesh" id="Shelf"]
+top_radius = 65.0
+bottom_radius = 450.0
+height = 60.0
+radial_segments = 128
+rings = 12
+
+[sub_resource type="SphereMesh" id="Dome"]
+radius = 90.0
+height = 180.0
+radial_segments = 96
+
+[node name="FftScene" type="Node3D" unique_id=1332484369]
+script = ExtResource("1_o")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=932497200]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=437685469]
+transform = Transform3D(0.7193398, 0.42767444, -0.5473983, 0, 0.7880108, 0.6156615, 0.6946584, -0.4428698, 0.5668475, 0, 0, 0)
+light_energy = 1.3
+shadow_enabled = true
+
+[node name="Sines" type="MeshInstance3D" parent="." unique_id=1961850484]
+material_override = SubResource("MatSines")
+mesh = SubResource("SeaMesh")
+
+[node name="Seabed" type="Node3D" parent="." unique_id=1322883552]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -120, -17.455185, -220)
+
+[node name="Shelf" type="MeshInstance3D" parent="Seabed" unique_id=458689918]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -28, 0)
+material_override = SubResource("Sand")
+mesh = SubResource("Shelf")
+
+[node name="Island" type="MeshInstance3D" parent="Seabed" unique_id=1392707696]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -60, 0)
+material_override = SubResource("Sand")
+mesh = SubResource("Dome")
+
+[node name="Cam" type="Camera3D" parent="." unique_id=961235060]
+transform = Transform3D(0.94, -0.12, 0.33, 0, 0.94, 0.35, -0.35, -0.32, 0.88, 0, 12, 34)
+fov = 60.0
+far = 3000.0
+
+[node name="Ui" type="CanvasLayer" parent="." unique_id=1710587140]
+
+[node name="Info" type="RichTextLabel" parent="Ui" unique_id=491792896]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 34.0
+offset_top = 26.0
+offset_right = -34.0
+offset_bottom = -26.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(1, 1, 1, 0.92)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.75)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+scroll_active = false

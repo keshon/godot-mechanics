@@ -1,0 +1,96 @@
+[gd_scene format=3]
+
+[sub_resource type="Gradient" id="SpriteGrad"]
+offsets = PackedFloat32Array(0, 0.6, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.5, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="Sprite"]
+gradient = SubResource("SpriteGrad")
+width = 64
+height = 64
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="QuadMesh" id="Quad"]
+size = Vector2(1, 1)
+
+[sub_resource type="Curve" id="CurveDust"]
+_data = [Vector2(0, 0.25), 0.0, 0.0, 0, 0, Vector2(0.35, 1), 0.0, 0.0, 0, 0, Vector2(1, 1.2), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveDustTex"]
+curve = SubResource("CurveDust")
+
+[sub_resource type="Gradient" id="RampDust"]
+offsets = PackedFloat32Array(0, 0.2, 1)
+colors = PackedColorArray(0.62, 0.56, 0.46, 0, 0.5, 0.45, 0.37, 0.7, 0.34, 0.31, 0.27, 0)
+
+[sub_resource type="GradientTexture1D" id="RampDustTex"]
+gradient = SubResource("RampDust")
+
+[sub_resource type="ParticleProcessMaterial" id="ProcDust"]
+emission_shape = 1
+emission_sphere_radius = 0.5
+direction = Vector3(0, 0.3, 0)
+spread = 90.0
+initial_velocity_min = 1.2
+initial_velocity_max = 3.4
+gravity = Vector3(0, 0.35, 0)
+damping_min = 1.6
+damping_max = 3.0
+scale_min = 0.9
+scale_max = 2.2
+scale_curve = SubResource("CurveDustTex")
+color_ramp = SubResource("RampDustTex")
+angle_min = -180.0
+angle_max = 180.0
+
+[sub_resource type="StandardMaterial3D" id="MatDust"]
+transparency = 1
+shading_mode = 0
+albedo_texture = SubResource("Sprite")
+billboard_mode = 1
+vertex_color_use_as_albedo = true
+disable_receive_shadows = true
+
+[sub_resource type="Animation" id="AnimPlay"]
+resource_name = "play"
+length = 2.0
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Dust")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"restart"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="Lib"]
+_data = {
+&"play": SubResource("AnimPlay")
+}
+
+[node name="Puff" type="Node3D"]
+
+[node name="Anim" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("Lib")
+}
+
+[node name="Dust" type="GPUParticles3D" parent="."]
+emitting = false
+amount = 26
+lifetime = 1.7
+one_shot = true
+explosiveness = 1.0
+local_coords = false
+process_material = SubResource("ProcDust")
+draw_pass_1 = SubResource("Quad")
+material_override = SubResource("MatDust")

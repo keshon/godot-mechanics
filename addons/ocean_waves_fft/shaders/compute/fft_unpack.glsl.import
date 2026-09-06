@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://dddoleak6lkso"
+path="res://.godot/imported/fft_unpack.glsl-289934f3295e4a867078a4eab8af1eb9.res"
+
+[deps]
+
+source_file="res://addons/ocean_waves_fft/shaders/compute/fft_unpack.glsl"
+dest_files=["res://.godot/imported/fft_unpack.glsl-289934f3295e4a867078a4eab8af1eb9.res"]
+
+[params]
+

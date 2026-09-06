@@ -1,0 +1,396 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/14_chunks/World.gd" id="1_world"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.12, 0.13, 0.18, 1)
+sky_horizon_color = Color(0.27, 0.28, 0.32, 1)
+ground_bottom_color = Color(0.07, 0.07, 0.09, 1)
+ground_horizon_color = Color(0.27, 0.28, 0.32, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+tonemap_mode = 2
+ssao_enabled = true
+ssao_intensity = 1.3
+ambient_light_source = 3
+ambient_light_energy = 0.5
+
+[sub_resource type="StandardMaterial3D" id="MatFloor"]
+albedo_color = Color(0.72, 0.73, 0.76, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="MatHall"]
+albedo_color = Color(0.78, 0.75, 0.68, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="MatVault"]
+albedo_color = Color(0.7, 0.66, 0.78, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="MatWall"]
+albedo_color = Color(0.5, 0.51, 0.55, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="MatPillar"]
+albedo_color = Color(0.85, 0.78, 0.62, 1)
+roughness = 0.7
+
+[sub_resource type="StandardMaterial3D" id="MatProp"]
+albedo_color = Color(0.6, 0.42, 0.28, 1)
+roughness = 0.75
+
+[sub_resource type="StandardMaterial3D" id="MatWater"]
+albedo_color = Color(0.11, 0.25, 0.36, 1)
+roughness = 0.08
+metallic = 0.4
+
+[sub_resource type="BoxMesh" id="F8x8"]
+size = Vector3(8, 0.2, 8)
+
+[sub_resource type="BoxMesh" id="F12x4"]
+size = Vector3(12, 0.2, 4)
+
+[sub_resource type="BoxMesh" id="F6x6"]
+size = Vector3(6, 0.2, 6)
+
+[sub_resource type="BoxMesh" id="F4x4"]
+size = Vector3(4, 0.2, 4)
+
+[sub_resource type="BoxMesh" id="F10x6"]
+size = Vector3(10, 0.2, 6)
+
+[sub_resource type="BoxMesh" id="F12x12"]
+size = Vector3(12, 0.2, 12)
+
+[sub_resource type="CylinderMesh" id="Pillar"]
+top_radius = 0.28
+bottom_radius = 0.38
+height = 1.6
+radial_segments = 10
+
+[sub_resource type="BoxMesh" id="Block"]
+size = Vector3(1.2, 0.7, 1.2)
+
+[sub_resource type="BoxMesh" id="Rail"]
+size = Vector3(8, 0.35, 0.5)
+
+[sub_resource type="BoxMesh" id="Plate"]
+size = Vector3(3, 0.16, 3)
+
+[sub_resource type="BoxMesh" id="Pool"]
+size = Vector3(6, 0.12, 6)
+
+[sub_resource type="BoxMesh" id="LimitMesh"]
+size = Vector3(1, 0.3, 1)
+
+[sub_resource type="StandardMaterial3D" id="MatLimit"]
+albedo_color = Color(0.17, 0.18, 0.22, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="WallSeg"]
+size = Vector3(1, 0.9, 0.3)
+
+[sub_resource type="MultiMesh" id="MmWall"]
+transform_format = 1
+mesh = SubResource("WallSeg")
+
+[node name="ChunkScene" type="Node3D"]
+script = ExtResource("1_world")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-58, -34, 0)
+light_energy = 1.15
+light_color = Color(1, 0.97, 0.92, 1)
+shadow_enabled = true
+
+[node name="Library" type="Node3D" parent="."]
+
+[node name="Hall" type="Node3D" parent="Library"]
+
+[node name="Floor" type="MeshInstance3D" parent="Library/Hall"]
+position = Vector3(0, -0.1, 0)
+mesh = SubResource("F8x8")
+material_override = SubResource("MatHall")
+
+[node name="GateN" type="Marker3D" parent="Library/Hall"]
+position = Vector3(0, 0, -4)
+
+[node name="GateS" type="Marker3D" parent="Library/Hall"]
+position = Vector3(0, 0, 4)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="GateE" type="Marker3D" parent="Library/Hall"]
+position = Vector3(4, 0, 0)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="GateW" type="Marker3D" parent="Library/Hall"]
+position = Vector3(-4, 0, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="P1" type="MeshInstance3D" parent="Library/Hall"]
+position = Vector3(-2.5, 0.8, -2.5)
+mesh = SubResource("Pillar")
+material_override = SubResource("MatPillar")
+
+[node name="P2" type="MeshInstance3D" parent="Library/Hall"]
+position = Vector3(2.5, 0.8, -2.5)
+mesh = SubResource("Pillar")
+material_override = SubResource("MatPillar")
+
+[node name="P3" type="MeshInstance3D" parent="Library/Hall"]
+position = Vector3(-2.5, 0.8, 2.5)
+mesh = SubResource("Pillar")
+material_override = SubResource("MatPillar")
+
+[node name="P4" type="MeshInstance3D" parent="Library/Hall"]
+position = Vector3(2.5, 0.8, 2.5)
+mesh = SubResource("Pillar")
+material_override = SubResource("MatPillar")
+
+[node name="Long" type="Node3D" parent="Library"]
+
+[node name="Floor" type="MeshInstance3D" parent="Library/Long"]
+position = Vector3(0, -0.1, 0)
+mesh = SubResource("F12x4")
+material_override = SubResource("MatFloor")
+
+[node name="GateW" type="Marker3D" parent="Library/Long"]
+position = Vector3(-6, 0, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="GateE" type="Marker3D" parent="Library/Long"]
+position = Vector3(6, 0, 0)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="B1" type="MeshInstance3D" parent="Library/Long"]
+position = Vector3(-3.5, 0.35, 0)
+mesh = SubResource("Block")
+material_override = SubResource("MatProp")
+
+[node name="B2" type="MeshInstance3D" parent="Library/Long"]
+position = Vector3(3.5, 0.35, 0)
+mesh = SubResource("Block")
+material_override = SubResource("MatProp")
+
+[node name="Corner" type="Node3D" parent="Library"]
+
+[node name="Floor" type="MeshInstance3D" parent="Library/Corner"]
+position = Vector3(0, -0.1, 0)
+mesh = SubResource("F6x6")
+material_override = SubResource("MatFloor")
+
+[node name="GateN" type="Marker3D" parent="Library/Corner"]
+position = Vector3(0, 0, -3)
+
+[node name="GateE" type="Marker3D" parent="Library/Corner"]
+position = Vector3(3, 0, 0)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="P1" type="MeshInstance3D" parent="Library/Corner"]
+position = Vector3(-1.5, 0.8, 1.5)
+mesh = SubResource("Pillar")
+material_override = SubResource("MatPillar")
+
+[node name="Cross" type="Node3D" parent="Library"]
+
+[node name="Floor" type="MeshInstance3D" parent="Library/Cross"]
+position = Vector3(0, -0.1, 0)
+mesh = SubResource("F6x6")
+material_override = SubResource("MatFloor")
+
+[node name="GateN" type="Marker3D" parent="Library/Cross"]
+position = Vector3(0, 0, -3)
+
+[node name="GateS" type="Marker3D" parent="Library/Cross"]
+position = Vector3(0, 0, 3)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="GateE" type="Marker3D" parent="Library/Cross"]
+position = Vector3(3, 0, 0)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="GateW" type="Marker3D" parent="Library/Cross"]
+position = Vector3(-3, 0, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="Plate" type="MeshInstance3D" parent="Library/Cross"]
+position = Vector3(0, 0.08, 0)
+mesh = SubResource("Plate")
+material_override = SubResource("MatHall")
+
+[node name="Nook" type="Node3D" parent="Library"]
+metadata/max_uses = 4
+
+[node name="Floor" type="MeshInstance3D" parent="Library/Nook"]
+position = Vector3(0, -0.1, 0)
+mesh = SubResource("F4x4")
+material_override = SubResource("MatFloor")
+
+[node name="GateS" type="Marker3D" parent="Library/Nook"]
+position = Vector3(0, 0, 2)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="Chest" type="MeshInstance3D" parent="Library/Nook"]
+position = Vector3(0, 0.35, -0.8)
+mesh = SubResource("Block")
+material_override = SubResource("MatProp")
+
+[node name="Bridge" type="Node3D" parent="Library"]
+
+[node name="Floor" type="MeshInstance3D" parent="Library/Bridge"]
+position = Vector3(0, -0.1, 0)
+mesh = SubResource("F10x6")
+material_override = SubResource("MatFloor")
+
+[node name="GateW" type="Marker3D" parent="Library/Bridge"]
+position = Vector3(-5, 0, 0)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="GateE" type="Marker3D" parent="Library/Bridge"]
+position = Vector3(5, 0, 0)
+rotation_degrees = Vector3(0, -90, 0)
+metadata/kind = "wide"
+
+[node name="R1" type="MeshInstance3D" parent="Library/Bridge"]
+position = Vector3(0, 0.35, -2.2)
+mesh = SubResource("Rail")
+material_override = SubResource("MatWall")
+
+[node name="R2" type="MeshInstance3D" parent="Library/Bridge"]
+position = Vector3(0, 0.35, 2.2)
+mesh = SubResource("Rail")
+material_override = SubResource("MatWall")
+
+[node name="Vault" type="Node3D" parent="Library"]
+metadata/max_uses = 1
+
+[node name="Floor" type="MeshInstance3D" parent="Library/Vault"]
+position = Vector3(0, -0.1, 0)
+mesh = SubResource("F12x12")
+material_override = SubResource("MatVault")
+
+[node name="GateW" type="Marker3D" parent="Library/Vault"]
+position = Vector3(-6, 0, 0)
+rotation_degrees = Vector3(0, 90, 0)
+metadata/kind = "wide"
+
+[node name="GateE" type="Marker3D" parent="Library/Vault"]
+position = Vector3(6, 0, 0)
+rotation_degrees = Vector3(0, -90, 0)
+metadata/kind = "wide"
+
+[node name="Pool" type="MeshInstance3D" parent="Library/Vault"]
+position = Vector3(0, 0.03, 0)
+mesh = SubResource("Pool")
+material_override = SubResource("MatWater")
+
+[node name="P1" type="MeshInstance3D" parent="Library/Vault"]
+position = Vector3(-4.5, 0.8, -4.5)
+mesh = SubResource("Pillar")
+material_override = SubResource("MatPillar")
+
+[node name="P2" type="MeshInstance3D" parent="Library/Vault"]
+position = Vector3(4.5, 0.8, -4.5)
+mesh = SubResource("Pillar")
+material_override = SubResource("MatPillar")
+
+[node name="P3" type="MeshInstance3D" parent="Library/Vault"]
+position = Vector3(-4.5, 0.8, 4.5)
+mesh = SubResource("Pillar")
+material_override = SubResource("MatPillar")
+
+[node name="P4" type="MeshInstance3D" parent="Library/Vault"]
+position = Vector3(4.5, 0.8, 4.5)
+mesh = SubResource("Pillar")
+material_override = SubResource("MatPillar")
+
+[node name="Limit" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.45, 0)
+mesh = SubResource("LimitMesh")
+material_override = SubResource("MatLimit")
+
+[node name="Board" type="Node3D" parent="."]
+
+[node name="Walls" type="MultiMeshInstance3D" parent="."]
+multimesh = SubResource("MmWall")
+material_override = SubResource("MatWall")
+
+[node name="Camera" type="Camera3D" parent="."]
+projection = 1
+size = 60.0
+far = 600.0
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Hud" type="Control" parent="Ui"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Big" type="Label" parent="Ui/Hud"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = -104.0
+offset_right = 500.0
+offset_bottom = -40.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.94)
+theme_override_font_sizes/font_size = 44
+text = "SEED 5"
+vertical_alignment = 1
+
+[node name="Detail" type="RichTextLabel" parent="Ui/Hud"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+grow_vertical = 0
+offset_left = 34.0
+offset_top = -348.0
+offset_right = 700.0
+offset_bottom = -106.0
+theme_override_colors/default_color = Color(1, 1, 1, 0.8)
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+scroll_active = false
+
+[node name="Hint" type="Label" parent="Ui/Hud"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -640.0
+offset_top = -200.0
+offset_right = -26.0
+offset_bottom = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.55)
+theme_override_font_sizes/font_size = 14
+text = "SPACE new seed    LEFT RIGHT seed -1 +1    UP DOWN more or fewer pieces
+WASD pans    WHEEL zooms    Q E shrink or grow the plot    G hides the rim walls    R rereads
+
+the pieces are real nodes under Library in this scene.
+open one: the Floor mesh size IS its footprint, the Marker3D
+gates point -Z outwards. duplicate one, move its gates, press R.
+
+Vault appears at most once and only takes a wide gate."
+horizontal_alignment = 2
+vertical_alignment = 2

@@ -1,0 +1,65 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/34_scale/Scale.gd" id="1_s"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.22, 0.36, 0.6, 1)
+sky_horizon_color = Color(0.68, 0.73, 0.78, 1)
+ground_horizon_color = Color(0.68, 0.73, 0.78, 1)
+ground_bottom_color = Color(0.5, 0.52, 0.54, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+tonemap_mode = 2
+tonemap_exposure = 0.95
+ambient_light_source = 3
+ambient_light_energy = 1.0
+fog_enabled = true
+fog_light_color = Color(0.7, 0.75, 0.82, 1)
+fog_density = 0.0004
+fog_sky_affect = 0.0
+
+[node name="ScaleScene" type="Node3D"]
+script = ExtResource("1_s")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.8, -0.42, 0.43, 0, 0.72, 0.7, -0.6, -0.56, 0.57, 0, 200, 0)
+light_energy = 1.15
+light_color = Color(1, 0.96, 0.88, 1)
+shadow_enabled = true
+directional_shadow_max_distance = 300.0
+
+[node name="Chunks" type="Node3D" parent="."]
+
+[node name="Clip" type="Node3D" parent="."]
+visible = false
+
+[node name="Cam" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 60, 0)
+fov = 74.0
+near = 0.2
+far = 3000.0
+
+[node name="Ui" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="Label" type="RichTextLabel" parent="Ui"]
+mouse_filter = 2
+offset_left = 26.0
+offset_top = 18.0
+offset_right = 860.0
+offset_bottom = 640.0
+bbcode_enabled = true
+scroll_active = false
+theme_override_colors/default_color = Color(1, 1, 1, 0.95)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/shadow_outline_size = 3

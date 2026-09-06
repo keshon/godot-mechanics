@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="StuffRound" load_steps=2 format=3 uid="uid://c43realgrenad"]
+
+[ext_resource type="Script" path="res://probes/43_stuff/Round.gd" id="1_r"]
+
+[resource]
+script = ExtResource("1_r")
+title = "40 мм ВОГ"
+calibre = 0.04
+energy = 40000.0
+momentum = 400.0
+crater_width = 5.0

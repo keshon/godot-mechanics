@@ -1,0 +1,55 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/10_possess/Unit.gd" id="1_unit"]
+
+[sub_resource type="CapsuleShape3D" id="Shape"]
+radius = 0.45
+height = 1.5
+
+[sub_resource type="CapsuleMesh" id="BodyMesh"]
+radius = 0.42
+height = 1.4
+
+[sub_resource type="StandardMaterial3D" id="MatBody"]
+albedo_color = Color(0.72, 0.68, 0.52, 1)
+roughness = 0.7
+
+[sub_resource type="BoxMesh" id="NoseMesh"]
+size = Vector3(0.2, 0.2, 0.45)
+
+[sub_resource type="StandardMaterial3D" id="MatNose"]
+albedo_color = Color(0.85, 0.4, 0.3, 1)
+roughness = 0.5
+
+[sub_resource type="TorusMesh" id="RingMesh"]
+inner_radius = 0.62
+outer_radius = 0.76
+rings = 20
+ring_segments = 5
+
+[sub_resource type="StandardMaterial3D" id="MatRing"]
+albedo_color = Color(0.5, 0.95, 0.6, 1)
+emission_enabled = true
+emission = Color(0.3, 0.85, 0.4, 1)
+
+[node name="Unit" type="CharacterBody3D"]
+script = ExtResource("1_unit")
+
+[node name="Shape" type="CollisionShape3D" parent="."]
+shape = SubResource("Shape")
+
+[node name="Body" type="Node3D" parent="."]
+
+[node name="Mesh" type="MeshInstance3D" parent="Body"]
+mesh = SubResource("BodyMesh")
+surface_material_override/0 = SubResource("MatBody")
+
+[node name="Nose" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -0.42)
+mesh = SubResource("NoseMesh")
+surface_material_override/0 = SubResource("MatNose")
+
+[node name="Ring" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.7, 0)
+mesh = SubResource("RingMesh")
+surface_material_override/0 = SubResource("MatRing")

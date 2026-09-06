@@ -1,0 +1,6 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3]
+
+[ext_resource type="Shader" path="res://probes/29_day/sky.gdshader" id="1_s"]
+
+[resource]
+shader = ExtResource("1_s")

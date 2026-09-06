@@ -1,0 +1,115 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/25_map/World.gd" id="1_w"]
+[ext_resource type="Script" path="res://probes/25_map/MapView.gd" id="2_m"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.24, 0.38, 0.6, 1)
+sky_horizon_color = Color(0.7, 0.76, 0.82, 1)
+ground_horizon_color = Color(0.7, 0.76, 0.82, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+tonemap_mode = 2
+ambient_light_source = 3
+ambient_light_energy = 0.9
+
+[sub_resource type="StandardMaterial3D" id="MatGround"]
+vertex_color_use_as_albedo = true
+roughness = 0.92
+
+[sub_resource type="StandardMaterial3D" id="MatPlayer"]
+albedo_color = Color(1, 0.82, 0.28, 1)
+emission_enabled = true
+emission = Color(0.6, 0.42, 0.05, 1)
+emission_energy_multiplier = 0.6
+
+[sub_resource type="CapsuleMesh" id="Body"]
+radius = 0.45
+height = 1.8
+
+[node name="MapWorld" type="Node3D"]
+script = ExtResource("1_w")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-56, -42, 0)
+light_energy = 1.15
+shadow_enabled = true
+
+[node name="Cam" type="Camera3D" parent="."]
+rotation_degrees = Vector3(-52, 0, 0)
+fov = 58.0
+far = 400.0
+
+[node name="Ground" type="MultiMeshInstance3D" parent="."]
+material_override = SubResource("MatGround")
+
+[node name="Player" type="MeshInstance3D" parent="."]
+mesh = SubResource("Body")
+material_override = SubResource("MatPlayer")
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Info" type="RichTextLabel" parent="Ui"]
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
+offset_left = 26.0
+offset_top = 22.0
+offset_right = 640.0
+offset_bottom = -22.0
+theme_override_colors/default_color = Color(1, 1, 1, 0.92)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+scroll_active = false
+mouse_filter = 2
+
+[node name="Live" type="SubViewportContainer" parent="Ui"]
+offset_right = 256.0
+offset_bottom = 256.0
+mouse_filter = 2
+stretch = true
+
+[node name="Sub" type="SubViewport" parent="Ui/Live"]
+handle_input_locally = false
+size = Vector2i(256, 256)
+render_target_update_mode = 3
+
+[node name="Eye" type="Camera3D" parent="Ui/Live/Sub"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 60, 0)
+rotation_degrees = Vector3(-90, 0, 0)
+projection = 1
+size = 46.0
+far = 200.0
+
+[node name="Mini" type="Control" parent="Ui"]
+offset_right = 256.0
+offset_bottom = 256.0
+mouse_filter = 2
+clip_contents = true
+script = ExtResource("2_m")
+
+[node name="Big" type="Control" parent="Ui"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_left = 660.0
+offset_top = 60.0
+offset_right = -60.0
+offset_bottom = -60.0
+clip_contents = true
+script = ExtResource("2_m")
+big = true
+span = 96.0

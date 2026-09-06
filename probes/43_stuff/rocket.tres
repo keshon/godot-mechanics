@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="StuffRound" load_steps=2 format=3 uid="uid://c43shotrock"]
+
+[ext_resource type="Script" path="res://probes/43_stuff/Round.gd" id="1_r"]
+
+[resource]
+script = ExtResource("1_r")
+title = "ракета"
+calibre = 0.35
+energy = 500.0
+momentum = 4000.0
+crater_width = 3.0

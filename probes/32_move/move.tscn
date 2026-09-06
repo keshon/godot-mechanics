@@ -1,0 +1,60 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/32_move/Course.gd" id="1_c"]
+[ext_resource type="PackedScene" path="res://probes/32_move/player.tscn" id="2_m"]
+[ext_resource type="PackedScene" path="res://probes/32_move/course.tscn" id="3_course"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.12, 0.16, 0.26, 1)
+sky_horizon_color = Color(0.34, 0.33, 0.36, 1)
+ground_horizon_color = Color(0.2, 0.19, 0.19, 1)
+ground_bottom_color = Color(0.09, 0.09, 0.1, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+tonemap_mode = 2
+tonemap_exposure = 0.95
+ambient_light_source = 3
+ambient_light_energy = 0.9
+ssao_enabled = true
+glow_enabled = true
+glow_intensity = 0.7
+glow_hdr_threshold = 1.0
+
+[sub_resource type="CapsuleShape3D" id="Body"]
+radius = 0.38
+height = 1.8
+
+[node name="MoveScene" type="Node3D"]
+script = ExtResource("1_c")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.82, -0.4, 0.41, 0, 0.72, 0.7, -0.57, -0.57, 0.59, 0, 20, 0)
+light_energy = 1.1
+light_color = Color(1, 0.95, 0.86, 1)
+shadow_enabled = true
+directional_shadow_max_distance = 90.0
+
+[node name="Course" parent="." instance=ExtResource("3_course")]
+
+[node name="Player" parent="." instance=ExtResource("2_m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 2)
+
+[node name="Ui" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="Label" type="RichTextLabel" parent="Ui"]
+mouse_filter = 2
+offset_left = 26.0
+offset_top = 20.0
+offset_right = 720.0
+offset_bottom = 620.0
+bbcode_enabled = true
+scroll_active = false

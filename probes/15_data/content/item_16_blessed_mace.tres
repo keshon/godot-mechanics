@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="DataDef" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://probes/15_data/Def.gd" id="1_def"]
+[ext_resource type="Script" path="res://probes/15_data/Effect.gd" id="2_fx"]
+
+[sub_resource type="Resource" id="E0"]
+script = ExtResource("2_fx")
+verb = 2
+stat = ""
+tag = "holy"
+amount = 0.0
+
+[sub_resource type="Resource" id="E1"]
+script = ExtResource("2_fx")
+verb = 0
+stat = "power"
+tag = ""
+amount = 6.0
+
+[resource]
+script = ExtResource("1_def")
+title = "Blessed Mace"
+kind = 0
+colour = Color(0.98, 0.86, 0.42, 1)
+hp = 0.0
+armour = 0.0
+effects = Array[Resource]([SubResource("E0"), SubResource("E1")])

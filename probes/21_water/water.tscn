@@ -1,0 +1,309 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/21_water/Water.gd" id="1_water"]
+[ext_resource type="Shader" path="res://probes/21_water/water.gdshader" id="2_surf"]
+[ext_resource type="Shader" path="res://probes/21_water/wet.gdshader" id="3_wet"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.24, 0.42, 0.72, 1)
+sky_horizon_color = Color(0.72, 0.8, 0.88, 1)
+ground_bottom_color = Color(0.16, 0.18, 0.22, 1)
+ground_horizon_color = Color(0.72, 0.8, 0.88, 1)
+sun_angle_max = 12.0
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+tonemap_mode = 2
+glow_enabled = true
+glow_bloom = 0.08
+ssr_enabled = true
+ssr_max_steps = 48
+ambient_light_source = 3
+ambient_light_energy = 1.0
+reflected_light_source = 2
+
+[sub_resource type="FastNoiseLite" id="NoiseLite"]
+noise_type = 2
+frequency = 0.03
+fractal_octaves = 3
+
+[sub_resource type="NoiseTexture2D" id="Ripples"]
+width = 512
+height = 512
+seamless = true
+as_normal_map = true
+bump_strength = 5.0
+noise = SubResource("NoiseLite")
+
+[sub_resource type="ShaderMaterial" id="MatWater"]
+render_priority = 1
+shader = ExtResource("2_surf")
+shader_parameter/ripples = SubResource("Ripples")
+
+[sub_resource type="ShaderMaterial" id="MatWet"]
+shader = ExtResource("3_wet")
+
+[sub_resource type="StandardMaterial3D" id="MatSand"]
+albedo_color = Color(0.5, 0.45, 0.34, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="MatRock"]
+albedo_color = Color(0.42, 0.4, 0.38, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="MatTile"]
+albedo_color = Color(0.72, 0.76, 0.8, 1)
+roughness = 0.55
+
+[sub_resource type="PlaneMesh" id="Surface"]
+size = Vector2(220, 220)
+subdivide_width = 180
+subdivide_depth = 180
+
+[sub_resource type="PlaneMesh" id="Sand"]
+size = Vector2(260, 260)
+
+[sub_resource type="BoxMesh" id="Shelf"]
+size = Vector3(60, 8, 60)
+
+[sub_resource type="BoxMesh" id="PoolBox"]
+size = Vector3(26, 3, 18)
+
+[sub_resource type="BoxMesh" id="Rock"]
+size = Vector3(4, 7, 4)
+
+[sub_resource type="BoxMesh" id="Post"]
+size = Vector3(0.7, 9, 0.7)
+
+[sub_resource type="StandardMaterial3D" id="MatSteel"]
+albedo_color = Color(0.46, 0.5, 0.5, 1)
+roughness = 0.45
+metallic = 0.35
+
+[sub_resource type="BoxMesh" id="RoomFloor"]
+size = Vector3(18, 1, 26)
+
+[sub_resource type="BoxMesh" id="RoomSide"]
+size = Vector3(1, 13, 26)
+
+[sub_resource type="BoxMesh" id="RoomEnd"]
+size = Vector3(18, 13, 1)
+
+[sub_resource type="BoxMesh" id="RoomLid"]
+size = Vector3(18, 1, 10)
+
+[sub_resource type="BoxMesh" id="Step"]
+size = Vector3(6, 0.5, 1.4)
+
+[sub_resource type="ParticleProcessMaterial" id="Motes"]
+emission_shape = 3
+emission_box_extents = Vector3(6, 4, 6)
+direction = Vector3(0, 1, 0)
+spread = 180.0
+initial_velocity_min = 0.05
+initial_velocity_max = 0.3
+gravity = Vector3(0, 0.05, 0)
+scale_min = 0.35
+scale_max = 1.6
+
+[sub_resource type="Gradient" id="MoteGrad"]
+offsets = PackedFloat32Array(0, 0.45, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.55, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="MoteTex"]
+gradient = SubResource("MoteGrad")
+width = 32
+height = 32
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="MatMote"]
+albedo_texture = SubResource("MoteTex")
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+albedo_color = Color(0.85, 0.97, 1, 0.55)
+billboard_mode = 1
+billboard_keep_scale = true
+disable_receive_shadows = true
+
+[sub_resource type="QuadMesh" id="Mote"]
+size = Vector2(0.08, 0.08)
+
+[node name="WaterScene" type="Node3D"]
+script = ExtResource("1_water")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-42, -50, 0)
+light_energy = 1.3
+shadow_enabled = true
+
+[node name="Seabed" type="MeshInstance3D" parent="."]
+position = Vector3(0, -14, 0)
+mesh = SubResource("Sand")
+material_override = SubResource("MatSand")
+
+[node name="Shelf" type="MeshInstance3D" parent="."]
+position = Vector3(-26, -10, -18)
+mesh = SubResource("Shelf")
+material_override = SubResource("MatSand")
+
+[node name="Shelf2" type="MeshInstance3D" parent="."]
+position = Vector3(22, -12.5, 26)
+mesh = SubResource("Shelf")
+material_override = SubResource("MatSand")
+
+[node name="Pool" type="MeshInstance3D" parent="."]
+position = Vector3(30, -2.4, -26)
+mesh = SubResource("PoolBox")
+material_override = SubResource("MatTile")
+
+[node name="Rock1" type="MeshInstance3D" parent="."]
+position = Vector3(-8, -2.5, 4)
+mesh = SubResource("Rock")
+material_override = SubResource("MatRock")
+
+[node name="Rock2" type="MeshInstance3D" parent="."]
+position = Vector3(6, -3.5, -9)
+mesh = SubResource("Rock")
+material_override = SubResource("MatRock")
+
+[node name="Rock3" type="MeshInstance3D" parent="."]
+position = Vector3(-14, -4, -12)
+mesh = SubResource("Rock")
+material_override = SubResource("MatRock")
+
+[node name="Post1" type="MeshInstance3D" parent="."]
+position = Vector3(2, -1, 10)
+mesh = SubResource("Post")
+material_override = SubResource("MatRock")
+
+[node name="Post2" type="MeshInstance3D" parent="."]
+position = Vector3(4.5, -1.6, 12)
+mesh = SubResource("Post")
+material_override = SubResource("MatRock")
+
+[node name="Water" type="MeshInstance3D" parent="."]
+mesh = SubResource("Surface")
+material_override = SubResource("MatWater")
+
+[node name="Particles" type="GPUParticles3D" parent="."]
+amount = 260
+lifetime = 9.0
+visibility_aabb = AABB(-14, -10, -14, 28, 20, 28)
+process_material = SubResource("Motes")
+draw_pass_1 = SubResource("Mote")
+material_override = SubResource("MatMote")
+
+[node name="Room" type="Node3D" parent="."]
+
+[node name="Floor" type="MeshInstance3D" parent="Room"]
+position = Vector3(-70, -8.5, 0)
+mesh = SubResource("RoomFloor")
+material_override = SubResource("MatSteel")
+
+[node name="WallW" type="MeshInstance3D" parent="Room"]
+position = Vector3(-79, -2.5, 0)
+mesh = SubResource("RoomSide")
+material_override = SubResource("MatSteel")
+
+[node name="WallE" type="MeshInstance3D" parent="Room"]
+position = Vector3(-61, -2.5, 0)
+mesh = SubResource("RoomSide")
+material_override = SubResource("MatSteel")
+
+[node name="WallN" type="MeshInstance3D" parent="Room"]
+position = Vector3(-70, -2.5, -13)
+mesh = SubResource("RoomEnd")
+material_override = SubResource("MatSteel")
+
+[node name="WallS" type="MeshInstance3D" parent="Room"]
+position = Vector3(-70, -2.5, 13)
+mesh = SubResource("RoomEnd")
+material_override = SubResource("MatSteel")
+
+[node name="LidN" type="MeshInstance3D" parent="Room"]
+position = Vector3(-70, 3.5, -8)
+mesh = SubResource("RoomLid")
+material_override = SubResource("MatSteel")
+
+[node name="LidS" type="MeshInstance3D" parent="Room"]
+position = Vector3(-70, 3.5, 8)
+mesh = SubResource("RoomLid")
+material_override = SubResource("MatSteel")
+
+[node name="S1" type="MeshInstance3D" parent="Room"]
+position = Vector3(-70, -7.6, 9)
+mesh = SubResource("Step")
+material_override = SubResource("MatSteel")
+
+[node name="S2" type="MeshInstance3D" parent="Room"]
+position = Vector3(-70, -6.4, 7.6)
+mesh = SubResource("Step")
+material_override = SubResource("MatSteel")
+
+[node name="S3" type="MeshInstance3D" parent="Room"]
+position = Vector3(-70, -5.2, 6.2)
+mesh = SubResource("Step")
+material_override = SubResource("MatSteel")
+
+[node name="S4" type="MeshInstance3D" parent="Room"]
+position = Vector3(-70, -4, 4.8)
+mesh = SubResource("Step")
+material_override = SubResource("MatSteel")
+
+[node name="S5" type="MeshInstance3D" parent="Room"]
+position = Vector3(-70, -2.8, 3.4)
+mesh = SubResource("Step")
+material_override = SubResource("MatSteel")
+
+[node name="Shaft" type="SpotLight3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, -0.02, 1, 0, -1, -0.02, -70, 9, 0)
+light_color = Color(0.72, 0.95, 1, 1)
+light_energy = 22.0
+shadow_enabled = true
+spot_range = 34.0
+spot_angle = 24.0
+
+[node name="Cam" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.99, -0.12, 0, 0.12, 0.99, 0, 3.2, 18)
+fov = 68.0
+far = 500.0
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Wet" type="ColorRect" parent="Ui"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+material = SubResource("MatWet")
+
+[node name="Info" type="RichTextLabel" parent="Ui"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_left = 34.0
+offset_top = 26.0
+offset_right = -34.0
+offset_bottom = -26.0
+theme_override_colors/default_color = Color(1, 1, 1, 0.9)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.7)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+scroll_active = false
+mouse_filter = 2

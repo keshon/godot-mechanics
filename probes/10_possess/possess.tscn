@@ -1,0 +1,180 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/10_possess/Director.gd" id="1_dir"]
+[ext_resource type="PackedScene" path="res://probes/10_possess/Unit.tscn" id="2_unit"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_1"]
+sky_top_color = Color(0.26, 0.33, 0.45, 1)
+sky_horizon_color = Color(0.56, 0.58, 0.62, 1)
+ground_bottom_color = Color(0.12, 0.13, 0.15, 1)
+ground_horizon_color = Color(0.56, 0.58, 0.62, 1)
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("SkyMaterial_1")
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 2
+sky = SubResource("Sky_1")
+tonemap_mode = 2
+ssao_enabled = true
+fog_enabled = true
+fog_light_color = Color(0.42, 0.44, 0.48, 1)
+fog_density = 0.004
+
+[sub_resource type="StandardMaterial3D" id="MatGround"]
+albedo_color = Color(0.27, 0.29, 0.31, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="MatBlock"]
+albedo_color = Color(0.4, 0.46, 0.55, 1)
+roughness = 0.8
+
+[sub_resource type="WorldBoundaryShape3D" id="GroundShape"]
+
+[sub_resource type="PlaneMesh" id="GroundMesh"]
+size = Vector2(180, 180)
+
+[sub_resource type="BoxMesh" id="TowerMesh"]
+size = Vector3(5, 12, 5)
+
+[sub_resource type="BoxShape3D" id="TowerShape"]
+size = Vector3(5, 12, 5)
+
+[sub_resource type="BoxMesh" id="WallMesh"]
+size = Vector3(30, 4, 1.5)
+
+[sub_resource type="BoxShape3D" id="WallShape"]
+size = Vector3(30, 4, 1.5)
+
+[node name="PossessScene" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.766, 0.4546, -0.4546, 0, 0.7071, 0.7071, 0.643, -0.5417, 0.5417, 0, 40, 0)
+light_energy = 1.1
+shadow_enabled = true
+
+[node name="World" type="Node3D" parent="."]
+
+[node name="Ground" type="MeshInstance3D" parent="World"]
+mesh = SubResource("GroundMesh")
+surface_material_override/0 = SubResource("MatGround")
+
+[node name="GroundBody" type="StaticBody3D" parent="World"]
+
+[node name="Shape" type="CollisionShape3D" parent="World/GroundBody"]
+shape = SubResource("GroundShape")
+
+[node name="TowerA" type="MeshInstance3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 6, -22)
+mesh = SubResource("TowerMesh")
+surface_material_override/0 = SubResource("MatBlock")
+
+[node name="Body" type="StaticBody3D" parent="World/TowerA"]
+
+[node name="Shape" type="CollisionShape3D" parent="World/TowerA/Body"]
+shape = SubResource("TowerShape")
+
+[node name="TowerB" type="MeshInstance3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 6, -14)
+mesh = SubResource("TowerMesh")
+surface_material_override/0 = SubResource("MatBlock")
+
+[node name="Body" type="StaticBody3D" parent="World/TowerB"]
+
+[node name="Shape" type="CollisionShape3D" parent="World/TowerB/Body"]
+shape = SubResource("TowerShape")
+
+[node name="WallA" type="MeshInstance3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -34)
+mesh = SubResource("WallMesh")
+surface_material_override/0 = SubResource("MatBlock")
+
+[node name="Body" type="StaticBody3D" parent="World/WallA"]
+
+[node name="Shape" type="CollisionShape3D" parent="World/WallA/Body"]
+shape = SubResource("WallShape")
+
+[node name="WallB" type="MeshInstance3D" parent="World"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 34, 2, 0)
+mesh = SubResource("WallMesh")
+surface_material_override/0 = SubResource("MatBlock")
+
+[node name="Body" type="StaticBody3D" parent="World/WallB"]
+
+[node name="Shape" type="CollisionShape3D" parent="World/WallB/Body"]
+shape = SubResource("WallShape")
+
+[node name="Units" type="Node3D" parent="World"]
+
+[node name="Director" type="Node3D" parent="."]
+script = ExtResource("1_dir")
+unit_scene = ExtResource("2_unit")
+
+[node name="Camera" type="Camera3D" parent="Director"]
+fov = 60.0
+far = 500.0
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Hud" type="Control" parent="Ui"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Big" type="Label" parent="Ui/Hud"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = -120.0
+offset_right = 380.0
+offset_bottom = -40.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.94)
+theme_override_font_sizes/font_size = 54
+text = "ABOVE"
+vertical_alignment = 1
+
+[node name="Detail" type="RichTextLabel" parent="Ui/Hud"]
+layout_mode = 1
+offset_left = 34.0
+offset_top = 28.0
+offset_right = 560.0
+offset_bottom = 240.0
+theme_override_colors/default_color = Color(1, 1, 1, 0.78)
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+scroll_active = false
+
+[node name="Hint" type="Label" parent="Ui/Hud"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -560.0
+offset_top = -168.0
+offset_right = -26.0
+offset_bottom = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.55)
+theme_override_font_sizes/font_size = 14
+text = "ABOVE:  WASD pan    LEFT click a unit    RIGHT click to order
+INSIDE: WASD drive    mouse looks
+
+E gets in and out.
+
+order a few of them somewhere far, then get inside one and
+walk the other way. the rest keep marching."
+horizontal_alignment = 2
+vertical_alignment = 2

@@ -1,0 +1,318 @@
+[gd_scene load_steps=21 format=3]
+
+[ext_resource type="Script" path="res://probes/40_hit/Rig.gd" id="1_rig"]
+[ext_resource type="Script" path="res://probes/40_hit/Target.gd" id="2_target"]
+
+[sub_resource type="StandardMaterial3D" id="RoomMat"]
+albedo_color = Color(0.36, 0.37, 0.39, 1)
+roughness = 0.95
+
+[sub_resource type="BoxMesh" id="M0"]
+size = Vector3(1.0, 1.0, 1.0)
+
+[sub_resource type="BoxShape3D" id="SM0"]
+size = Vector3(1.0, 1.0, 1.0)
+
+[sub_resource type="BoxMesh" id="M1"]
+size = Vector3(1.1, 1.5, 1.1)
+
+[sub_resource type="BoxShape3D" id="SM1"]
+size = Vector3(1.1, 1.5, 1.1)
+
+[sub_resource type="BoxMesh" id="M2"]
+size = Vector3(2.0, 2.4, 0.12)
+
+[sub_resource type="BoxShape3D" id="SM2"]
+size = Vector3(2.0, 2.4, 0.12)
+
+[sub_resource type="BoxMesh" id="M3"]
+size = Vector3(2.0, 2.0, 2.0)
+
+[sub_resource type="BoxShape3D" id="SM3"]
+size = Vector3(2.0, 2.0, 2.0)
+
+[sub_resource type="BoxMesh" id="M4"]
+size = Vector3(40, 1, 40)
+
+[sub_resource type="BoxShape3D" id="SM4"]
+size = Vector3(40, 1, 40)
+
+[sub_resource type="BoxMesh" id="M5"]
+size = Vector3(40, 8, 1)
+
+[sub_resource type="BoxShape3D" id="SM5"]
+size = Vector3(40, 8, 1)
+
+[sub_resource type="BoxMesh" id="M6"]
+size = Vector3(1, 8, 40)
+
+[sub_resource type="BoxShape3D" id="SM6"]
+size = Vector3(1, 8, 40)
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.26, 0.34, 0.5, 1)
+sky_horizon_color = Color(0.6, 0.64, 0.68, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+ambient_light_source = 3
+ambient_light_energy = 0.6
+tonemap_mode = 2
+
+[node name="HitScene" type="Node3D"]
+script = ExtResource("1_rig")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.87, -0.31, 0.38, 0, 0.77, 0.63, -0.49, -0.55, 0.67, 0, 20, 0)
+light_energy = 1.1
+shadow_enabled = true
+
+[node name="Room" type="Node3D" parent="."]
+
+[node name="Floor" type="StaticBody3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -8)
+
+[node name="Mesh" type="MeshInstance3D" parent="Room/Floor"]
+mesh = SubResource("M4")
+material_override = SubResource("RoomMat")
+
+[node name="Shape" type="CollisionShape3D" parent="Room/Floor"]
+shape = SubResource("SM4")
+
+[node name="Back" type="StaticBody3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, -20)
+
+[node name="Mesh" type="MeshInstance3D" parent="Room/Back"]
+mesh = SubResource("M5")
+material_override = SubResource("RoomMat")
+
+[node name="Shape" type="CollisionShape3D" parent="Room/Back"]
+shape = SubResource("SM5")
+
+[node name="Left" type="StaticBody3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 4, -8)
+
+[node name="Mesh" type="MeshInstance3D" parent="Room/Left"]
+mesh = SubResource("M6")
+material_override = SubResource("RoomMat")
+
+[node name="Shape" type="CollisionShape3D" parent="Room/Left"]
+shape = SubResource("SM6")
+
+[node name="Right" type="StaticBody3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 4, -8)
+
+[node name="Mesh" type="MeshInstance3D" parent="Room/Right"]
+mesh = SubResource("M6")
+material_override = SubResource("RoomMat")
+
+[node name="Shape" type="CollisionShape3D" parent="Room/Right"]
+shape = SubResource("SM6")
+
+[node name="Targets" type="Node3D" parent="."]
+
+[node name="Crate0" type="RigidBody3D" parent="Targets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.0, 0.6, -6.0)
+mass = 18.0
+script = ExtResource("2_target")
+material = "дерево"
+health = 40.0
+pieces = 6
+give = 1.0
+
+[node name="Mesh" type="MeshInstance3D" parent="Targets/Crate0"]
+mesh = SubResource("M0")
+
+[node name="Shape" type="CollisionShape3D" parent="Targets/Crate0"]
+shape = SubResource("SM0")
+
+[node name="Crate1" type="RigidBody3D" parent="Targets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, 0.6, -6.0)
+mass = 18.0
+script = ExtResource("2_target")
+material = "дерево"
+health = 40.0
+pieces = 6
+give = 1.0
+
+[node name="Mesh" type="MeshInstance3D" parent="Targets/Crate1"]
+mesh = SubResource("M0")
+
+[node name="Shape" type="CollisionShape3D" parent="Targets/Crate1"]
+shape = SubResource("SM0")
+
+[node name="Crate2" type="RigidBody3D" parent="Targets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7999999999999998, 0.6, -6.0)
+mass = 18.0
+script = ExtResource("2_target")
+material = "дерево"
+health = 40.0
+pieces = 6
+give = 1.0
+
+[node name="Mesh" type="MeshInstance3D" parent="Targets/Crate2"]
+mesh = SubResource("M0")
+
+[node name="Shape" type="CollisionShape3D" parent="Targets/Crate2"]
+shape = SubResource("SM0")
+
+[node name="Crate3" type="RigidBody3D" parent="Targets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8000000000000007, 0.6, -6.0)
+mass = 18.0
+script = ExtResource("2_target")
+material = "дерево"
+health = 40.0
+pieces = 6
+give = 1.0
+
+[node name="Mesh" type="MeshInstance3D" parent="Targets/Crate3"]
+mesh = SubResource("M0")
+
+[node name="Shape" type="CollisionShape3D" parent="Targets/Crate3"]
+shape = SubResource("SM0")
+
+[node name="Crate4" type="RigidBody3D" parent="Targets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4000000000000004, 0.6, -6.0)
+mass = 18.0
+script = ExtResource("2_target")
+material = "дерево"
+health = 40.0
+pieces = 6
+give = 1.0
+
+[node name="Mesh" type="MeshInstance3D" parent="Targets/Crate4"]
+mesh = SubResource("M0")
+
+[node name="Shape" type="CollisionShape3D" parent="Targets/Crate4"]
+shape = SubResource("SM0")
+
+[node name="Barrel0" type="RigidBody3D" parent="Targets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0, 0.75, -10.0)
+mass = 90.0
+script = ExtResource("2_target")
+material = "металл"
+health = 140.0
+pieces = 5
+give = 0.45
+
+[node name="Mesh" type="MeshInstance3D" parent="Targets/Barrel0"]
+mesh = SubResource("M1")
+
+[node name="Shape" type="CollisionShape3D" parent="Targets/Barrel0"]
+shape = SubResource("SM1")
+
+[node name="Barrel1" type="RigidBody3D" parent="Targets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0.75, -10.0)
+mass = 90.0
+script = ExtResource("2_target")
+material = "металл"
+health = 140.0
+pieces = 5
+give = 0.45
+
+[node name="Mesh" type="MeshInstance3D" parent="Targets/Barrel1"]
+mesh = SubResource("M1")
+
+[node name="Shape" type="CollisionShape3D" parent="Targets/Barrel1"]
+shape = SubResource("SM1")
+
+[node name="Barrel2" type="RigidBody3D" parent="Targets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0, 0.75, -10.0)
+mass = 90.0
+script = ExtResource("2_target")
+material = "металл"
+health = 140.0
+pieces = 5
+give = 0.45
+
+[node name="Mesh" type="MeshInstance3D" parent="Targets/Barrel2"]
+mesh = SubResource("M1")
+
+[node name="Shape" type="CollisionShape3D" parent="Targets/Barrel2"]
+shape = SubResource("SM1")
+
+[node name="Pane0" type="RigidBody3D" parent="Targets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, 1.3, -14.0)
+mass = 12.0
+script = ExtResource("2_target")
+material = "стекло"
+health = 8.0
+pieces = 10
+give = 1.0
+
+[node name="Mesh" type="MeshInstance3D" parent="Targets/Pane0"]
+mesh = SubResource("M2")
+
+[node name="Shape" type="CollisionShape3D" parent="Targets/Pane0"]
+shape = SubResource("SM2")
+
+[node name="Pane1" type="RigidBody3D" parent="Targets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 1.3, -14.0)
+mass = 12.0
+script = ExtResource("2_target")
+material = "стекло"
+health = 8.0
+pieces = 10
+give = 1.0
+
+[node name="Mesh" type="MeshInstance3D" parent="Targets/Pane1"]
+mesh = SubResource("M2")
+
+[node name="Shape" type="CollisionShape3D" parent="Targets/Pane1"]
+shape = SubResource("SM2")
+
+[node name="Pane2" type="RigidBody3D" parent="Targets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 1.3, -14.0)
+mass = 12.0
+script = ExtResource("2_target")
+material = "стекло"
+health = 8.0
+pieces = 10
+give = 1.0
+
+[node name="Mesh" type="MeshInstance3D" parent="Targets/Pane2"]
+mesh = SubResource("M2")
+
+[node name="Shape" type="CollisionShape3D" parent="Targets/Pane2"]
+shape = SubResource("SM2")
+
+[node name="Boulder" type="RigidBody3D" parent="Targets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.0, 1.0, -9.0)
+mass = 900.0
+script = ExtResource("2_target")
+material = "камень"
+health = 900.0
+pieces = 0
+give = 0.06
+
+[node name="Mesh" type="MeshInstance3D" parent="Targets/Boulder"]
+mesh = SubResource("M3")
+
+[node name="Shape" type="CollisionShape3D" parent="Targets/Boulder"]
+shape = SubResource("SM3")
+
+[node name="Marks" type="Node3D" parent="."]
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 2)
+fov = 74.0
+far = 200.0
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Info" type="RichTextLabel" parent="Ui"]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 800.0
+offset_bottom = 300.0
+mouse_filter = 2
+bbcode_enabled = true
+scroll_active = false
+theme_override_colors/default_color = Color(0.92, 0.94, 0.96, 1)

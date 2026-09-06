@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="StuffRound" load_steps=2 format=3 uid="uid://c43realheavy_"]
+
+[ext_resource type="Script" path="res://probes/43_stuff/Round.gd" id="1_r"]
+
+[resource]
+script = ExtResource("1_r")
+title = "12.7x108"
+calibre = 0.0127
+energy = 17000.0
+momentum = 35.0
+crater_width = 3.0

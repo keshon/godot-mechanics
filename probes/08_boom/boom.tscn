@@ -1,0 +1,166 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/08_boom/Range.gd" id="1_range"]
+[ext_resource type="PackedScene" path="res://probes/08_boom/blast.tscn" id="2_boom"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_1"]
+sky_top_color = Color(0.09, 0.11, 0.17, 1)
+sky_horizon_color = Color(0.26, 0.27, 0.31, 1)
+ground_bottom_color = Color(0.1, 0.1, 0.12, 1)
+ground_horizon_color = Color(0.26, 0.27, 0.31, 1)
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("SkyMaterial_1")
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 2
+sky = SubResource("Sky_1")
+tonemap_mode = 2
+glow_enabled = true
+glow_bloom = 0.15
+glow_hdr_threshold = 1.0
+fog_enabled = true
+fog_light_color = Color(0.2, 0.21, 0.25, 1)
+fog_density = 0.006
+
+[sub_resource type="StandardMaterial3D" id="MatGround"]
+albedo_color = Color(0.15, 0.16, 0.18, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="MatBlock"]
+albedo_color = Color(0.3, 0.29, 0.27, 1)
+roughness = 0.85
+
+[sub_resource type="PlaneMesh" id="GroundMesh"]
+size = Vector2(160, 160)
+
+[sub_resource type="BoxMesh" id="BlockMesh"]
+size = Vector3(3, 6, 3)
+
+[sub_resource type="BoxMesh" id="WallMesh"]
+size = Vector3(30, 8, 1.2)
+
+[node name="BoomRange" type="Node3D"]
+script = ExtResource("1_range")
+boom_scene = ExtResource("2_boom")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.766, 0.4546, -0.4546, 0, 0.7071, 0.7071, 0.643, -0.5417, 0.5417, 0, 30, 0)
+light_energy = 0.75
+light_color = Color(0.8, 0.84, 1, 1)
+shadow_enabled = true
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+mesh = SubResource("GroundMesh")
+surface_material_override/0 = SubResource("MatGround")
+
+[node name="BlockA" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 3, -16)
+mesh = SubResource("BlockMesh")
+surface_material_override/0 = SubResource("MatBlock")
+
+[node name="BlockB" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 3, -22)
+mesh = SubResource("BlockMesh")
+surface_material_override/0 = SubResource("MatBlock")
+
+[node name="BlockC" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 3, -9)
+mesh = SubResource("BlockMesh")
+surface_material_override/0 = SubResource("MatBlock")
+
+[node name="Backdrop" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, -30)
+mesh = SubResource("WallMesh")
+surface_material_override/0 = SubResource("MatBlock")
+
+[node name="Booms" type="Node3D" parent="."]
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, 12)
+fov = 70.0
+far = 300.0
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Hud" type="Control" parent="Ui"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Big" type="Label" parent="Ui/Hud"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = -120.0
+offset_right = 340.0
+offset_bottom = -38.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.94)
+theme_override_font_sizes/font_size = 56
+text = "x1.00"
+vertical_alignment = 1
+
+[node name="Detail" type="RichTextLabel" parent="Ui/Hud"]
+layout_mode = 1
+offset_left = 34.0
+offset_top = 28.0
+offset_right = 620.0
+offset_bottom = 230.0
+theme_override_colors/default_color = Color(1, 1, 1, 0.78)
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+scroll_active = false
+
+[node name="Crosshair" type="Label" parent="Ui/Hud"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -10.0
+offset_top = -14.0
+offset_right = 10.0
+offset_bottom = 14.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.5)
+theme_override_font_sizes/font_size = 20
+text = "+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Hint" type="Label" parent="Ui/Hud"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -560.0
+offset_top = -164.0
+offset_right = -26.0
+offset_bottom = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.55)
+theme_override_font_sizes/font_size = 14
+text = "LEFT CLICK or SPACE to set one off    WASD fly    SHIFT up
+
+1-5 toggle the layers    TAB switches style
+Z X C set time to x1  x0.25  x0.1
+
+slow it right down and watch the layers come apart.
+that is the whole probe."
+horizontal_alignment = 2
+vertical_alignment = 2

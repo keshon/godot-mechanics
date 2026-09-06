@@ -1,0 +1,260 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/02_orbit/Player.gd" id="1_player"]
+[ext_resource type="Script" path="res://probes/02_orbit/CameraRig.gd" id="2_rig"]
+[ext_resource type="Script" path="res://probes/02_orbit/Hud.gd" id="3_hud"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_1"]
+sky_top_color = Color(0.32, 0.4, 0.53, 1)
+sky_horizon_color = Color(0.62, 0.64, 0.67, 1)
+ground_bottom_color = Color(0.14, 0.15, 0.17, 1)
+ground_horizon_color = Color(0.62, 0.64, 0.67, 1)
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("SkyMaterial_1")
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 2
+sky = SubResource("Sky_1")
+tonemap_mode = 2
+ssao_enabled = true
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_1"]
+radius = 0.35
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_1"]
+radius = 0.35
+height = 1.7
+
+[sub_resource type="BoxMesh" id="BoxMesh_1"]
+size = Vector3(0.22, 0.22, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="MatFloor"]
+albedo_color = Color(0.29, 0.31, 0.34, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="MatWall"]
+albedo_color = Color(0.19, 0.2, 0.23, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="MatAccent"]
+albedo_color = Color(0.36, 0.52, 0.68, 1)
+roughness = 0.75
+
+[sub_resource type="StandardMaterial3D" id="MatBody"]
+albedo_color = Color(0.84, 0.78, 0.62, 1)
+roughness = 0.6
+
+[sub_resource type="StandardMaterial3D" id="MatNose"]
+albedo_color = Color(0.86, 0.36, 0.28, 1)
+roughness = 0.5
+
+[node name="Orbit" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.766, 0.4546, -0.4546, 0, 0.7071, 0.7071, 0.643, -0.5417, 0.5417, 0, 14, 0)
+light_energy = 1.1
+shadow_enabled = true
+
+[node name="Blockout" type="Node3D" parent="."]
+
+[node name="Floor" type="CSGBox3D" parent="Blockout"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+use_collision = true
+size = Vector3(50, 1, 50)
+material = SubResource("MatFloor")
+
+[node name="WallNorth" type="CSGBox3D" parent="Blockout"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -25)
+use_collision = true
+size = Vector3(50, 6, 1)
+material = SubResource("MatWall")
+
+[node name="WallSouth" type="CSGBox3D" parent="Blockout"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 25)
+use_collision = true
+size = Vector3(50, 6, 1)
+material = SubResource("MatWall")
+
+[node name="WallEast" type="CSGBox3D" parent="Blockout"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 3, 0)
+use_collision = true
+size = Vector3(1, 6, 50)
+material = SubResource("MatWall")
+
+[node name="WallWest" type="CSGBox3D" parent="Blockout"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25, 3, 0)
+use_collision = true
+size = Vector3(1, 6, 50)
+material = SubResource("MatWall")
+
+[node name="Pillar1" type="CSGBox3D" parent="Blockout"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2.5, -4)
+use_collision = true
+size = Vector3(0.9, 5, 0.9)
+material = SubResource("MatAccent")
+
+[node name="Pillar2" type="CSGBox3D" parent="Blockout"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.5, -4)
+use_collision = true
+size = Vector3(0.9, 5, 0.9)
+material = SubResource("MatAccent")
+
+[node name="Pillar3" type="CSGBox3D" parent="Blockout"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2.5, -8)
+use_collision = true
+size = Vector3(0.9, 5, 0.9)
+material = SubResource("MatAccent")
+
+[node name="Pillar4" type="CSGBox3D" parent="Blockout"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 2.5, -8)
+use_collision = true
+size = Vector3(0.9, 5, 0.9)
+material = SubResource("MatAccent")
+
+[node name="Pillar5" type="CSGBox3D" parent="Blockout"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.5, -11)
+use_collision = true
+size = Vector3(0.9, 5, 0.9)
+material = SubResource("MatAccent")
+
+[node name="Pillar6" type="CSGBox3D" parent="Blockout"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 2.5, -12)
+use_collision = true
+size = Vector3(0.9, 5, 0.9)
+material = SubResource("MatAccent")
+
+[node name="CorridorWest" type="CSGBox3D" parent="Blockout"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.6, 2, -8)
+use_collision = true
+size = Vector3(0.6, 4, 14)
+material = SubResource("MatWall")
+
+[node name="CorridorEast" type="CSGBox3D" parent="Blockout"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.4, 2, -8)
+use_collision = true
+size = Vector3(0.6, 4, 14)
+material = SubResource("MatWall")
+
+[node name="Overhang" type="CSGBox3D" parent="Blockout"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.8, -12)
+use_collision = true
+size = Vector3(3.4, 0.5, 6)
+material = SubResource("MatWall")
+
+[node name="Ramp" type="CSGBox3D" parent="Blockout"]
+transform = Transform3D(1, 0, 0, 0, 0.9659, -0.2588, 0, 0.2588, 0.9659, -16, -2.145, -14)
+use_collision = true
+size = Vector3(8, 6, 12)
+material = SubResource("MatAccent")
+
+[node name="Platform" type="CSGBox3D" parent="Blockout"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 1.986, -21.5)
+use_collision = true
+size = Vector3(8, 0.6, 5)
+material = SubResource("MatAccent")
+
+[node name="Player" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 12)
+script = ExtResource("1_player")
+
+[node name="Shape" type="CollisionShape3D" parent="Player"]
+shape = SubResource("CapsuleShape3D_1")
+
+[node name="Body" type="Node3D" parent="Player"]
+
+[node name="Torso" type="MeshInstance3D" parent="Player/Body"]
+mesh = SubResource("CapsuleMesh_1")
+surface_material_override/0 = SubResource("MatBody")
+
+[node name="Nose" type="MeshInstance3D" parent="Player/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, -0.42)
+mesh = SubResource("BoxMesh_1")
+surface_material_override/0 = SubResource("MatNose")
+
+[node name="CameraRig" type="Node3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+script = ExtResource("2_rig")
+
+[node name="Pitch" type="Node3D" parent="Player/CameraRig"]
+transform = Transform3D(1, 0, 0, 0, 0.9781, 0.2079, 0, -0.2079, 0.9781, 0, 0, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="Player/CameraRig/Pitch"]
+spring_length = 4.0
+shape = SubResource("SphereShape3D_1")
+
+[node name="Mount" type="Node3D" parent="Player/CameraRig/Pitch/SpringArm3D"]
+
+[node name="Camera3D" type="Camera3D" parent="Player/CameraRig/Pitch/SpringArm3D/Mount"]
+fov = 70.0
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Hud" type="Control" parent="Ui"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("3_hud")
+
+[node name="Speed" type="Label" parent="Ui/Hud"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = -122.0
+offset_right = 320.0
+offset_bottom = -32.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.94)
+theme_override_font_sizes/font_size = 64
+text = "0.0"
+vertical_alignment = 1
+
+[node name="Detail" type="RichTextLabel" parent="Ui/Hud"]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 34.0
+offset_top = 28.0
+offset_right = 430.0
+offset_bottom = 150.0
+theme_override_colors/default_color = Color(1, 1, 1, 0.72)
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+scroll_active = false
+
+[node name="Hint" type="Label" parent="Ui/Hud"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -500.0
+offset_top = -150.0
+offset_right = -26.0
+offset_bottom = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.55)
+theme_override_font_sizes/font_size = 14
+text = "WASD move    SPACE jump    RIGHT MOUSE aim    R respawn    ESC free the mouse
+
+the pillars and the narrow corridor squeeze the camera —
+watch the CAMERA line push in.
+hold aim and watch FACING collapse to zero."
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[connection signal="mode_changed" from="Player" to="Player/CameraRig" method="set_aiming"]

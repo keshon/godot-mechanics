@@ -1,0 +1,107 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/36_forest/Wood.gd" id="1_w"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.36, 0.52, 0.72, 1)
+sky_horizon_color = Color(0.74, 0.79, 0.78, 1)
+ground_horizon_color = Color(0.5, 0.53, 0.48, 1)
+ground_bottom_color = Color(0.24, 0.26, 0.22, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+tonemap_mode = 2
+tonemap_exposure = 1.0
+ambient_light_source = 2
+ambient_light_color = Color(0.2, 0.29, 0.44, 1)
+ambient_light_energy = 2.2
+adjustment_enabled = true
+adjustment_brightness = 1.1
+adjustment_contrast = 1.12
+adjustment_saturation = 1.14
+ssao_enabled = true
+ssao_radius = 1.6
+ssao_intensity = 2.2
+fog_enabled = true
+fog_light_color = Color(0.56, 0.61, 0.55, 1)
+fog_density = 0.0035
+fog_sky_affect = 0.35
+volumetric_fog_density = 0.014
+volumetric_fog_albedo = Color(0.85, 0.88, 0.8, 1)
+volumetric_fog_length = 90.0
+volumetric_fog_detail_spread = 1.6
+
+[sub_resource type="ParticleProcessMaterial" id="Debris"]
+emission_shape = 3
+emission_box_extents = Vector3(16, 11, 16)
+direction = Vector3(0.86, -0.12, 0.5)
+spread = 28.0
+initial_velocity_min = 10.0
+initial_velocity_max = 22.0
+gravity = Vector3(0, -2.4, 0)
+angular_velocity_min = -220.0
+angular_velocity_max = 220.0
+scale_min = 0.5
+scale_max = 1.3
+color = Color(0.78, 0.74, 0.46, 1)
+
+[sub_resource type="StandardMaterial3D" id="LeafMat"]
+albedo_color = Color(0.62, 0.6, 0.34, 1)
+roughness = 0.8
+cull_mode = 2
+vertex_color_use_as_albedo = true
+
+[sub_resource type="QuadMesh" id="Leaf"]
+material = SubResource("LeafMat")
+size = Vector2(0.34, 0.22)
+
+[node name="ForestScene" type="Node3D"]
+script = ExtResource("1_w")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.72, -0.5, 0.48, 0, 0.69, 0.72, -0.69, -0.52, 0.5, 0, 40, 0)
+light_energy = 3.4
+light_color = Color(1, 0.85, 0.52, 1)
+shadow_enabled = true
+directional_shadow_max_distance = 60.0
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+
+[node name="Cam" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+fov = 70.0
+near = 0.08
+far = 400.0
+
+[node name="Debris" type="GPUParticles3D" parent="."]
+amount = 1400
+lifetime = 2.6
+visibility_aabb = AABB(-40, -30, -40, 80, 60, 80)
+local_coords = false
+draw_order = 0
+process_material = SubResource("Debris")
+draw_pass_1 = SubResource("Leaf")
+
+[node name="Ui" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="Label" type="RichTextLabel" parent="Ui"]
+mouse_filter = 2
+offset_left = 26.0
+offset_top = 18.0
+offset_right = 900.0
+offset_bottom = 560.0
+bbcode_enabled = true
+scroll_active = false
+theme_override_colors/default_color = Color(1, 1, 1, 0.95)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/shadow_outline_size = 3

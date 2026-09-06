@@ -1,0 +1,78 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/33_land/Land.gd" id="1_l"]
+[ext_resource type="Script" path="res://probes/33_land/Ski.gd" id="2_s"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.24, 0.38, 0.62, 1)
+sky_horizon_color = Color(0.66, 0.71, 0.76, 1)
+ground_horizon_color = Color(0.66, 0.71, 0.76, 1)
+ground_bottom_color = Color(0.48, 0.5, 0.52, 1)
+sun_angle_max = 22.0
+sun_curve = 0.12
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+tonemap_mode = 2
+tonemap_exposure = 0.95
+ambient_light_source = 3
+ambient_light_energy = 1.0
+ssao_enabled = true
+fog_enabled = true
+fog_light_color = Color(0.68, 0.74, 0.82, 1)
+fog_density = 0.0035
+fog_sky_affect = 0.0
+glow_enabled = true
+glow_intensity = 0.5
+glow_hdr_threshold = 1.1
+
+[sub_resource type="CapsuleShape3D" id="Body"]
+radius = 0.4
+height = 1.8
+
+[node name="LandScene" type="Node3D"]
+script = ExtResource("1_l")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.8, -0.42, 0.43, 0, 0.72, 0.7, -0.6, -0.56, 0.57, 0, 60, 0)
+light_energy = 1.15
+light_color = Color(1, 0.96, 0.88, 1)
+shadow_enabled = true
+directional_shadow_max_distance = 180.0
+
+[node name="Skier" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 40, 0)
+script = ExtResource("2_s")
+
+[node name="Col" type="CollisionShape3D" parent="Skier"]
+shape = SubResource("Body")
+
+[node name="Cam" type="Camera3D" parent="Skier"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+fov = 75.0
+near = 0.1
+far = 900.0
+
+[node name="Ui" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="Label" type="RichTextLabel" parent="Ui"]
+mouse_filter = 2
+theme_override_colors/default_color = Color(1, 1, 1, 0.95)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/shadow_outline_size = 3
+offset_left = 26.0
+offset_top = 20.0
+offset_right = 780.0
+offset_bottom = 600.0
+bbcode_enabled = true
+scroll_active = false

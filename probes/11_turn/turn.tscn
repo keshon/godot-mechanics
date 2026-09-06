@@ -1,0 +1,119 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/11_turn/World.gd" id="1_world"]
+[ext_resource type="PackedScene" path="res://probes/11_turn/Actor.tscn" id="2_actor"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_1"]
+sky_top_color = Color(0.16, 0.18, 0.24, 1)
+sky_horizon_color = Color(0.34, 0.35, 0.4, 1)
+ground_bottom_color = Color(0.1, 0.1, 0.12, 1)
+ground_horizon_color = Color(0.34, 0.35, 0.4, 1)
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("SkyMaterial_1")
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 2
+sky = SubResource("Sky_1")
+tonemap_mode = 2
+ssao_enabled = true
+ssao_intensity = 1.0
+ambient_light_source = 3
+ambient_light_energy = 0.55
+
+[sub_resource type="StandardMaterial3D" id="MatTile"]
+albedo_color = Color(0.56, 0.58, 0.62, 1)
+roughness = 0.95
+vertex_color_use_as_albedo = true
+
+[sub_resource type="StandardMaterial3D" id="MatWall"]
+albedo_color = Color(0.72, 0.75, 0.8, 1)
+roughness = 0.85
+vertex_color_use_as_albedo = true
+
+[node name="TurnScene" type="Node3D"]
+script = ExtResource("1_world")
+actor_scene = ExtResource("2_actor")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-64, -38, 0)
+light_energy = 1.15
+shadow_enabled = true
+
+[node name="Tiles" type="MultiMeshInstance3D" parent="."]
+material_override = SubResource("MatTile")
+
+[node name="Walls" type="MultiMeshInstance3D" parent="."]
+material_override = SubResource("MatWall")
+
+[node name="Actors" type="Node3D" parent="."]
+
+[node name="Camera" type="Camera3D" parent="."]
+projection = 1
+size = 18.0
+far = 300.0
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Hud" type="Control" parent="Ui"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Big" type="Label" parent="Ui/Hud"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = -116.0
+offset_right = 460.0
+offset_bottom = -40.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.94)
+theme_override_font_sizes/font_size = 48
+text = "TURN 0"
+vertical_alignment = 1
+
+[node name="Detail" type="RichTextLabel" parent="Ui/Hud"]
+layout_mode = 1
+offset_left = 34.0
+offset_top = 28.0
+offset_right = 520.0
+offset_bottom = 280.0
+theme_override_colors/default_color = Color(1, 1, 1, 0.8)
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+scroll_active = false
+
+[node name="Hint" type="Label" parent="Ui/Hud"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -600.0
+offset_top = -186.0
+offset_right = -26.0
+offset_bottom = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.55)
+theme_override_font_sizes/font_size = 14
+text = "WASD steps one cell (hold two for a diagonal)    SPACE waits
+walk into somebody to shove them    WHEEL zooms    R resets
+
+T is the whole point: it makes input wait for the animation.
+hold a direction with T off, then with T on.
+
+the map is a block of text at the top of World.gd. edit it, press R."
+horizontal_alignment = 2
+vertical_alignment = 2

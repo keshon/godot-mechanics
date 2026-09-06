@@ -1,0 +1,134 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://probes/38_tyre/Pad.gd" id="1_pad"]
+
+[sub_resource type="PlaneMesh" id="GroundMesh"]
+size = Vector2(400, 400)
+
+[sub_resource type="BoxShape3D" id="GroundShape"]
+size = Vector3(400, 2, 400)
+
+[sub_resource type="StandardMaterial3D" id="MarkBigMat"]
+albedo_color = Color(0.9, 0.6, 0.15, 1)
+
+[sub_resource type="StandardMaterial3D" id="MarkSmallMat"]
+albedo_color = Color(0.85, 0.85, 0.8, 1)
+
+[sub_resource type="BoxMesh" id="MarkBig"]
+material = SubResource("MarkBigMat")
+size = Vector3(3, 0.02, 0.3)
+
+[sub_resource type="BoxMesh" id="MarkSmall"]
+material = SubResource("MarkSmallMat")
+size = Vector3(3, 0.02, 0.3)
+
+[node name="Pad" type="Node3D"]
+script = ExtResource("1_pad")
+
+[node name="Asphalt" type="MeshInstance3D" parent="."]
+mesh = SubResource("GroundMesh")
+
+[node name="Body" type="StaticBody3D" parent="Asphalt"]
+
+[node name="Shape" type="CollisionShape3D" parent="Asphalt/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+shape = SubResource("GroundShape")
+
+[node name="Marks" type="Node3D" parent="."]
+
+[node name="M00" type="MeshInstance3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.01, 40.0)
+mesh = SubResource("MarkBig")
+
+[node name="M01" type="MeshInstance3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.01, 30.0)
+mesh = SubResource("MarkSmall")
+
+[node name="M02" type="MeshInstance3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.01, 20.0)
+mesh = SubResource("MarkSmall")
+
+[node name="M03" type="MeshInstance3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.01, 10.0)
+mesh = SubResource("MarkSmall")
+
+[node name="M04" type="MeshInstance3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.01, 0.0)
+mesh = SubResource("MarkSmall")
+
+[node name="M05" type="MeshInstance3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.01, -10.0)
+mesh = SubResource("MarkBig")
+
+[node name="M06" type="MeshInstance3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.01, -20.0)
+mesh = SubResource("MarkSmall")
+
+[node name="M07" type="MeshInstance3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.01, -30.0)
+mesh = SubResource("MarkSmall")
+
+[node name="M08" type="MeshInstance3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.01, -40.0)
+mesh = SubResource("MarkSmall")
+
+[node name="M09" type="MeshInstance3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.01, -50.0)
+mesh = SubResource("MarkSmall")
+
+[node name="M10" type="MeshInstance3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.01, -60.0)
+mesh = SubResource("MarkBig")
+
+[node name="M11" type="MeshInstance3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.01, -70.0)
+mesh = SubResource("MarkSmall")
+
+[node name="M12" type="MeshInstance3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.01, -80.0)
+mesh = SubResource("MarkSmall")
+
+[node name="M13" type="MeshInstance3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.01, -90.0)
+mesh = SubResource("MarkSmall")
+
+[node name="M14" type="MeshInstance3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.01, -100.0)
+mesh = SubResource("MarkSmall")
+
+[node name="M15" type="MeshInstance3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.01, -110.0)
+mesh = SubResource("MarkBig")
+
+[node name="M16" type="MeshInstance3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.01, -120.0)
+mesh = SubResource("MarkSmall")
+
+[node name="M17" type="MeshInstance3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.01, -130.0)
+mesh = SubResource("MarkSmall")
+
+[node name="M18" type="MeshInstance3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.01, -140.0)
+mesh = SubResource("MarkSmall")
+
+[node name="M19" type="MeshInstance3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.01, -150.0)
+mesh = SubResource("MarkSmall")
+
+[node name="M20" type="MeshInstance3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.01, -160.0)
+mesh = SubResource("MarkBig")
+
+[node name="M21" type="MeshInstance3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.01, -170.0)
+mesh = SubResource("MarkSmall")
+
+[node name="M22" type="MeshInstance3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.01, -180.0)
+mesh = SubResource("MarkSmall")
+
+[node name="M23" type="MeshInstance3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.01, -190.0)
+mesh = SubResource("MarkSmall")
+

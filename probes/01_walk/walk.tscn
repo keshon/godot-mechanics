@@ -1,0 +1,238 @@
+[gd_scene format=3 uid="uid://6qa1raaspw0s"]
+
+[ext_resource type="Script" uid="uid://iib6enmj5vcl" path="res://probes/01_walk/Player.gd" id="1_player"]
+[ext_resource type="Script" uid="uid://btny1s387ga4e" path="res://probes/01_walk/Hud.gd" id="2_hud"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_1"]
+sky_top_color = Color(0.38, 0.47, 0.6, 1)
+sky_horizon_color = Color(0.66, 0.68, 0.7, 1)
+ground_bottom_color = Color(0.16, 0.17, 0.19, 1)
+ground_horizon_color = Color(0.66, 0.68, 0.7, 1)
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("SkyMaterial_1")
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 2
+sky = SubResource("Sky_1")
+tonemap_mode = 2
+ssao_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="MatFloor"]
+albedo_color = Color(0.28, 0.3, 0.33, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="MatWall"]
+albedo_color = Color(0.19, 0.2, 0.23, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="MatStripe"]
+albedo_color = Color(0.78, 0.8, 0.83, 1)
+roughness = 0.7
+
+[sub_resource type="StandardMaterial3D" id="MatAccent"]
+albedo_color = Color(0.36, 0.52, 0.68, 1)
+roughness = 0.75
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
+radius = 0.4
+height = 1.8
+
+[node name="Walk" type="Node3D" unique_id=80654243]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=38428189]
+environment = SubResource("Environment_1")
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=1683868128]
+transform = Transform3D(0.766, 0.4546, -0.4546, 0, 0.7071, 0.7071, 0.643, -0.5417, 0.5417, 0, 12, 0)
+light_energy = 1.1
+shadow_enabled = true
+
+[node name="Blockout" type="Node3D" parent="." unique_id=492480971]
+
+[node name="Floor" type="CSGBox3D" parent="Blockout" unique_id=2110580584]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+use_collision = true
+size = Vector3(60, 1, 60)
+material = SubResource("MatFloor")
+
+[node name="WallNorth" type="CSGBox3D" parent="Blockout" unique_id=1656957875]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -30.410538)
+use_collision = true
+size = Vector3(60, 6, 1)
+material = SubResource("MatWall")
+
+[node name="WallSouth" type="CSGBox3D" parent="Blockout" unique_id=190741325]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 30)
+use_collision = true
+size = Vector3(60, 6, 1)
+material = SubResource("MatWall")
+
+[node name="WallEast" type="CSGBox3D" parent="Blockout" unique_id=133457294]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 3, 0)
+use_collision = true
+size = Vector3(1, 6, 60)
+material = SubResource("MatWall")
+
+[node name="WallWest" type="CSGBox3D" parent="Blockout" unique_id=1002921925]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 3, 0)
+use_collision = true
+size = Vector3(1, 6, 60)
+material = SubResource("MatWall")
+
+[node name="Stripe1" type="CSGBox3D" parent="Blockout" unique_id=227709615]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 24)
+size = Vector3(56, 0.06, 0.5)
+material = SubResource("MatStripe")
+
+[node name="Stripe2" type="CSGBox3D" parent="Blockout" unique_id=1804935102]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 16)
+size = Vector3(56, 0.06, 0.5)
+material = SubResource("MatStripe")
+
+[node name="Stripe3" type="CSGBox3D" parent="Blockout" unique_id=1164895757]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 8)
+size = Vector3(56, 0.06, 0.5)
+material = SubResource("MatStripe")
+
+[node name="Stripe4" type="CSGBox3D" parent="Blockout" unique_id=1044765136]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+size = Vector3(56, 0.06, 0.5)
+material = SubResource("MatStripe")
+
+[node name="Stripe5" type="CSGBox3D" parent="Blockout" unique_id=1031291660]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, -8)
+size = Vector3(56, 0.06, 0.5)
+material = SubResource("MatStripe")
+
+[node name="PillarL1" type="CSGBox3D" parent="Blockout" unique_id=1124598386]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 2.5, 16)
+use_collision = true
+size = Vector3(0.8, 5, 0.8)
+material = SubResource("MatAccent")
+
+[node name="PillarL2" type="CSGBox3D" parent="Blockout" unique_id=1922377542]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 2.5, 4)
+use_collision = true
+size = Vector3(0.8, 5, 0.8)
+material = SubResource("MatAccent")
+
+[node name="PillarL3" type="CSGBox3D" parent="Blockout" unique_id=433884997]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 2.5, -8)
+use_collision = true
+size = Vector3(0.8, 5, 0.8)
+material = SubResource("MatAccent")
+
+[node name="PillarR1" type="CSGBox3D" parent="Blockout" unique_id=1550986129]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 2.5, 16)
+use_collision = true
+size = Vector3(0.8, 5, 0.8)
+material = SubResource("MatAccent")
+
+[node name="PillarR2" type="CSGBox3D" parent="Blockout" unique_id=1257942855]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 2.5, 4)
+use_collision = true
+size = Vector3(0.8, 5, 0.8)
+material = SubResource("MatAccent")
+
+[node name="PillarR3" type="CSGBox3D" parent="Blockout" unique_id=974883136]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 2.5, -8)
+use_collision = true
+size = Vector3(0.8, 5, 0.8)
+material = SubResource("MatAccent")
+
+[node name="Ramp" type="CSGBox3D" parent="Blockout" unique_id=1264086388]
+transform = Transform3D(1, 0, 0, 0, 0.9659, -0.2588, 0, 0.2588, 0.9659, 0, -1.708, -14.8)
+use_collision = true
+size = Vector3(10, 6, 16)
+material = SubResource("MatAccent")
+
+[node name="Platform" type="CSGBox3D" parent="Blockout" unique_id=1220171174]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.94, -23.990143)
+use_collision = true
+size = Vector3(10, 0.6, 4.4802856)
+material = SubResource("MatAccent")
+
+[node name="IslandNear" type="CSGBox3D" parent="Blockout" unique_id=777248886]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 2.94, -25.75)
+use_collision = true
+size = Vector3(6, 0.6, 6)
+material = SubResource("MatAccent")
+
+[node name="IslandFar" type="CSGBox3D" parent="Blockout" unique_id=1798384748]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 2.94, -25.75)
+use_collision = true
+size = Vector3(6, 0.6, 6)
+material = SubResource("MatAccent")
+
+[node name="Player" type="CharacterBody3D" parent="." unique_id=1096012227]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 20)
+script = ExtResource("1_player")
+
+[node name="Shape" type="CollisionShape3D" parent="Player" unique_id=1731104774]
+shape = SubResource("CapsuleShape3D_1")
+
+[node name="Camera3D" type="Camera3D" parent="Player" unique_id=303182075]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+fov = 90.0
+
+[node name="Ui" type="CanvasLayer" parent="." unique_id=1766086738]
+
+[node name="Hud" type="Control" parent="Ui" unique_id=1841247127]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("2_hud")
+
+[node name="Speed" type="Label" parent="Ui/Hud" unique_id=1915887085]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = -122.0
+offset_right = 320.0
+offset_bottom = -32.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.94)
+theme_override_font_sizes/font_size = 64
+text = "0.0"
+vertical_alignment = 1
+
+[node name="Detail" type="RichTextLabel" parent="Ui/Hud" unique_id=1870637263]
+layout_mode = 1
+offset_left = 34.0
+offset_top = 28.0
+offset_right = 390.0
+offset_bottom = 150.0
+theme_override_colors/default_color = Color(1, 1, 1, 0.72)
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+scroll_active = false
+
+[node name="Hint" type="Label" parent="Ui/Hud" unique_id=431725094]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -470.0
+offset_top = -140.0
+offset_right = -26.0
+offset_bottom = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.55)
+theme_override_font_sizes/font_size = 14
+text = "WASD move    SPACE jump    R respawn    ESC free the mouse
+
+up the ramp, then two islands to the right.
+the second gap wants every bit of speed you can
+keep through the first landing — watch LAST JUMP"
+horizontal_alignment = 2
+vertical_alignment = 2

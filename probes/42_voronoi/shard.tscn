@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://c42vor0n0i002"]
+
+[sub_resource type="PhysicsMaterial" id="Rubble"]
+friction = 0.95
+bounce = 0.02
+
+[node name="Shard" type="RigidBody3D" groups=["shard"]]
+physics_material_override = SubResource("Rubble")
+
+[node name="Shape" type="CollisionShape3D" parent="."]
+
+[node name="Mesh" type="MeshInstance3D" parent="."]

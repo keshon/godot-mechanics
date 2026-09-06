@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://0i0eq2o6bvqm"
+path="res://.godot/imported/spectrum_modulate.glsl-29604150d9d2b437e0a4f4dd87b569c4.res"
+
+[deps]
+
+source_file="res://addons/ocean_waves_fft/shaders/compute/spectrum_modulate.glsl"
+dest_files=["res://.godot/imported/spectrum_modulate.glsl-29604150d9d2b437e0a4f4dd87b569c4.res"]
+
+[params]
+

@@ -1,0 +1,180 @@
+[gd_scene format=3]
+
+[ext_resource type="Shader" path="res://probes/30_gun/fx.gdshader" id="1_h2jub"]
+
+[sub_resource type="ProceduralSkyMaterial" id="VmSkyMat"]
+sky_top_color = Color(0.16, 0.18, 0.23, 1)
+sky_horizon_color = Color(0.12, 0.12, 0.14, 1)
+ground_bottom_color = Color(0.05, 0.048, 0.045, 1)
+ground_horizon_color = Color(0.09, 0.085, 0.08, 1)
+
+[sub_resource type="Sky" id="VmSky"]
+sky_material = SubResource("VmSkyMat")
+
+[sub_resource type="Environment" id="VmEnv"]
+sky = SubResource("VmSky")
+ambient_light_source = 3
+ambient_light_energy = 0.22
+reflected_light_source = 2
+tonemap_mode = 2
+tonemap_exposure = 0.6
+glow_enabled = true
+glow_intensity = 1.1
+glow_bloom = 0.15
+glow_hdr_threshold = 0.85
+
+[sub_resource type="StandardMaterial3D" id="MatGun"]
+albedo_color = Color(0.26, 0.27, 0.3, 1)
+metallic = 0.45
+roughness = 0.5
+
+[sub_resource type="BoxMesh" id="GunUpper"]
+size = Vector3(0.175, 0.205, 0.38)
+
+[sub_resource type="StandardMaterial3D" id="MatGunAccent"]
+albedo_color = Color(0.5, 0.22, 0.09, 1)
+metallic = 0.4
+roughness = 0.45
+
+[sub_resource type="BoxMesh" id="GunAccent"]
+size = Vector3(0.134, 0.05, 0.16)
+
+[sub_resource type="StandardMaterial3D" id="MatGunDark"]
+albedo_color = Color(0.12, 0.12, 0.14, 1)
+metallic = 0.8
+roughness = 0.26
+
+[sub_resource type="BoxMesh" id="GunHand"]
+size = Vector3(0.128, 0.145, 0.3)
+
+[sub_resource type="BoxMesh" id="GunRail"]
+size = Vector3(0.075, 0.045, 0.52)
+
+[sub_resource type="BoxMesh" id="GunOptic"]
+size = Vector3(0.085, 0.095, 0.15)
+
+[sub_resource type="CylinderMesh" id="GunMuzzle"]
+top_radius = 0.082
+bottom_radius = 0.092
+height = 0.2
+radial_segments = 16
+
+[sub_resource type="BoxMesh" id="GunMag"]
+size = Vector3(0.115, 0.25, 0.15)
+
+[sub_resource type="BoxMesh" id="GunGrip"]
+size = Vector3(0.075, 0.19, 0.1)
+
+[sub_resource type="ShaderMaterial" id="MatFlash"]
+render_priority = 0
+shader = ExtResource("1_h2jub")
+shader_parameter/mode = 0
+shader_parameter/age = 0.0
+shader_parameter/hider = 0.0
+shader_parameter/seed = 0.0
+shader_parameter/gain = 4.2
+shader_parameter/barrel_screen = Vector2(1, 0)
+shader_parameter/cone_len = 2.1
+shader_parameter/fat = 0.88
+shader_parameter/core_colour = Color(1, 0.93, 0.66, 1)
+shader_parameter/gas_colour = Color(1, 0.48, 0.13, 1)
+
+[sub_resource type="QuadMesh" id="FlashMesh"]
+
+[node name="Hands" type="CanvasLayer" unique_id=2026066220]
+layer = 0
+
+[node name="Wrap" type="SubViewportContainer" parent="." unique_id=1283435931]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+stretch = true
+
+[node name="Sub" type="SubViewport" parent="Wrap" unique_id=1051896185]
+own_world_3d = true
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(1600, 900)
+render_target_update_mode = 4
+
+[node name="VmWorld" type="WorldEnvironment" parent="Wrap/Sub" unique_id=771212718]
+environment = SubResource("VmEnv")
+
+[node name="WeapCam" type="Camera3D" parent="Wrap/Sub" unique_id=446516670]
+fov = 50.0
+near = 0.02
+far = 12.0
+
+[node name="KeyL" type="DirectionalLight3D" parent="Wrap/Sub" unique_id=929857946]
+transform = Transform3D(0.77, -0.38, 0.51, 0, 0.8, 0.6, -0.64, -0.46, 0.62, 0, 0, 0)
+light_color = Color(1, 0.94, 0.86, 1)
+light_energy = 1.25
+
+[node name="FillL" type="DirectionalLight3D" parent="Wrap/Sub" unique_id=1807416016]
+transform = Transform3D(-0.72, 0.31, -0.62, 0, 0.89, 0.45, 0.69, 0.32, -0.65, 0, 0, 0)
+light_color = Color(0.5, 0.62, 0.92, 1)
+light_energy = 0.55
+
+[node name="RimL" type="DirectionalLight3D" parent="Wrap/Sub" unique_id=300504150]
+transform = Transform3D(-0.3, -0.35, -0.89, 0, 0.93, -0.37, 0.95, -0.11, -0.28, 0, 0, 0)
+light_color = Color(1, 0.72, 0.45, 1)
+light_energy = 1.3
+
+[node name="Weapon" type="Node3D" parent="Wrap/Sub" unique_id=1058612057]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.24, -0.24, -0.62)
+
+[node name="Upper" type="MeshInstance3D" parent="Wrap/Sub/Weapon" unique_id=296645356]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.04)
+material_override = SubResource("MatGun")
+mesh = SubResource("GunUpper")
+
+[node name="Accent" type="MeshInstance3D" parent="Wrap/Sub/Weapon" unique_id=7529903]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.048, -0.32)
+material_override = SubResource("MatGunAccent")
+mesh = SubResource("GunAccent")
+
+[node name="Hand" type="MeshInstance3D" parent="Wrap/Sub/Weapon" unique_id=989742185]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.012, -0.32)
+material_override = SubResource("MatGunDark")
+mesh = SubResource("GunHand")
+
+[node name="Rail" type="MeshInstance3D" parent="Wrap/Sub/Weapon" unique_id=1022245642]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.122, -0.16)
+material_override = SubResource("MatGunDark")
+mesh = SubResource("GunRail")
+
+[node name="Optic" type="MeshInstance3D" parent="Wrap/Sub/Weapon" unique_id=411005412]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.194, -0.02)
+material_override = SubResource("MatGun")
+mesh = SubResource("GunOptic")
+
+[node name="Brake" type="MeshInstance3D" parent="Wrap/Sub/Weapon" unique_id=1116639755]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, -0.012, -0.56)
+material_override = SubResource("MatGunDark")
+mesh = SubResource("GunMuzzle")
+
+[node name="Mag" type="MeshInstance3D" parent="Wrap/Sub/Weapon" unique_id=2053101329]
+transform = Transform3D(1, 0, 0, 0, 0.97, 0.24, 0, -0.24, 0.97, 0, -0.18, 0.14)
+material_override = SubResource("MatGunDark")
+mesh = SubResource("GunMag")
+
+[node name="Grip" type="MeshInstance3D" parent="Wrap/Sub/Weapon" unique_id=1270592502]
+transform = Transform3D(1, 0, 0, 0, 0.92, -0.39, 0, 0.39, 0.92, 0, -0.17, 0)
+material_override = SubResource("MatGunDark")
+mesh = SubResource("GunGrip")
+
+[node name="Muzzle" type="Marker3D" parent="Wrap/Sub/Weapon" unique_id=1209433592]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.012, -0.66)
+
+[node name="Flash" type="MeshInstance3D" parent="Wrap/Sub/Weapon/Muzzle" unique_id=1766453313]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.08)
+visible = false
+material_override = SubResource("MatFlash")
+cast_shadow = 0
+mesh = SubResource("FlashMesh")
+
+[node name="Port" type="Marker3D" parent="Wrap/Sub/Weapon" unique_id=826302206]
+transform = Transform3D(0.5, 0, 0.87, 0, 1, 0, -0.87, 0, 0.5, 0.09, 0.04, 0.02)

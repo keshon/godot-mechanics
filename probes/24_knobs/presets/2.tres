@@ -1,0 +1,27 @@
+[gd_resource type="ShaderMaterial" format=4]
+
+[ext_resource type="Shader" path="res://addons/ocean_waves_fft/shaders/spatial/water.gdshader" id="1_a35ku"]
+
+[resource]
+render_priority = 1
+shader = ExtResource("1_a35ku")
+shader_parameter/roughness = 0.65
+shader_parameter/sky_strip_on = 0.0
+shader_parameter/sky_strip_gain = 1.0
+shader_parameter/water_absorb = Vector3(0.55, 0.22, 0.14)
+shader_parameter/transparency_on = 0.0
+shader_parameter/refraction = 0.3
+shader_parameter/haze_dist = 1100.0
+shader_parameter/haze_max = 0.9
+shader_parameter/normal_strength = 1.0
+shader_parameter/sss_gain = 1.0
+shader_parameter/diffuse_tint = 0.0
+shader_parameter/depth_color_on = 0.0
+shader_parameter/shallow_color = Color(0.055, 0.34, 0.31, 1)
+shader_parameter/shallow_depth = 8.0
+shader_parameter/shore_foam = 1.8
+shader_parameter/normal_fade = 0.0175
+shader_parameter/map_scales = PackedVector4Array(0.0113636, 0.0113636, 1, 1, 0.0175439, 0.0175439, 0.75, 1, 0.0625, 0.0625, 0, 0.25)
+shader_parameter/ship_n = 0
+shader_parameter/ship_pos = PackedVector4Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/ship_dim = PackedVector4Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)

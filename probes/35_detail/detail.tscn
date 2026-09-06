@@ -1,0 +1,61 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/35_detail/Detail.gd" id="1_d"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.26, 0.42, 0.68, 1)
+sky_horizon_color = Color(0.72, 0.78, 0.83, 1)
+ground_horizon_color = Color(0.6, 0.6, 0.58, 1)
+ground_bottom_color = Color(0.35, 0.34, 0.32, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+tonemap_mode = 2
+tonemap_exposure = 0.95
+ambient_light_source = 3
+ambient_light_energy = 0.9
+ssao_enabled = true
+ssao_radius = 1.2
+ssao_intensity = 1.4
+
+[node name="DetailScene" type="Node3D"]
+script = ExtResource("1_d")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.87, -0.35, 0.35, 0, 0.71, 0.71, -0.5, -0.62, 0.61, 0, 60, 0)
+light_energy = 1.25
+light_color = Color(1, 0.96, 0.89, 1)
+shadow_enabled = true
+directional_shadow_max_distance = 120.0
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+
+[node name="Cam" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 40)
+fov = 72.0
+near = 0.05
+far = 500.0
+
+[node name="Ui" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="Label" type="RichTextLabel" parent="Ui"]
+mouse_filter = 2
+offset_left = 26.0
+offset_top = 18.0
+offset_right = 880.0
+offset_bottom = 560.0
+bbcode_enabled = true
+scroll_active = false
+theme_override_colors/default_color = Color(1, 1, 1, 0.95)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/shadow_outline_size = 3

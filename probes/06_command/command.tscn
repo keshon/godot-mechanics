@@ -1,0 +1,164 @@
+[gd_scene format=3 uid="uid://d4gio0wvjvk4p"]
+
+[ext_resource type="Script" uid="uid://3a5oiiappg22" path="res://probes/06_command/Field.gd" id="1_field"]
+[ext_resource type="PackedScene" path="res://probes/06_command/Unit.tscn" id="2_unit"]
+[ext_resource type="Script" uid="uid://c1nq8y7o7sees" path="res://probes/06_command/Hud.gd" id="3_hud"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_1"]
+sky_top_color = Color(0.28, 0.35, 0.48, 1)
+sky_horizon_color = Color(0.6, 0.62, 0.66, 1)
+ground_bottom_color = Color(0.13, 0.14, 0.16, 1)
+ground_horizon_color = Color(0.6, 0.62, 0.66, 1)
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("SkyMaterial_1")
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 2
+sky = SubResource("Sky_1")
+tonemap_mode = 2
+ssao_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="MatGround"]
+albedo_color = Color(0.29, 0.31, 0.33, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="MatStripe"]
+albedo_color = Color(0.36, 0.39, 0.42, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="MatBlock"]
+albedo_color = Color(0.42, 0.5, 0.6, 1)
+roughness = 0.8
+
+[node name="CommandScene" type="Node3D" unique_id=934950448]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=922456967]
+environment = SubResource("Environment_1")
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=1760930184]
+transform = Transform3D(0.766, 0.4546, -0.4546, 0, 0.7071, 0.7071, 0.643, -0.5417, 0.5417, 0, 40, 0)
+light_energy = 1.15
+shadow_enabled = true
+
+[node name="World" type="Node3D" parent="." unique_id=1045117619]
+
+[node name="Ground" type="CSGBox3D" parent="World" unique_id=2143923935]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+size = Vector3(160, 0.5, 160)
+material = SubResource("MatGround")
+
+[node name="StripeA" type="CSGBox3D" parent="World" unique_id=1052329527]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, -30)
+size = Vector3(150, 0.06, 0.4)
+material = SubResource("MatStripe")
+
+[node name="StripeB" type="CSGBox3D" parent="World" unique_id=584759739]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 30)
+size = Vector3(150, 0.06, 0.4)
+material = SubResource("MatStripe")
+
+[node name="StripeC" type="CSGBox3D" parent="World" unique_id=1167144732]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 0.02, 0)
+size = Vector3(0.4, 0.06, 150)
+material = SubResource("MatStripe")
+
+[node name="StripeD" type="CSGBox3D" parent="World" unique_id=1363529328]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0.02, 0)
+size = Vector3(0.4, 0.06, 150)
+material = SubResource("MatStripe")
+
+[node name="BlockA" type="CSGBox3D" parent="World" unique_id=1215503437]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 2, -18)
+size = Vector3(8, 4, 8)
+material = SubResource("MatBlock")
+
+[node name="BlockB" type="CSGBox3D" parent="World" unique_id=675066967]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 1.5, 14)
+size = Vector3(10, 3, 6)
+material = SubResource("MatBlock")
+
+[node name="BlockC" type="CSGBox3D" parent="World" unique_id=113710282]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1, -34)
+size = Vector3(6, 2, 12)
+material = SubResource("MatBlock")
+
+[node name="Units" type="Node3D" parent="World" unique_id=860026633]
+
+[node name="Field" type="Node3D" parent="." unique_id=1982100232]
+process_mode = 3
+script = ExtResource("1_field")
+unit_scene = ExtResource("2_unit")
+unit_count = 2000
+
+[node name="CamPivot" type="Node3D" parent="Field" unique_id=1646070307]
+
+[node name="Camera3D" type="Camera3D" parent="Field/CamPivot" unique_id=1901421850]
+transform = Transform3D(1, 0, 0, 0, 0.81, 0.58, 0, -0.58, 0.81, 0, 22, 15.8)
+fov = 55.0
+far = 500.0
+
+[node name="Ui" type="CanvasLayer" parent="." unique_id=1693766594]
+process_mode = 3
+
+[node name="Hud" type="Control" parent="Ui" unique_id=525054621]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("3_hud")
+
+[node name="Big" type="Label" parent="Ui/Hud" unique_id=917605671]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = -126.0
+offset_right = 320.0
+offset_bottom = -36.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.94)
+theme_override_font_sizes/font_size = 64
+text = "0"
+vertical_alignment = 1
+
+[node name="Detail" type="RichTextLabel" parent="Ui/Hud" unique_id=1217533446]
+layout_mode = 1
+offset_left = 34.0
+offset_top = 28.0
+offset_right = 500.0
+offset_bottom = 190.0
+theme_override_colors/default_color = Color(1, 1, 1, 0.75)
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+scroll_active = false
+
+[node name="Hint" type="Label" parent="Ui/Hud" unique_id=1672865594]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -560.0
+offset_top = -176.0
+offset_right = -26.0
+offset_bottom = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.55)
+theme_override_font_sizes/font_size = 14
+text = "WASD pan    WHEEL zoom    LEFT click or drag to select
+RIGHT click to order    SHIFT+RIGHT to add a waypoint
+SHIFT+LEFT to add to the selection
+
+SPACE pauses the world.    1 / 2 / 3 set time to x1 x2 x4
+
+while paused: select, drag a box, lay out a whole route.
+then unpause and watch it run."
+horizontal_alignment = 2
+vertical_alignment = 2

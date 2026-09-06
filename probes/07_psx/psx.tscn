@@ -1,0 +1,249 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/07_psx/Look.gd" id="1_look"]
+[ext_resource type="Shader" path="res://probes/07_psx/psx.gdshader" id="2_psx"]
+[ext_resource type="Shader" path="res://probes/07_psx/post.gdshader" id="3_post"]
+[ext_resource type="Script" path="res://probes/07_psx/Hud.gd" id="4_hud"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_1"]
+sky_top_color = Color(0.16, 0.18, 0.26, 1)
+sky_horizon_color = Color(0.42, 0.36, 0.34, 1)
+ground_bottom_color = Color(0.1, 0.1, 0.12, 1)
+ground_horizon_color = Color(0.42, 0.36, 0.34, 1)
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("SkyMaterial_1")
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 2
+sky = SubResource("Sky_1")
+tonemap_mode = 2
+fog_enabled = true
+fog_light_color = Color(0.36, 0.32, 0.33, 1)
+fog_density = 0.015
+fog_sky_affect = 0.4
+
+[sub_resource type="ShaderMaterial" id="MatFloor"]
+shader = ExtResource("2_psx")
+shader_parameter/snap_vertices = true
+shader_parameter/affine_uv = true
+shader_parameter/uv_scale = Vector2(9, 9)
+shader_parameter/tint = Color(0.62, 0.6, 0.56, 1)
+
+[sub_resource type="ShaderMaterial" id="MatWall"]
+shader = ExtResource("2_psx")
+shader_parameter/snap_vertices = true
+shader_parameter/affine_uv = true
+shader_parameter/uv_scale = Vector2(8, 1)
+shader_parameter/tint = Color(0.52, 0.42, 0.38, 1)
+
+[sub_resource type="ShaderMaterial" id="MatProp"]
+shader = ExtResource("2_psx")
+shader_parameter/snap_vertices = true
+shader_parameter/affine_uv = true
+shader_parameter/uv_scale = Vector2(2, 2)
+shader_parameter/tint = Color(0.38, 0.52, 0.5, 1)
+
+[sub_resource type="ShaderMaterial" id="MatPost"]
+shader = ExtResource("3_post")
+shader_parameter/crush = true
+shader_parameter/scanlines = false
+shader_parameter/levels = 32
+shader_parameter/dither = true
+shader_parameter/dither_strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="MatScan"]
+shader = ExtResource("3_post")
+shader_parameter/crush = false
+shader_parameter/scanlines = false
+shader_parameter/scanline_strength = 0.18
+
+[sub_resource type="PlaneMesh" id="FloorMesh"]
+size = Vector2(70, 70)
+subdivide_width = 12
+subdivide_depth = 12
+
+[sub_resource type="BoxMesh" id="WallLong"]
+size = Vector3(70, 7, 1)
+
+[sub_resource type="BoxMesh" id="WallSide"]
+size = Vector3(1, 7, 70)
+
+[sub_resource type="BoxMesh" id="SlabMesh"]
+size = Vector3(14, 0.6, 14)
+
+[sub_resource type="BoxMesh" id="PillarMesh"]
+size = Vector3(1.6, 6, 1.6)
+
+[sub_resource type="BoxMesh" id="RampMesh"]
+size = Vector3(9, 1, 16)
+
+[node name="PsxScene" type="Node"]
+script = ExtResource("1_look")
+
+[node name="Screen" type="SubViewportContainer" parent="."]
+texture_filter = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+stretch = true
+stretch_shrink = 4
+
+[node name="View" type="SubViewport" parent="Screen"]
+handle_input_locally = false
+gui_disable_input = true
+size = Vector2i(320, 180)
+render_target_update_mode = 4
+
+[node name="World" type="Node3D" parent="Screen/View"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Screen/View/World"]
+environment = SubResource("Environment_1")
+
+[node name="Sun" type="DirectionalLight3D" parent="Screen/View/World"]
+transform = Transform3D(0.766, 0.4546, -0.4546, 0, 0.7071, 0.7071, 0.643, -0.5417, 0.5417, 0, 20, 0)
+light_energy = 1.4
+light_color = Color(1, 0.93, 0.82, 1)
+
+[node name="Floor" type="MeshInstance3D" parent="Screen/View/World"]
+mesh = SubResource("FloorMesh")
+material_override = SubResource("MatFloor")
+
+[node name="WallN" type="MeshInstance3D" parent="Screen/View/World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, -35)
+mesh = SubResource("WallLong")
+material_override = SubResource("MatWall")
+
+[node name="WallS" type="MeshInstance3D" parent="Screen/View/World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 35)
+mesh = SubResource("WallLong")
+material_override = SubResource("MatWall")
+
+[node name="WallE" type="MeshInstance3D" parent="Screen/View/World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35, 3.5, 0)
+mesh = SubResource("WallSide")
+material_override = SubResource("MatWall")
+
+[node name="WallW" type="MeshInstance3D" parent="Screen/View/World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35, 3.5, 0)
+mesh = SubResource("WallSide")
+material_override = SubResource("MatWall")
+
+[node name="Slab" type="MeshInstance3D" parent="Screen/View/World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 2.4, -14)
+mesh = SubResource("SlabMesh")
+material_override = SubResource("MatProp")
+
+[node name="Ramp" type="MeshInstance3D" parent="Screen/View/World"]
+transform = Transform3D(1, 0, 0, 0, 0.9659, -0.2588, 0, 0.2588, 0.9659, -14, 1.2, 0)
+mesh = SubResource("RampMesh")
+material_override = SubResource("MatProp")
+
+[node name="Pillar1" type="MeshInstance3D" parent="Screen/View/World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 3, -6)
+mesh = SubResource("PillarMesh")
+material_override = SubResource("MatProp")
+
+[node name="Pillar2" type="MeshInstance3D" parent="Screen/View/World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 3, -14)
+mesh = SubResource("PillarMesh")
+material_override = SubResource("MatProp")
+
+[node name="Pillar3" type="MeshInstance3D" parent="Screen/View/World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 3, -22)
+mesh = SubResource("PillarMesh")
+material_override = SubResource("MatProp")
+
+[node name="Camera" type="Camera3D" parent="Screen/View/World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 16)
+fov = 68.0
+far = 200.0
+
+[node name="Post" type="ColorRect" parent="Screen/View"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+material = SubResource("MatPost")
+
+[node name="Scanlines" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+material = SubResource("MatScan")
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Hud" type="Control" parent="Ui"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("4_hud")
+
+[node name="Big" type="Label" parent="Ui/Hud"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = -118.0
+offset_right = 420.0
+offset_bottom = -40.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.94)
+theme_override_font_sizes/font_size = 52
+text = "0x0"
+vertical_alignment = 1
+
+[node name="Detail" type="RichTextLabel" parent="Ui/Hud"]
+layout_mode = 1
+offset_left = 34.0
+offset_top = 28.0
+offset_right = 620.0
+offset_bottom = 330.0
+theme_override_colors/default_color = Color(1, 1, 1, 0.78)
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+scroll_active = false
+
+[node name="Hint" type="Label" parent="Ui/Hud"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -560.0
+offset_top = -150.0
+offset_right = -26.0
+offset_bottom = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.55)
+theme_override_font_sizes/font_size = 14
+text = "WASD fly    SPACE up    SHIFT hurry    ESC free the mouse
+
+1 vertex snap   2 affine UV   3 colour crush   4 dither
+5 resolution    6 smooth      7 scanlines      8 floor cuts
+9 CRT (vignette + curve + colour bleed)
+
+get close to the floor and look along it. that is where
+perspective correction earns its keep — and where turning
+it off is impossible to miss.
+
+turn them off one at a time — the one you miss most is
+the one doing the work."
+horizontal_alignment = 2
+vertical_alignment = 2

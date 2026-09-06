@@ -1,0 +1,90 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://probes/38_tyre/Chassis.gd" id="1_chassis"]
+[ext_resource type="Script" path="res://probes/38_tyre/Wheel.gd" id="2_wheel"]
+
+[sub_resource type="BoxShape3D" id="Hull"]
+size = Vector3(1.82, 1, 4.5)
+
+[sub_resource type="StandardMaterial3D" id="PaintMat"]
+albedo_color = Color(0.2, 0.3, 0.52, 1)
+metallic = 0.3
+roughness = 0.35
+
+[sub_resource type="StandardMaterial3D" id="CabinMat"]
+albedo_color = Color(0.12, 0.14, 0.18, 1)
+metallic = 0.3
+roughness = 0.35
+
+[sub_resource type="StandardMaterial3D" id="BumperMat"]
+albedo_color = Color(0.1, 0.1, 0.11, 1)
+metallic = 0.3
+roughness = 0.35
+
+[sub_resource type="BoxMesh" id="BodyMesh"]
+material = SubResource("PaintMat")
+size = Vector3(1.54, 0.4, 4.5)
+
+[sub_resource type="BoxMesh" id="CabinMesh"]
+material = SubResource("CabinMat")
+size = Vector3(1.26, 0.4, 1.98)
+
+[sub_resource type="BoxMesh" id="BumperMesh"]
+material = SubResource("BumperMat")
+size = Vector3(1.6, 0.11, 0.45)
+
+[node name="Chassis" type="RigidBody3D"]
+script = ExtResource("1_chassis")
+
+[node name="Hull" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.64, 0)
+shape = SubResource("Hull")
+
+[node name="Shell" type="Node3D" parent="."]
+
+[node name="Body" type="MeshInstance3D" parent="Shell"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+mesh = SubResource("BodyMesh")
+
+[node name="Cabin" type="MeshInstance3D" parent="Shell"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.97, 0.22)
+mesh = SubResource("CabinMesh")
+
+[node name="Bumper" type="MeshInstance3D" parent="Shell"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -2.25)
+mesh = SubResource("BumperMesh")
+
+[node name="Wheels" type="Node3D" parent="."]
+
+[node name="FrontLeft" type="Node3D" parent="Wheels"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0.32, -1.35)
+script = ExtResource("2_wheel")
+front = true
+driven = false
+radius = 0.33
+width = 0.22
+
+[node name="FrontRight" type="Node3D" parent="Wheels"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0.32, -1.35)
+script = ExtResource("2_wheel")
+front = true
+driven = false
+radius = 0.33
+width = 0.22
+
+[node name="RearLeft" type="Node3D" parent="Wheels"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0.32, 1.35)
+script = ExtResource("2_wheel")
+front = false
+driven = false
+radius = 0.33
+width = 0.22
+
+[node name="RearRight" type="Node3D" parent="Wheels"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0.32, 1.35)
+script = ExtResource("2_wheel")
+front = false
+driven = false
+radius = 0.33
+width = 0.22
+

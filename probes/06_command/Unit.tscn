@@ -1,0 +1,44 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/06_command/Unit.gd" id="1_unit"]
+
+[sub_resource type="SphereShape3D" id="Pick_1"]
+radius = 0.7
+
+[sub_resource type="BoxMesh" id="BodyMesh"]
+size = Vector3(0.7, 0.7, 1.3)
+
+[sub_resource type="StandardMaterial3D" id="MatUnit"]
+albedo_color = Color(0.72, 0.68, 0.5, 1)
+roughness = 0.7
+
+[sub_resource type="TorusMesh" id="RingMesh"]
+inner_radius = 0.85
+outer_radius = 1.0
+rings = 24
+ring_segments = 6
+
+[sub_resource type="StandardMaterial3D" id="MatRing"]
+albedo_color = Color(0.5, 0.95, 0.6, 1)
+emission_enabled = true
+emission = Color(0.35, 0.9, 0.45, 1)
+
+[node name="Unit" type="Area3D"]
+input_ray_pickable = true
+monitoring = false
+monitorable = false
+script = ExtResource("1_unit")
+
+[node name="Pick" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+shape = SubResource("Pick_1")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+mesh = SubResource("BodyMesh")
+surface_material_override/0 = SubResource("MatUnit")
+
+[node name="Ring" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
+mesh = SubResource("RingMesh")
+surface_material_override/0 = SubResource("MatRing")

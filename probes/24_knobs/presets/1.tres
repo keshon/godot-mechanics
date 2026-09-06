@@ -1,0 +1,24 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://probes/24_knobs/psx.gdshader" id="1_7gm5y"]
+
+[sub_resource type="FastNoiseLite" id="GrainNoise"]
+noise_type = 2
+frequency = 0.02
+fractal_octaves = 4
+
+[sub_resource type="NoiseTexture2D" id="Grain"]
+noise = SubResource("GrainNoise")
+seamless = true
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_7gm5y")
+shader_parameter/snap_grid = Vector2(160, 120)
+shader_parameter/snap_vertices = true
+shader_parameter/affine_uv = true
+shader_parameter/albedo_tex = SubResource("Grain")
+shader_parameter/albedo_smooth = SubResource("Grain")
+shader_parameter/smooth_textures = false
+shader_parameter/uv_scale = Vector2(1, 1)
+shader_parameter/tint = Color(1, 1, 1, 1)

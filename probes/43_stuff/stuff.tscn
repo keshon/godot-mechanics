@@ -1,0 +1,338 @@
+[gd_scene load_steps=39 format=3 uid="uid://c43stuff0001"]
+
+[ext_resource type="Script" path="res://probes/43_stuff/Rig.gd" id="1_rig"]
+[ext_resource type="Script" path="res://probes/43_stuff/Solid.gd" id="1_solid"]
+[ext_resource type="Resource" path="res://probes/43_stuff/rifle.tres" id="r_rifle"]
+[ext_resource type="Resource" path="res://probes/43_stuff/buck.tres" id="r_buck"]
+[ext_resource type="Resource" path="res://probes/43_stuff/grenade.tres" id="r_grenade"]
+[ext_resource type="Resource" path="res://probes/43_stuff/rocket.tres" id="r_rocket"]
+[ext_resource type="Resource" path="res://probes/43_stuff/concrete_real.tres" id="k_real"]
+[ext_resource type="Resource" path="res://probes/43_stuff/rifle_real.tres" id="r_rifle2"]
+[ext_resource type="Resource" path="res://probes/43_stuff/heavy_real.tres" id="r_heavy2"]
+[ext_resource type="Resource" path="res://probes/43_stuff/grenade_real.tres" id="r_gren2"]
+[ext_resource type="Resource" path="res://probes/43_stuff/rpg_real.tres" id="r_rpg2"]
+[ext_resource type="Resource" path="res://probes/43_stuff/wood.tres" id="k_wood"]
+[ext_resource type="Resource" path="res://probes/43_stuff/concrete.tres" id="k_concrete"]
+[ext_resource type="Resource" path="res://probes/43_stuff/slate.tres" id="k_slate"]
+[ext_resource type="Resource" path="res://probes/43_stuff/glass.tres" id="k_glass"]
+
+[sub_resource type="ProceduralSkyMaterial" id="Sky_1"]
+sky_top_color = Color(0.29, 0.38, 0.52, 1)
+sky_horizon_color = Color(0.58, 0.62, 0.66, 1)
+ground_bottom_color = Color(0.24, 0.24, 0.25, 1)
+ground_horizon_color = Color(0.44, 0.44, 0.45, 1)
+
+[sub_resource type="Sky" id="Sky_2"]
+sky_material = SubResource("Sky_1")
+
+[sub_resource type="Environment" id="Env_1"]
+background_mode = 2
+sky = SubResource("Sky_2")
+ambient_light_source = 3
+ambient_light_color = Color(0.56, 0.62, 0.72, 1)
+ambient_light_energy = 1.1
+tonemap_mode = 2
+tonemap_white = 3.0
+ssao_enabled = true
+ssao_intensity = 1.2
+ssao_radius = 0.6
+
+[sub_resource type="BoxMesh" id="G_m"]
+size = Vector3(90, 0.4, 90)
+
+[sub_resource type="BoxShape3D" id="G_s"]
+size = Vector3(90, 0.4, 90)
+
+[sub_resource type="StandardMaterial3D" id="G_mat"]
+albedo_color = Color(0.33, 0.335, 0.35, 1)
+roughness = 0.95
+
+[sub_resource type="BoxMesh" id="BoxWood_m"]
+size = Vector3(1.0, 1.0, 1.0)
+
+[sub_resource type="BoxShape3D" id="BoxWood_s"]
+size = Vector3(1.0, 1.0, 1.0)
+
+[sub_resource type="BoxMesh" id="BoxConcrete_m"]
+size = Vector3(1.0, 1.0, 1.0)
+
+[sub_resource type="BoxShape3D" id="BoxConcrete_s"]
+size = Vector3(1.0, 1.0, 1.0)
+
+[sub_resource type="BoxMesh" id="BoxSlate_m"]
+size = Vector3(1.0, 1.0, 1.0)
+
+[sub_resource type="BoxShape3D" id="BoxSlate_s"]
+size = Vector3(1.0, 1.0, 1.0)
+
+[sub_resource type="BoxMesh" id="BoxGlass_m"]
+size = Vector3(1.0, 1.0, 1.0)
+
+[sub_resource type="BoxShape3D" id="BoxGlass_s"]
+size = Vector3(1.0, 1.0, 1.0)
+
+[sub_resource type="BoxMesh" id="Column_m"]
+size = Vector3(0.7, 4.0, 0.7)
+
+[sub_resource type="BoxShape3D" id="Column_s"]
+size = Vector3(0.7, 4.0, 0.7)
+
+[sub_resource type="BoxMesh" id="Pane_m"]
+size = Vector3(2.4, 2.0, 0.12)
+
+[sub_resource type="BoxShape3D" id="Pane_s"]
+size = Vector3(2.4, 2.0, 0.12)
+
+[sub_resource type="BoxMesh" id="Beam_m"]
+size = Vector3(5.0, 0.35, 0.35)
+
+[sub_resource type="BoxShape3D" id="Beam_s"]
+size = Vector3(5.0, 0.35, 0.35)
+
+[sub_resource type="BoxMesh" id="Deck_m"]
+size = Vector3(2.0, 0.25, 2.0)
+
+[sub_resource type="BoxShape3D" id="Deck_s"]
+size = Vector3(2.0, 0.25, 2.0)
+
+[sub_resource type="BoxMesh" id="BoxReal_m"]
+size = Vector3(1.0, 1.0, 1.0)
+
+[sub_resource type="BoxShape3D" id="BoxReal_s"]
+size = Vector3(1.0, 1.0, 1.0)
+
+[node name="Rig" type="Node3D"]
+script = ExtResource("1_rig")
+rounds = [ExtResource("r_rifle"), ExtResource("r_buck"), ExtResource("r_grenade"), ExtResource("r_rocket"), ExtResource("r_rifle2"), ExtResource("r_heavy2"), ExtResource("r_gren2"), ExtResource("r_rpg2")]
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.86, -0.32, 0.4, 0, 0.78, 0.62, -0.51, -0.53, 0.67, 0, 14, 0)
+light_color = Color(1, 0.96, 0.9, 1)
+light_energy = 1.0
+shadow_enabled = true
+
+[node name="World" type="WorldEnvironment" parent="."]
+environment = SubResource("Env_1")
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 2.3, 9.4)
+fov = 70.0
+
+[node name="Ground" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Ground"]
+mesh = SubResource("G_m")
+material_override = SubResource("G_mat")
+
+[node name="Shape" type="CollisionShape3D" parent="Ground"]
+shape = SubResource("G_s")
+
+[node name="BoxWood" type="RigidBody3D" parent="." groups=["solid"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0.5, 2.8)
+freeze = true
+script = ExtResource("1_solid")
+stuff = ExtResource("k_wood")
+scatter_seed = 11
+
+[node name="Mesh" type="MeshInstance3D" parent="BoxWood"]
+mesh = SubResource("BoxWood_m")
+
+[node name="Shape" type="CollisionShape3D" parent="BoxWood"]
+shape = SubResource("BoxWood_s")
+
+[node name="Tag" type="Label3D" parent="BoxWood"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
+billboard = 1
+no_depth_test = true
+fixed_size = true
+pixel_size = 0.0011
+font_size = 44
+outline_size = 12
+
+[node name="BoxConcrete" type="RigidBody3D" parent="." groups=["solid"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.5, 2.8)
+freeze = true
+script = ExtResource("1_solid")
+stuff = ExtResource("k_concrete")
+scatter_seed = 17
+
+[node name="Mesh" type="MeshInstance3D" parent="BoxConcrete"]
+mesh = SubResource("BoxConcrete_m")
+
+[node name="Shape" type="CollisionShape3D" parent="BoxConcrete"]
+shape = SubResource("BoxConcrete_s")
+
+[node name="Tag" type="Label3D" parent="BoxConcrete"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
+billboard = 1
+no_depth_test = true
+fixed_size = true
+pixel_size = 0.0011
+font_size = 44
+outline_size = 12
+
+[node name="BoxSlate" type="RigidBody3D" parent="." groups=["solid"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.5, 2.8)
+freeze = true
+script = ExtResource("1_solid")
+stuff = ExtResource("k_slate")
+scatter_seed = 23
+
+[node name="Mesh" type="MeshInstance3D" parent="BoxSlate"]
+mesh = SubResource("BoxSlate_m")
+
+[node name="Shape" type="CollisionShape3D" parent="BoxSlate"]
+shape = SubResource("BoxSlate_s")
+
+[node name="Tag" type="Label3D" parent="BoxSlate"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
+billboard = 1
+no_depth_test = true
+fixed_size = true
+pixel_size = 0.0011
+font_size = 44
+outline_size = 12
+
+[node name="BoxGlass" type="RigidBody3D" parent="." groups=["solid"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.5, 2.8)
+freeze = true
+script = ExtResource("1_solid")
+stuff = ExtResource("k_glass")
+scatter_seed = 31
+
+[node name="Mesh" type="MeshInstance3D" parent="BoxGlass"]
+mesh = SubResource("BoxGlass_m")
+
+[node name="Shape" type="CollisionShape3D" parent="BoxGlass"]
+shape = SubResource("BoxGlass_s")
+
+[node name="Tag" type="Label3D" parent="BoxGlass"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
+billboard = 1
+no_depth_test = true
+fixed_size = true
+pixel_size = 0.0011
+font_size = 44
+outline_size = 12
+
+[node name="Column" type="RigidBody3D" parent="." groups=["solid"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 2.0, -2.5)
+freeze = true
+script = ExtResource("1_solid")
+stuff = ExtResource("k_concrete")
+scatter_seed = 43
+
+[node name="Mesh" type="MeshInstance3D" parent="Column"]
+mesh = SubResource("Column_m")
+
+[node name="Shape" type="CollisionShape3D" parent="Column"]
+shape = SubResource("Column_s")
+
+[node name="Tag" type="Label3D" parent="Column"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+billboard = 1
+no_depth_test = true
+fixed_size = true
+pixel_size = 0.0011
+font_size = 44
+outline_size = 12
+
+[node name="Pane" type="RigidBody3D" parent="." groups=["solid"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4, 1.2, -3.4)
+freeze = true
+script = ExtResource("1_solid")
+stuff = ExtResource("k_glass")
+scatter_seed = 51
+
+[node name="Mesh" type="MeshInstance3D" parent="Pane"]
+mesh = SubResource("Pane_m")
+
+[node name="Shape" type="CollisionShape3D" parent="Pane"]
+shape = SubResource("Pane_s")
+
+[node name="Tag" type="Label3D" parent="Pane"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+billboard = 1
+no_depth_test = true
+fixed_size = true
+pixel_size = 0.0011
+font_size = 44
+outline_size = 12
+
+[node name="Beam" type="RigidBody3D" parent="." groups=["solid"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 0.9, -3.4)
+freeze = true
+script = ExtResource("1_solid")
+stuff = ExtResource("k_wood")
+scatter_seed = 67
+
+[node name="Mesh" type="MeshInstance3D" parent="Beam"]
+mesh = SubResource("Beam_m")
+
+[node name="Shape" type="CollisionShape3D" parent="Beam"]
+shape = SubResource("Beam_s")
+
+[node name="Tag" type="Label3D" parent="Beam"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.68, 0)
+billboard = 1
+no_depth_test = true
+fixed_size = true
+pixel_size = 0.0011
+font_size = 44
+outline_size = 12
+
+[node name="Deck" type="RigidBody3D" parent="." groups=["solid"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.0, 0.6, -2.5)
+freeze = true
+script = ExtResource("1_solid")
+stuff = ExtResource("k_slate")
+scatter_seed = 73
+
+[node name="Mesh" type="MeshInstance3D" parent="Deck"]
+mesh = SubResource("Deck_m")
+
+[node name="Shape" type="CollisionShape3D" parent="Deck"]
+shape = SubResource("Deck_s")
+
+[node name="Tag" type="Label3D" parent="Deck"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.62, 0)
+billboard = 1
+no_depth_test = true
+fixed_size = true
+pixel_size = 0.0011
+font_size = 44
+outline_size = 12
+[node name="BoxReal" type="RigidBody3D" parent="." groups=["solid"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0.5, 2.8)
+freeze = true
+script = ExtResource("1_solid")
+stuff = ExtResource("k_real")
+scatter_seed = 53
+
+[node name="Mesh" type="MeshInstance3D" parent="BoxReal"]
+mesh = SubResource("BoxReal_m")
+
+[node name="Shape" type="CollisionShape3D" parent="BoxReal"]
+shape = SubResource("BoxReal_s")
+
+[node name="Tag" type="Label3D" parent="BoxReal"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
+billboard = 1
+no_depth_test = true
+fixed_size = true
+pixel_size = 0.0011
+font_size = 44
+outline_size = 12
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Info" type="RichTextLabel" parent="Ui"]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 1220.0
+offset_bottom = 330.0
+mouse_filter = 2
+bbcode_enabled = true
+scroll_active = false
+theme_override_colors/default_color = Color(0.92, 0.94, 0.96, 1)

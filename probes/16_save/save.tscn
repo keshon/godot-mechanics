@@ -1,0 +1,147 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/16_save/Bench.gd" id="1_bench"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.11, 0.12, 0.17, 1)
+sky_horizon_color = Color(0.26, 0.27, 0.31, 1)
+ground_bottom_color = Color(0.07, 0.07, 0.09, 1)
+ground_horizon_color = Color(0.26, 0.27, 0.31, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+tonemap_mode = 2
+ambient_light_source = 3
+ambient_light_energy = 0.55
+
+[sub_resource type="StandardMaterial3D" id="MatFloor"]
+albedo_color = Color(0.68, 0.7, 0.74, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="MatActor"]
+albedo_color = Color(1, 1, 1, 1)
+roughness = 0.55
+vertex_color_use_as_albedo = true
+
+[sub_resource type="BoxMesh" id="Tile"]
+size = Vector3(0.94, 0.12, 0.94)
+
+[sub_resource type="CapsuleMesh" id="Pawn"]
+radius = 0.3
+height = 1.1
+radial_segments = 10
+
+[sub_resource type="MultiMesh" id="MmFloor"]
+transform_format = 1
+mesh = SubResource("Tile")
+
+[sub_resource type="MultiMesh" id="MmActors"]
+transform_format = 1
+use_colors = true
+mesh = SubResource("Pawn")
+
+[node name="SaveScene" type="Node3D"]
+script = ExtResource("1_bench")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-60, -36, 0)
+light_energy = 1.15
+shadow_enabled = true
+
+[node name="Floor" type="MultiMeshInstance3D" parent="."]
+multimesh = SubResource("MmFloor")
+material_override = SubResource("MatFloor")
+
+[node name="Actors" type="MultiMeshInstance3D" parent="."]
+multimesh = SubResource("MmActors")
+material_override = SubResource("MatActor")
+
+[node name="Camera" type="Camera3D" parent="."]
+projection = 1
+size = 26.0
+far = 300.0
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Hud" type="Control" parent="Ui"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Big" type="Label" parent="Ui/Hud"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = -100.0
+offset_right = 620.0
+offset_bottom = -38.0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 42
+text = "..."
+vertical_alignment = 1
+
+[node name="Detail" type="RichTextLabel" parent="Ui/Hud"]
+layout_mode = 1
+offset_left = 34.0
+offset_top = 28.0
+offset_right = 660.0
+offset_bottom = 420.0
+theme_override_colors/default_color = Color(1, 1, 1, 0.82)
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+scroll_active = false
+
+[node name="Which" type="RichTextLabel" parent="Ui/Hud"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+grow_vertical = 0
+offset_left = 34.0
+offset_top = -140.0
+offset_right = 660.0
+offset_bottom = -104.0
+theme_override_colors/default_color = Color(1, 0.9, 0.7, 0.85)
+theme_override_font_sizes/normal_font_size = 16
+bbcode_enabled = true
+scroll_active = false
+
+[node name="Hint" type="Label" parent="Ui/Hud"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -640.0
+offset_top = -212.0
+offset_right = -26.0
+offset_bottom = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.55)
+theme_override_font_sizes/font_size = 14
+text = "T runs the whole experiment    SPACE new seed    LEFT RIGHT seed -1 +1
+1 2 3 show the truth / the STATE load / the REPLAY load
+
+K  turn off saving the die's position
+L  leak one draw into the global generator
+V  pretend a later build changed one rule
+
+flip a switch and watch a yes turn into a NO. then press 1 and 3
+and look at the board: the same save, two different worlds."
+horizontal_alignment = 2
+vertical_alignment = 2

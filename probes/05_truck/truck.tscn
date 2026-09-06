@@ -1,0 +1,323 @@
+[gd_scene format=3 uid="uid://bfoa8m810idcu"]
+
+[ext_resource type="Script" uid="uid://dq0d4jmp863xd" path="res://probes/05_truck/Truck.gd" id="1_truck"]
+[ext_resource type="Script" uid="uid://dg4rp23b0xsf" path="res://probes/05_truck/ChaseCam.gd" id="2_cam"]
+[ext_resource type="Script" uid="uid://do30kk0vylhxb" path="res://probes/05_truck/Hud.gd" id="3_hud"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_1"]
+sky_top_color = Color(0.31, 0.39, 0.52, 1)
+sky_horizon_color = Color(0.62, 0.64, 0.67, 1)
+ground_bottom_color = Color(0.15, 0.16, 0.18, 1)
+ground_horizon_color = Color(0.62, 0.64, 0.67, 1)
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("SkyMaterial_1")
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 2
+sky = SubResource("Sky_1")
+tonemap_mode = 2
+ssao_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="MatGround"]
+albedo_color = Color(0.31, 0.33, 0.35, 1)
+roughness = 0.95
+
+[sub_resource type="WorldBoundaryShape3D" id="Ground_1"]
+
+[sub_resource type="StandardMaterial3D" id="MatObstacle"]
+albedo_color = Color(0.6, 0.5, 0.36, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="MatSlope"]
+albedo_color = Color(0.4, 0.52, 0.62, 1)
+roughness = 0.8
+
+[sub_resource type="BoxShape3D" id="Hull_1"]
+size = Vector3(2.1, 0.9, 5.8)
+
+[sub_resource type="BoxMesh" id="HullMesh"]
+size = Vector3(2.1, 0.9, 5.8)
+
+[sub_resource type="StandardMaterial3D" id="MatHull"]
+albedo_color = Color(0.55, 0.58, 0.45, 1)
+roughness = 0.75
+
+[sub_resource type="BoxMesh" id="CabMesh"]
+size = Vector3(1.9, 0.9, 1.8)
+
+[sub_resource type="StandardMaterial3D" id="MatCab"]
+albedo_color = Color(0.42, 0.46, 0.36, 1)
+roughness = 0.7
+
+[sub_resource type="CylinderMesh" id="WheelMesh"]
+height = 0.36
+radial_segments = 16
+
+[sub_resource type="StandardMaterial3D" id="MatWheel"]
+albedo_color = Color(0.13, 0.13, 0.14, 1)
+roughness = 0.9
+
+[node name="TruckScene" type="Node3D" unique_id=1677555281]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1618086904]
+environment = SubResource("Environment_1")
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=2098671020]
+transform = Transform3D(0.766, 0.4546, -0.4546, 0, 0.7071, 0.7071, 0.643, -0.5417, 0.5417, 0, 30, 0)
+light_energy = 1.15
+shadow_enabled = true
+
+[node name="Course" type="Node3D" parent="." unique_id=145394905]
+
+[node name="GroundVisual" type="CSGBox3D" parent="Course" unique_id=2102709244]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -10)
+size = Vector3(120, 1, 120)
+material = SubResource("MatGround")
+
+[node name="Ground" type="StaticBody3D" parent="Course" unique_id=1704466382]
+
+[node name="Shape" type="CollisionShape3D" parent="Course/Ground" unique_id=1717514555]
+shape = SubResource("Ground_1")
+
+[node name="Bump1" type="CSGBox3D" parent="Course" unique_id=988355880]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 6)
+use_collision = true
+size = Vector3(12, 0.6, 0.9)
+material = SubResource("MatObstacle")
+
+[node name="Bump2" type="CSGBox3D" parent="Course" unique_id=1665403305]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 4)
+use_collision = true
+size = Vector3(12, 0.6, 0.9)
+material = SubResource("MatObstacle")
+
+[node name="Bump3" type="CSGBox3D" parent="Course" unique_id=268975546]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 2)
+use_collision = true
+size = Vector3(12, 0.6, 0.9)
+material = SubResource("MatObstacle")
+
+[node name="Bump4" type="CSGBox3D" parent="Course" unique_id=968955608]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+use_collision = true
+size = Vector3(12, 0.6, 0.9)
+material = SubResource("MatObstacle")
+
+[node name="Bump5" type="CSGBox3D" parent="Course" unique_id=1695081076]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, -2)
+use_collision = true
+size = Vector3(12, 0.6, 0.9)
+material = SubResource("MatObstacle")
+
+[node name="Bump6" type="CSGBox3D" parent="Course" unique_id=1125420035]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, -4)
+use_collision = true
+size = Vector3(12, 0.6, 0.9)
+material = SubResource("MatObstacle")
+
+[node name="OneSideBump" type="CSGBox3D" parent="Course" unique_id=356778192]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2, -0.15, -20)
+use_collision = true
+size = Vector3(5, 0.7, 1.4)
+material = SubResource("MatSlope")
+
+[node name="OneSideBump2" type="CSGBox3D" parent="Course" unique_id=1625251624]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2, -0.15, -23)
+use_collision = true
+size = Vector3(5, 0.7, 1.4)
+material = SubResource("MatSlope")
+
+[node name="Step" type="CSGBox3D" parent="Course" unique_id=599935740]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -13)
+use_collision = true
+size = Vector3(12, 0.7, 5)
+material = SubResource("MatObstacle")
+
+[node name="JumpRamp" type="CSGBox3D" parent="Course" unique_id=2099671231]
+transform = Transform3D(1, 0, 0, 0, 0.9703, -0.2419, 0, 0.2419, 0.9703, 12, -0.881, -24)
+use_collision = true
+size = Vector3(8, 4, 10)
+material = SubResource("MatObstacle")
+
+[node name="SideSlope" type="CSGBox3D" parent="Course" unique_id=1499388889]
+transform = Transform3D(0.9781, -0.2079, 0, 0.2079, 0.9781, 0, 0, 0, 1, -14, -0.427, -26)
+use_collision = true
+size = Vector3(10, 3, 16)
+material = SubResource("MatSlope")
+
+[node name="Truck" type="VehicleBody3D" parent="." unique_id=410685057]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 18)
+mass = 2400.0
+center_of_mass_mode = 1
+center_of_mass = Vector3(0, 0.35, 0)
+script = ExtResource("1_truck")
+drive = 1
+engine_power = 12000.0
+
+[node name="Hull" type="CollisionShape3D" parent="Truck" unique_id=2097374559]
+shape = SubResource("Hull_1")
+
+[node name="HullMesh" type="MeshInstance3D" parent="Truck" unique_id=1038476193]
+mesh = SubResource("HullMesh")
+surface_material_override/0 = SubResource("MatHull")
+
+[node name="CabMesh" type="MeshInstance3D" parent="Truck" unique_id=936727626]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, -1.9)
+mesh = SubResource("CabMesh")
+surface_material_override/0 = SubResource("MatCab")
+
+[node name="FL" type="VehicleWheel3D" parent="Truck" unique_id=276231783]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.15, -0.35, -2.1)
+use_as_traction = true
+use_as_steering = true
+wheel_rest_length = 0.4
+wheel_friction_slip = 4.0
+suspension_travel = 0.45
+suspension_stiffness = 40.0
+suspension_max_force = 20000.0
+
+[node name="Mesh" type="MeshInstance3D" parent="Truck/FL" unique_id=800028896]
+transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("WheelMesh")
+surface_material_override/0 = SubResource("MatWheel")
+
+[node name="FR" type="VehicleWheel3D" parent="Truck" unique_id=742046634]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.15, -0.35, -2.1)
+use_as_traction = true
+use_as_steering = true
+wheel_rest_length = 0.4
+wheel_friction_slip = 4.0
+suspension_travel = 0.45
+suspension_stiffness = 40.0
+suspension_max_force = 20000.0
+
+[node name="Mesh" type="MeshInstance3D" parent="Truck/FR" unique_id=1822359329]
+transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("WheelMesh")
+surface_material_override/0 = SubResource("MatWheel")
+
+[node name="ML" type="VehicleWheel3D" parent="Truck" unique_id=7883530]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.15, -0.35, 0)
+use_as_traction = true
+wheel_rest_length = 0.4
+wheel_friction_slip = 4.0
+suspension_travel = 0.45
+suspension_stiffness = 40.0
+suspension_max_force = 20000.0
+
+[node name="Mesh" type="MeshInstance3D" parent="Truck/ML" unique_id=536322973]
+transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("WheelMesh")
+surface_material_override/0 = SubResource("MatWheel")
+
+[node name="MR" type="VehicleWheel3D" parent="Truck" unique_id=207432037]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.15, -0.35, 0)
+use_as_traction = true
+wheel_rest_length = 0.4
+wheel_friction_slip = 4.0
+suspension_travel = 0.45
+suspension_stiffness = 40.0
+suspension_max_force = 20000.0
+
+[node name="Mesh" type="MeshInstance3D" parent="Truck/MR" unique_id=752162154]
+transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("WheelMesh")
+surface_material_override/0 = SubResource("MatWheel")
+
+[node name="RL" type="VehicleWheel3D" parent="Truck" unique_id=1968295413]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.15, -0.35, 2.1)
+use_as_traction = true
+wheel_rest_length = 0.4
+wheel_friction_slip = 4.0
+suspension_travel = 0.45
+suspension_stiffness = 40.0
+suspension_max_force = 20000.0
+
+[node name="Mesh" type="MeshInstance3D" parent="Truck/RL" unique_id=933837801]
+transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("WheelMesh")
+surface_material_override/0 = SubResource("MatWheel")
+
+[node name="RR" type="VehicleWheel3D" parent="Truck" unique_id=1508244658]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.15, -0.35, 2.1)
+use_as_traction = true
+wheel_rest_length = 0.4
+wheel_friction_slip = 4.0
+suspension_travel = 0.45
+suspension_stiffness = 40.0
+suspension_max_force = 20000.0
+
+[node name="Mesh" type="MeshInstance3D" parent="Truck/RR" unique_id=2076364755]
+transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("WheelMesh")
+surface_material_override/0 = SubResource("MatWheel")
+
+[node name="ChaseCam" type="Camera3D" parent="." unique_id=746616324]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 27)
+fov = 65.0
+far = 400.0
+script = ExtResource("2_cam")
+
+[node name="Ui" type="CanvasLayer" parent="." unique_id=1208599760]
+
+[node name="Hud" type="Control" parent="Ui" unique_id=1712634678]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("3_hud")
+
+[node name="Big" type="Label" parent="Ui/Hud" unique_id=1304098737]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = -126.0
+offset_right = 320.0
+offset_bottom = -36.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.94)
+theme_override_font_sizes/font_size = 64
+text = "0"
+vertical_alignment = 1
+
+[node name="Detail" type="RichTextLabel" parent="Ui/Hud" unique_id=137014878]
+layout_mode = 1
+offset_left = 34.0
+offset_top = 28.0
+offset_right = 520.0
+offset_bottom = 260.0
+theme_override_colors/default_color = Color(1, 1, 1, 0.75)
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+scroll_active = false
+
+[node name="Hint" type="Label" parent="Ui/Hud" unique_id=214629977]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -560.0
+offset_top = -172.0
+offset_right = -26.0
+offset_bottom = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.55)
+theme_override_font_sizes/font_size = 14
+text = "W/S throttle    A/D steer    SPACE brake    C switch view
+
+C gives you the side view. Take the washboard in it and
+watch three axles ride the same bump one after another.
+
+Truck node, Remote tab: Drive, Middle Axle, Split Torque.
+Turn Split Torque OFF to see why the comparison needs it."
+horizontal_alignment = 2
+vertical_alignment = 2

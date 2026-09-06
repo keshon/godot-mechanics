@@ -1,0 +1,139 @@
+[gd_scene format=3 uid="uid://c03siege0001"]
+
+[ext_resource type="Script" uid="uid://bhbjjc476vry" path="res://mixes/03_siege/Rig.gd" id="1_rig"]
+[ext_resource type="Script" uid="uid://clbmjb4pefrot" path="res://probes/43_stuff/Round.gd" id="2_cwhfd"]
+[ext_resource type="Script" uid="uid://cqmgyr1hkih6o" path="res://mixes/03_siege/Frame.gd" id="2_frame"]
+[ext_resource type="PackedScene" path="res://probes/30_gun/weapon.tscn" id="3_weapon"]
+[ext_resource type="PackedScene" path="res://probes/30_gun/fx.tscn" id="4_fx"]
+[ext_resource type="Resource" uid="uid://c43stuffconc" path="res://probes/43_stuff/concrete.tres" id="5_concrete"]
+[ext_resource type="Resource" uid="uid://c43shotrifl" path="res://probes/43_stuff/rifle.tres" id="6_rifle"]
+[ext_resource type="Resource" uid="uid://c43shotbuck" path="res://probes/43_stuff/buck.tres" id="7_buck"]
+[ext_resource type="Resource" uid="uid://c43shotgren" path="res://probes/43_stuff/grenade.tres" id="8_grenade"]
+[ext_resource type="Resource" uid="uid://c43shotrock" path="res://probes/43_stuff/rocket.tres" id="9_rocket"]
+[ext_resource type="Resource" uid="uid://c43bigchar" path="res://probes/43_stuff/charge.tres" id="10_charge"]
+[ext_resource type="Resource" uid="uid://c43bigbomb" path="res://probes/43_stuff/bomb.tres" id="11_bomb"]
+
+[sub_resource type="ProceduralSkyMaterial" id="Sky_1"]
+sky_top_color = Color(0.26, 0.34, 0.48, 1)
+sky_horizon_color = Color(0.56, 0.6, 0.64, 1)
+ground_bottom_color = Color(0.22, 0.22, 0.23, 1)
+ground_horizon_color = Color(0.42, 0.42, 0.43, 1)
+
+[sub_resource type="Sky" id="Sky_2"]
+sky_material = SubResource("Sky_1")
+
+[sub_resource type="Environment" id="Env_1"]
+background_mode = 2
+sky = SubResource("Sky_2")
+ambient_light_source = 3
+ambient_light_color = Color(0.54, 0.6, 0.7, 1)
+tonemap_mode = 2
+tonemap_white = 3.0
+ssao_enabled = true
+ssao_radius = 0.6
+ssao_intensity = 1.3
+
+[sub_resource type="StandardMaterial3D" id="G_mat"]
+albedo_color = Color(0.31, 0.315, 0.33, 1)
+roughness = 0.95
+
+[sub_resource type="BoxMesh" id="G_m"]
+size = Vector3(120, 0.4, 120)
+
+[sub_resource type="BoxShape3D" id="G_s"]
+size = Vector3(120, 0.4, 120)
+
+[node name="Rig" type="Node3D" unique_id=1726687037]
+script = ExtResource("1_rig")
+rounds = Array[ExtResource("2_cwhfd")]([ExtResource("6_rifle"), ExtResource("7_buck"), ExtResource("8_grenade"), ExtResource("9_rocket"), ExtResource("10_charge"), ExtResource("11_bomb")])
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=655130480]
+transform = Transform3D(0.86, -0.32, 0.4, 0, 0.78, 0.62, -0.51, -0.53, 0.67, 0, 20, 0)
+light_color = Color(1, 0.96, 0.9, 1)
+shadow_enabled = true
+
+[node name="World" type="WorldEnvironment" parent="." unique_id=836880494]
+environment = SubResource("Env_1")
+
+[node name="Camera" type="Camera3D" parent="." unique_id=528742496]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, 16)
+fov = 70.0
+
+[node name="Lamp" type="OmniLight3D" parent="." unique_id=368338326]
+light_color = Color(1, 0.85, 0.6, 1)
+light_energy = 0.0
+omni_range = 6.0
+
+[node name="Ground" type="StaticBody3D" parent="." unique_id=1655496629]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Ground" unique_id=2071317593]
+material_override = SubResource("G_mat")
+mesh = SubResource("G_m")
+
+[node name="Shape" type="CollisionShape3D" parent="Ground" unique_id=1123871755]
+shape = SubResource("G_s")
+
+[node name="Frame" type="Node3D" parent="." unique_id=386862426]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
+script = ExtResource("2_frame")
+stuff = ExtResource("5_concrete")
+floors = 10
+
+[node name="Frame2" type="Node3D" parent="." unique_id=241770100]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.476086, 0, 1.1876144)
+script = ExtResource("2_frame")
+stuff = ExtResource("5_concrete")
+floors = 10
+span = 1
+
+[node name="Frame3" type="Node3D" parent="." unique_id=980680024]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.95217, 0, 2.375229)
+script = ExtResource("2_frame")
+stuff = ExtResource("5_concrete")
+floors = 10
+span = 1
+
+[node name="Frame4" type="Node3D" parent="." unique_id=1539506741]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 49.428257, 0, 3.5628433)
+script = ExtResource("2_frame")
+stuff = ExtResource("5_concrete")
+floors = 10
+span = 1
+
+[node name="Frame5" type="Node3D" parent="." unique_id=391999333]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.725891, 0, 13.447968)
+script = ExtResource("2_frame")
+stuff = ExtResource("5_concrete")
+floors = 10
+span = 1
+
+[node name="Frame6" type="Node3D" parent="." unique_id=793207224]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33.20198, 0, 14.635582)
+script = ExtResource("2_frame")
+stuff = ExtResource("5_concrete")
+floors = 10
+span = 1
+
+[node name="Frame7" type="Node3D" parent="." unique_id=1294132634]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 49.678062, 0, 15.823196)
+script = ExtResource("2_frame")
+stuff = ExtResource("5_concrete")
+floors = 10
+span = 1
+
+[node name="Fx" parent="." unique_id=865857678 instance=ExtResource("4_fx")]
+
+[node name="Hands" parent="." unique_id=330039574 instance=ExtResource("3_weapon")]
+
+[node name="Ui" type="CanvasLayer" parent="." unique_id=2023350601]
+
+[node name="Info" type="RichTextLabel" parent="Ui" unique_id=1871579440]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 1200.0
+offset_bottom = 320.0
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.92, 0.94, 0.96, 1)
+bbcode_enabled = true
+scroll_active = false

@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://probes/32_move/Move.gd" id="1_move"]
+
+[sub_resource type="CapsuleShape3D" id="Body"]
+radius = 0.38
+height = 1.8
+
+[node name="Player" type="CharacterBody3D"]
+floor_max_angle = 0.9
+script = ExtResource("1_move")
+
+[node name="Col" type="CollisionShape3D" parent="."]
+shape = SubResource("Body")
+
+[node name="Cam" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
+fov = 78.0
+near = 0.05
+far = 400.0
+

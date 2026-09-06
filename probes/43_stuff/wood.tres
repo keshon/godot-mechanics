@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="StuffKind" format=3 uid="uid://c43stuffwood"]
+
+[ext_resource type="Script" uid="uid://8apnsw1eqxke" path="res://probes/43_stuff/Stuff.gd" id="1_s"]
+
+[sub_resource type="StandardMaterial3D" id="Body"]
+albedo_color = Color(0.46, 0.32, 0.18, 1)
+roughness = 0.85
+
+[sub_resource type="PhysicsMaterial" id="Rubble"]
+friction = 0.8
+bounce = 0.1
+
+[sub_resource type="StandardMaterial3D" id="Shard"]
+albedo_color = Color(0.66, 0.5, 0.3, 1)
+roughness = 0.95
+
+[resource]
+script = ExtResource("1_s")
+title = "дерево"
+toughness = 6.3
+strength = 25.0
+flaw = 0.15
+grain = Vector3(6, 1, 1)
+density = 700.0
+grit = 0.004
+body_look = SubResource("Body")
+shard_look = SubResource("Shard")
+rubble = SubResource("Rubble")

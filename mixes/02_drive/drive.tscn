@@ -1,0 +1,69 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://mixes/02_drive/Rig.gd" id="1_rig"]
+[ext_resource type="PackedScene" path="res://probes/37_car/track.tscn" id="2_track"]
+[ext_resource type="PackedScene" path="res://probes/37_car/machine.tscn" id="3_car"]
+[ext_resource type="PackedScene" path="res://probes/30_gun/weapon.tscn" id="4_weapon"]
+[ext_resource type="PackedScene" path="res://probes/30_gun/fx.tscn" id="5_fx"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.3, 0.42, 0.64, 1)
+sky_horizon_color = Color(0.64, 0.69, 0.74, 1)
+ground_bottom_color = Color(0.17, 0.17, 0.18, 1)
+ground_horizon_color = Color(0.47, 0.47, 0.49, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+ambient_light_source = 3
+ambient_light_energy = 0.55
+tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 0.5
+glow_bloom = 0.1
+
+[node name="Drive" type="Node3D"]
+script = ExtResource("1_rig")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.87, -0.31, 0.38, 0, 0.77, 0.63, -0.49, -0.55, 0.67, 0, 30, 0)
+light_energy = 1.15
+light_color = Color(1, 0.96, 0.9, 1)
+shadow_enabled = true
+directional_shadow_max_distance = 140.0
+
+[node name="Track" parent="." instance=ExtResource("2_track")]
+
+[node name="Car" parent="." instance=ExtResource("3_car")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 20)
+
+[node name="Fx" parent="." instance=ExtResource("5_fx")]
+
+[node name="Hands" parent="." instance=ExtResource("4_weapon")]
+
+[node name="MuzzleLight" type="OmniLight3D" parent="."]
+light_color = Color(1, 0.86, 0.6, 1)
+light_energy = 0.0
+omni_range = 8.0
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 30)
+fov = 74.0
+far = 500.0
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Info" type="RichTextLabel" parent="Ui"]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 760.0
+offset_bottom = 230.0
+mouse_filter = 2
+bbcode_enabled = true
+theme_override_colors/default_color = Color(0.92, 0.94, 0.96, 1)

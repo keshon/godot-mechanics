@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="StuffKind" format=3 uid="uid://c43stuffglas"]
+
+[ext_resource type="Script" uid="uid://8apnsw1eqxke" path="res://probes/43_stuff/Stuff.gd" id="1_s"]
+
+[sub_resource type="StandardMaterial3D" id="Body"]
+albedo_color = Color(0.62, 0.74, 0.76, 1)
+roughness = 0.85
+
+[sub_resource type="PhysicsMaterial" id="Rubble"]
+friction = 0.25
+bounce = 0.35
+
+[sub_resource type="StandardMaterial3D" id="Shard"]
+albedo_color = Color(0.78, 0.88, 0.9, 1)
+roughness = 0.95
+
+[resource]
+script = ExtResource("1_s")
+title = "стекло"
+toughness = 2.75
+strength = 6.0
+flaw = 0.45
+density = 2500.0
+grit = 0.00015
+body_look = SubResource("Body")
+shard_look = SubResource("Shard")
+rubble = SubResource("Rubble")

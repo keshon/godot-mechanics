@@ -1,0 +1,159 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/24_knobs/Tune.gd" id="1_t"]
+[ext_resource type="Script" path="res://probes/24_knobs/Panel.gd" id="2_p"]
+[ext_resource type="Shader" path="res://probes/24_knobs/water.gdshader" id="3_w"]
+[ext_resource type="Shader" path="res://probes/24_knobs/psx.gdshader" id="4_x"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.22, 0.38, 0.62, 1)
+sky_horizon_color = Color(0.72, 0.78, 0.84, 1)
+ground_horizon_color = Color(0.72, 0.78, 0.84, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+tonemap_mode = 2
+ambient_light_source = 3
+
+[sub_resource type="FastNoiseLite" id="RipNoise"]
+frequency = 0.03
+
+[sub_resource type="NoiseTexture2D" id="Ripples"]
+seamless = true
+as_normal_map = true
+bump_strength = 3.0
+noise = SubResource("RipNoise")
+
+[sub_resource type="FastNoiseLite" id="GrainNoise"]
+noise_type = 2
+frequency = 0.02
+fractal_octaves = 4
+
+[sub_resource type="NoiseTexture2D" id="Grain"]
+seamless = true
+noise = SubResource("GrainNoise")
+
+[sub_resource type="ShaderMaterial" id="MatWater"]
+shader = ExtResource("3_w")
+shader_parameter/ripples = SubResource("Ripples")
+
+[sub_resource type="ShaderMaterial" id="MatPsx"]
+shader = ExtResource("4_x")
+shader_parameter/albedo_tex = SubResource("Grain")
+shader_parameter/albedo_smooth = SubResource("Grain")
+
+[sub_resource type="StandardMaterial3D" id="MatFloor"]
+albedo_color = Color(0.62, 0.55, 0.42, 1)
+albedo_texture = SubResource("Grain")
+roughness = 0.9
+uv1_scale = Vector3(4, 4, 1)
+
+[sub_resource type="PlaneMesh" id="Surface"]
+size = Vector2(14, 14)
+subdivide_width = 90
+subdivide_depth = 90
+
+[sub_resource type="BoxMesh" id="Basin"]
+size = Vector3(14, 0.5, 14)
+
+[sub_resource type="SphereMesh" id="Rock"]
+radius = 1.1
+height = 2.2
+
+[sub_resource type="SphereMesh" id="Ball"]
+radius = 1.6
+height = 3.2
+radial_segments = 24
+rings = 12
+
+[sub_resource type="BoxMesh" id="Slab"]
+size = Vector3(2.4, 2.4, 2.4)
+
+[node name="Knobs" type="Node3D"]
+script = ExtResource("1_t")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-42, -38, 0)
+light_energy = 1.2
+shadow_enabled = true
+
+[node name="Cam" type="Camera3D" parent="."]
+fov = 55.0
+far = 200.0
+
+[node name="Water" type="Node3D" parent="."]
+
+[node name="Mesh" type="MeshInstance3D" parent="Water"]
+mesh = SubResource("Surface")
+material_override = SubResource("MatWater")
+
+[node name="Basin" type="MeshInstance3D" parent="Water"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.4, 0)
+mesh = SubResource("Basin")
+material_override = SubResource("MatFloor")
+
+[node name="Rock" type="MeshInstance3D" parent="Water"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, -0.7, 1.4)
+mesh = SubResource("Rock")
+material_override = SubResource("MatFloor")
+
+[node name="Psx" type="Node3D" parent="."]
+
+[node name="Mesh" type="MeshInstance3D" parent="Psx"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+mesh = SubResource("Ball")
+material_override = SubResource("MatPsx")
+
+[node name="Slab" type="MeshInstance3D" parent="Psx"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6, 0.4, -1.4)
+mesh = SubResource("Slab")
+material_override = SubResource("MatPsx")
+
+[node name="Ground" type="MeshInstance3D" parent="Psx"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.2, 0)
+mesh = SubResource("Basin")
+material_override = SubResource("MatFloor")
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Info" type="RichTextLabel" parent="Ui"]
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
+offset_left = 26.0
+offset_top = 22.0
+offset_right = 620.0
+offset_bottom = -22.0
+theme_override_colors/default_color = Color(1, 1, 1, 0.92)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+scroll_active = false
+mouse_filter = 2
+
+[node name="Box" type="ScrollContainer" parent="Ui"]
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+offset_left = -410.0
+offset_top = 14.0
+offset_right = -14.0
+offset_bottom = -14.0
+
+[node name="List" type="VBoxContainer" parent="Ui/Box"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 3
+script = ExtResource("2_p")

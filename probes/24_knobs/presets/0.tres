@@ -1,0 +1,34 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://probes/24_knobs/water.gdshader" id="1_ean1y"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_ean1y")
+shader_parameter/use_waves = 0.530000025175
+shader_parameter/use_ripple = 0.66400003154
+shader_parameter/use_depth = 0.8350000396625
+shader_parameter/use_fresnel = 1.0
+shader_parameter/use_refract = 0.3810000180975
+shader_parameter/use_foam = 0.0
+shader_parameter/show_depth = 0.0
+shader_parameter/shallow_col = Color(0.3, 0.62, 0.62, 1)
+shader_parameter/deep_col = Color(0.02, 0.1, 0.18, 1)
+shader_parameter/foam_col = Color(0.92, 0.96, 1, 1)
+shader_parameter/absorb = 1.791
+shader_parameter/wave_amp = 0.324
+shader_parameter/wave_len = 13.433
+shader_parameter/wave_speed = 1.7610000000000001
+shader_parameter/wave_steep = 0.9770000464075
+shader_parameter/wave_n = 6
+shader_parameter/wave_spread = 0.9
+shader_parameter/wave_dir = 0.47
+shader_parameter/ripple_scale = 0.355
+shader_parameter/ripple_strength = 1.38800006593
+shader_parameter/ripple_speed = 0.418
+shader_parameter/flow = Vector2(0, -0.403)
+shader_parameter/foam_depth = 1.988
+shader_parameter/foam_crest = 0.283
+shader_parameter/refract_amount = 1.4
+shader_parameter/fresnel_power = 9.850999999999999
+shader_parameter/water_rough = 0.1010000047975

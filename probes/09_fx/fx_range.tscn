@@ -1,0 +1,218 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/09_fx/FxRange.gd" id="1_range"]
+[ext_resource type="Script" path="res://probes/09_fx/Fx.gd" id="2_fx"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_1"]
+sky_top_color = Color(0.1, 0.12, 0.18, 1)
+sky_horizon_color = Color(0.28, 0.29, 0.33, 1)
+ground_bottom_color = Color(0.09, 0.09, 0.11, 1)
+ground_horizon_color = Color(0.28, 0.29, 0.33, 1)
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("SkyMaterial_1")
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 2
+sky = SubResource("Sky_1")
+tonemap_mode = 2
+glow_enabled = true
+glow_bloom = 0.12
+glow_hdr_threshold = 1.0
+fog_enabled = true
+fog_light_color = Color(0.18, 0.19, 0.23, 1)
+fog_density = 0.008
+
+[sub_resource type="StandardMaterial3D" id="MatGround"]
+albedo_color = Color(0.15, 0.16, 0.18, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="MatBlock"]
+albedo_color = Color(0.3, 0.29, 0.27, 1)
+roughness = 0.85
+
+[sub_resource type="WorldBoundaryShape3D" id="GroundShape"]
+
+[sub_resource type="BoxShape3D" id="BlockShape"]
+size = Vector3(3, 5, 3)
+
+[sub_resource type="BoxShape3D" id="WallShape"]
+size = Vector3(26, 7, 1.2)
+
+[sub_resource type="BoxShape3D" id="PanelShape"]
+size = Vector3(7, 5, 0.6)
+
+[sub_resource type="BoxMesh" id="PanelMesh"]
+size = Vector3(7, 5, 0.6)
+
+[sub_resource type="PlaneMesh" id="GroundMesh"]
+size = Vector2(140, 140)
+
+[sub_resource type="BoxMesh" id="BlockMesh"]
+size = Vector3(3, 5, 3)
+
+[sub_resource type="BoxMesh" id="WallMesh"]
+size = Vector3(26, 7, 1.2)
+
+[node name="FxRange" type="Node3D"]
+script = ExtResource("1_range")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.766, 0.4546, -0.4546, 0, 0.7071, 0.7071, 0.643, -0.5417, 0.5417, 0, 30, 0)
+light_energy = 0.7
+light_color = Color(0.8, 0.84, 1, 1)
+shadow_enabled = true
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+mesh = SubResource("GroundMesh")
+surface_material_override/0 = SubResource("MatGround")
+
+[node name="GroundBody" type="StaticBody3D" parent="."]
+
+[node name="Shape" type="CollisionShape3D" parent="GroundBody"]
+shape = SubResource("GroundShape")
+
+[node name="BlockA" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.5, -14)
+mesh = SubResource("BlockMesh")
+surface_material_override/0 = SubResource("MatBlock")
+
+[node name="Body" type="StaticBody3D" parent="BlockA"]
+
+[node name="Shape" type="CollisionShape3D" parent="BlockA/Body"]
+shape = SubResource("BlockShape")
+
+[node name="BlockB" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 2.5, -19)
+mesh = SubResource("BlockMesh")
+surface_material_override/0 = SubResource("MatBlock")
+
+[node name="Body" type="StaticBody3D" parent="BlockB"]
+
+[node name="Shape" type="CollisionShape3D" parent="BlockB/Body"]
+shape = SubResource("BlockShape")
+
+[node name="Backdrop" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, -26)
+mesh = SubResource("WallMesh")
+surface_material_override/0 = SubResource("MatBlock")
+
+[node name="Body" type="StaticBody3D" parent="Backdrop"]
+
+[node name="Shape" type="CollisionShape3D" parent="Backdrop/Body"]
+shape = SubResource("WallShape")
+
+[node name="TiltA" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.766, 0.643, 0, -0.643, 0.766, -9, 2.4, -10)
+mesh = SubResource("PanelMesh")
+surface_material_override/0 = SubResource("MatBlock")
+
+[node name="Body" type="StaticBody3D" parent="TiltA"]
+
+[node name="Shape" type="CollisionShape3D" parent="TiltA/Body"]
+shape = SubResource("PanelShape")
+
+[node name="TiltB" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.819, -0.574, 0, 0.574, 0.819, 9, 2, -12)
+mesh = SubResource("PanelMesh")
+surface_material_override/0 = SubResource("MatBlock")
+
+[node name="Body" type="StaticBody3D" parent="TiltB"]
+
+[node name="Shape" type="CollisionShape3D" parent="TiltB/Body"]
+shape = SubResource("PanelShape")
+
+[node name="Effects" type="Node3D" parent="."]
+
+[node name="Fx" type="Node" parent="."]
+script = ExtResource("2_fx")
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 10)
+fov = 70.0
+far = 300.0
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Hud" type="Control" parent="Ui"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Big" type="Label" parent="Ui/Hud"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = -118.0
+offset_right = 420.0
+offset_bottom = -40.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.94)
+theme_override_font_sizes/font_size = 52
+text = "0 / 0"
+vertical_alignment = 1
+
+[node name="Detail" type="RichTextLabel" parent="Ui/Hud"]
+layout_mode = 1
+offset_left = 34.0
+offset_top = 28.0
+offset_right = 560.0
+offset_bottom = 250.0
+theme_override_colors/default_color = Color(1, 1, 1, 0.78)
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+scroll_active = false
+
+[node name="Crosshair" type="Label" parent="Ui/Hud"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -10.0
+offset_top = -14.0
+offset_right = 10.0
+offset_bottom = 14.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.5)
+theme_override_font_sizes/font_size = 20
+text = "+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Hint" type="Label" parent="Ui/Hud"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -580.0
+offset_top = -172.0
+offset_right = -26.0
+offset_bottom = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.55)
+theme_override_font_sizes/font_size = 14
+text = "HOLD LEFT MOUSE or SPACE to fire    WASD fly    SHIFT up
+1-9 pick an effect    R rescan the folder
+
+no effect in this probe has a script. open one in the editor:
+particles in the inspector, timing on the AnimationPlayer.
+
+sparks now come off whatever you hit, along its normal.
+try the two tilted panels and the ground."
+horizontal_alignment = 2
+vertical_alignment = 2

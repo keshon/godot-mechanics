@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="StuffRound" load_steps=2 format=3 uid="uid://c43shotgren"]
+
+[ext_resource type="Script" path="res://probes/43_stuff/Round.gd" id="1_r"]
+
+[resource]
+script = ExtResource("1_r")
+title = "граната"
+calibre = 0.2
+energy = 260.0
+momentum = 1500.0
+crater_width = 3.0

@@ -1,0 +1,167 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/18_ui/Ui.gd" id="1_ui"]
+[ext_resource type="Script" path="res://probes/18_ui/BagView.gd" id="2_bag"]
+[ext_resource type="Script" path="res://probes/18_ui/Skeleton.gd" id="3_skel"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.09, 0.1, 0.15, 1)
+sky_horizon_color = Color(0.2, 0.21, 0.26, 1)
+ground_bottom_color = Color(0.05, 0.05, 0.07, 1)
+ground_horizon_color = Color(0.2, 0.21, 0.26, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+tonemap_mode = 2
+glow_enabled = true
+glow_bloom = 0.12
+ambient_light_source = 3
+ambient_light_energy = 0.5
+
+[sub_resource type="StandardMaterial3D" id="MatPlinth"]
+albedo_color = Color(0.3, 0.31, 0.36, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="MatHero"]
+albedo_color = Color(0.82, 0.84, 0.88, 1)
+roughness = 0.5
+
+[sub_resource type="CylinderMesh" id="Plinth"]
+top_radius = 2.2
+bottom_radius = 2.6
+height = 0.4
+
+[sub_resource type="CapsuleMesh" id="Body"]
+radius = 0.5
+height = 2.0
+
+[sub_resource type="BoxMesh" id="Bit"]
+size = Vector3(0.3, 0.3, 0.3)
+
+[node name="UiScene" type="Node3D"]
+script = ExtResource("1_ui")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-50, -40, 0)
+light_energy = 1.1
+shadow_enabled = true
+
+[node name="Plinth" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.2, 0)
+mesh = SubResource("Plinth")
+material_override = SubResource("MatPlinth")
+
+[node name="Hero" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1, 0)
+mesh = SubResource("Body")
+material_override = SubResource("MatHero")
+
+[node name="Worn" type="Node3D" parent="."]
+
+[node name="Proto" type="Node3D" parent="."]
+visible = false
+
+[node name="Bit" type="MeshInstance3D" parent="Proto"]
+mesh = SubResource("Bit")
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(0.94, -0.13, 0.32, 0, 0.93, 0.37, -0.34, -0.35, 0.87, 4.6, 4.4, 11.6)
+fov = 36.0
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Root" type="MarginContainer" parent="Ui"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 44
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 44
+theme_override_constants/margin_bottom = 40
+
+[node name="Main" type="HBoxContainer" parent="Ui/Root"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 48
+
+[node name="Left" type="VBoxContainer" parent="Ui/Root/Main"]
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+theme_override_constants/separation = 34
+
+[node name="Bag" type="Control" parent="Ui/Root/Main/Left"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+script = ExtResource("2_bag")
+cols = 10
+rows = 6
+cell = 46
+title = "bag"
+
+[node name="Cover" type="ColorRect" parent="Ui/Root/Main/Left/Bag"]
+offset_left = 92.0
+offset_top = 92.0
+offset_right = 322.0
+offset_bottom = 222.0
+color = Color(1, 0.42, 0.32, 0.3)
+mouse_filter = 2
+
+[node name="Floor" type="Control" parent="Ui/Root/Main/Left"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+script = ExtResource("2_bag")
+cols = 12
+rows = 2
+cell = 40
+title = "the floor"
+
+[node name="Right" type="VBoxContainer" parent="Ui/Root/Main"]
+layout_mode = 2
+size_flags_horizontal = 10
+mouse_filter = 2
+theme_override_constants/separation = 30
+
+[node name="Worn" type="Control" parent="Ui/Root/Main/Right"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+script = ExtResource("2_bag")
+cols = 3
+rows = 1
+cell = 62
+compact = true
+slot_tags = PackedStringArray("weapon", "armour", "trinket")
+title = "worn"
+
+[node name="Info" type="RichTextLabel" parent="Ui/Root/Main/Right"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 3
+custom_minimum_size = Vector2(440, 260)
+theme_override_colors/default_color = Color(1, 1, 1, 0.8)
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+scroll_active = false
+mouse_filter = 2
+
+[node name="Skeleton" type="Control" parent="Ui"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("3_skel")

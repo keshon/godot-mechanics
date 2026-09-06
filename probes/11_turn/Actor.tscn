@@ -1,0 +1,14 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/11_turn/Actor.gd" id="1_actor"]
+
+[sub_resource type="CapsuleMesh" id="Body"]
+radius = 0.3
+height = 0.9
+
+[node name="Actor" type="Node3D"]
+script = ExtResource("1_actor")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+mesh = SubResource("Body")

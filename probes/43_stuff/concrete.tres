@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="StuffKind" format=3 uid="uid://c43stuffconc"]
+
+[ext_resource type="Script" uid="uid://8apnsw1eqxke" path="res://probes/43_stuff/Stuff.gd" id="1_s"]
+
+[sub_resource type="StandardMaterial3D" id="Body"]
+albedo_color = Color(0.6, 0.59, 0.56, 1)
+roughness = 0.85
+
+[sub_resource type="PhysicsMaterial" id="Rubble"]
+friction = 0.95
+bounce = 0.02
+
+[sub_resource type="StandardMaterial3D" id="Shard"]
+albedo_color = Color(0.74, 0.72, 0.68, 1)
+roughness = 0.95
+
+[resource]
+script = ExtResource("1_s")
+toughness = 4.4
+body_look = SubResource("Body")
+shard_look = SubResource("Shard")
+rubble = SubResource("Rubble")

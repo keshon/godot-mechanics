@@ -1,0 +1,122 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/29_day/Day.gd" id="1_d"]
+
+[sub_resource type="Sky" id="SkyRes"]
+radiance_size = 3
+process_mode = 3
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("SkyRes")
+tonemap_mode = 2
+tonemap_exposure = 0.42
+ambient_light_source = 3
+ambient_light_energy = 1.0
+fog_enabled = true
+fog_light_color = Color(0.5, 0.6, 0.7, 1)
+fog_density = 0.002
+glow_enabled = true
+glow_bloom = 0.08
+
+[sub_resource type="CameraAttributesPractical" id="CamAttr"]
+auto_exposure_enabled = true
+auto_exposure_min_sensitivity = 12.0
+auto_exposure_max_sensitivity = 320.0
+auto_exposure_speed = 0.6
+
+[sub_resource type="StandardMaterial3D" id="MatGround"]
+albedo_color = Color(0.38, 0.4, 0.34, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="MatStone"]
+albedo_color = Color(0.62, 0.58, 0.52, 1)
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="MatWhite"]
+albedo_color = Color(0.86, 0.86, 0.84, 1)
+roughness = 0.55
+
+[sub_resource type="PlaneMesh" id="Ground"]
+size = Vector2(140, 140)
+
+[sub_resource type="BoxMesh" id="Block"]
+size = Vector3(2.4, 7, 2.4)
+
+[sub_resource type="CylinderMesh" id="Column"]
+top_radius = 0.7
+bottom_radius = 0.8
+height = 9.0
+radial_segments = 20
+
+[sub_resource type="SphereMesh" id="Ball"]
+radius = 1.6
+height = 3.2
+
+[node name="DayScene" type="Node3D"]
+script = ExtResource("1_d")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+light_energy = 1.2
+shadow_enabled = true
+directional_shadow_max_distance = 120.0
+
+[node name="Moon" type="DirectionalLight3D" parent="."]
+light_energy = 0.1
+shadow_enabled = false
+
+[node name="Cam" type="Camera3D" parent="."]
+attributes = SubResource("CamAttr")
+fov = 62.0
+far = 600.0
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+mesh = SubResource("Ground")
+material_override = SubResource("MatGround")
+
+[node name="BlockA" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.5, -3)
+mesh = SubResource("Block")
+material_override = SubResource("MatStone")
+
+[node name="BlockB" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.87, 0, -0.5, 0, 1, 0, 0.5, 0, 0.87, 7, 3.5, 4)
+mesh = SubResource("Block")
+material_override = SubResource("MatStone")
+
+[node name="ColumnA" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, -9)
+mesh = SubResource("Column")
+material_override = SubResource("MatWhite")
+
+[node name="ColumnB" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 4.5, -6)
+mesh = SubResource("Column")
+material_override = SubResource("MatWhite")
+
+[node name="Ball" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.6, 2)
+mesh = SubResource("Ball")
+material_override = SubResource("MatWhite")
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Info" type="RichTextLabel" parent="Ui"]
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
+offset_left = 26.0
+offset_top = 22.0
+offset_right = 700.0
+offset_bottom = -22.0
+theme_override_colors/default_color = Color(1, 1, 1, 0.92)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+scroll_active = false
+mouse_filter = 2
