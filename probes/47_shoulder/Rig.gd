@@ -27,6 +27,13 @@ const STEADY := 0.25
 var _yaw := 0.0
 var _pitch := 0.0
 var _zoom := false
+## Watching from the side, which is the only way to JUDGE a shot. From the shoulder the round
+## leaves as a dot over the ground and every flight looks the same; the difference between a
+## thrown thing and a beam rider is a SHAPE, and a shape needs to be seen from off to one side.
+var _side := false
+## Where the round has been. Kept after the shot, so the last path can be compared with the
+## line that was being held while it flew.
+var _path := PackedVector3Array()
 var _shot: ShoulderRound = null
 var _last := ""
 var _table: Array = []
@@ -38,6 +45,8 @@ var _hold := 0.0        ## seconds the sight was on the target during the shot
 var _flight := 0.0
 
 @onready var _eye: Camera3D = $Body/Eye
+@onready var _off: Camera3D = $Side
+@onready var _trace: MeshInstance3D = $Trace
 @onready var _body: CharacterBody3D = $Body
 @onready var _tube: ShoulderLauncher = $Body/Eye/Tube
 @onready var _mark: ShoulderTarget = $Target
@@ -72,6 +81,11 @@ func _unhandled_input(event: InputEvent) -> void:
 			if r != null:
 				_kind_flip()
 		KEY_2: _mark.speed = 0.0 if _mark.speed > 0.0 else 11.0
+		KEY_3: _side = not _side
+		KEY_4:
+			var marks := [80.0, 160.0, 240.0, 320.0, 500.0]
+			var i := marks.find(_tube.sight_range)
+			_tube.sight_range = marks[(i + 1) % marks.size()]
 		KEY_G:
 			_table.clear()
 			_row = 0
@@ -103,6 +117,7 @@ func _pull() -> void:
 	_shot = shot
 	_flight = 0.0
 	_hold = 0.0
+	_path = PackedVector3Array([_tube.muzzle().origin])
 
 
 func _physics_process(delta: float) -> void:
@@ -127,6 +142,24 @@ func _look() -> void:
 	_body.rotation.y = _yaw
 	_eye.rotation.x = _pitch
 	_eye.fov = lerpf(_eye.fov, zoom_fov if _zoom else open_fov, 0.25)
+	_eye.current = not _side
+	_off.current = _side
+
+
+## The side view stands off the line between shooter and target, high enough to put the whole
+## flight against the ground. The sight is still the EYE, so the round is still being guided by
+## the hand while this camera watches it — flying and judging want different places to stand.
+func _watch() -> void:
+	var from := _body.global_position
+	var mid := (from + _mark.global_position) * 0.5
+	var flat := _mark.global_position - from
+	flat.y = 0.0
+	var span := maxf(flat.length(), 40.0)
+	var side := Vector3(-flat.z, 0.0, flat.x).normalized() if flat.length() > 1.0 		else Vector3.RIGHT
+	_off.global_position = mid + side * span * 0.9 + Vector3.UP * span * 0.2
+	# Aimed at the middle of the baseline and not at the round: the whole flight has to stay in
+	# frame, and a camera that follows the round swings the ground out from under it.
+	_off.look_at(mid, Vector3.UP)
 
 
 func _walk(delta: float) -> void:
@@ -142,12 +175,18 @@ func _walk(delta: float) -> void:
 ## memory of where the sight was at launch; it goes wherever the line is NOW. Look away and
 ## the round follows the look.
 func _feed(delta: float) -> void:
-	_tube.aim(-_eye.global_basis.z, Vector3.UP)
+	# The TUBE is held above the line of sight by the dialled elevation; the BEAM stays on the
+	# sight. So a beam rider leaves high and settles down onto the line, and that settling is
+	# the thing the side view was added to show.
+	_tube.aim((-_eye.global_basis.z).rotated(_eye.global_basis.x, _tube.elevation()),
+		Vector3.UP)
 	if _shot == null:
 		return
 	_flight += delta
 	_shot.beam_from = _tube.muzzle().origin
 	_shot.beam_dir = -_eye.global_basis.z
+	if _path.is_empty() or _path[-1].distance_to(_shot.global_position) > 1.5:
+		_path.append(_shot.global_position)
 	# How much of the flight the sight actually spent on the target. This is the price of
 	# guidance, expressed in the only currency the shooter has.
 	var to_mark := _mark.global_position - _eye.global_position
@@ -173,7 +212,7 @@ func _aim_for_measurement(delta: float) -> void:
 func _start_row() -> void:
 	_mark.reset()
 	var d: float = RANGES[_row]
-	_mark.position = Vector3(-_mark.run * 0.5, _mark.position.y, -d)
+	_mark.position = Vector3(0.0, _mark.position.y, -d)
 	_body.position = Vector3.ZERO
 	_tube.reset()
 	_settle = 0.8
@@ -216,7 +255,33 @@ func _reset() -> void:
 
 
 func _process(_delta: float) -> void:
+	_watch()
+	_draw()
 	_readout()
+
+
+## THE PATH AND THE LINE IN ONE PICTURE. The round's track is drawn where it went, the sight
+## line where it is being held, and the whole mechanic is the distance between them: a beam
+## rider closes it, a thrown round never had one to close.
+func _draw() -> void:
+	var mesh := _trace.mesh as ImmediateMesh
+	if mesh == null:
+		return
+	mesh.clear_surfaces()
+	if _path.size() > 1:
+		mesh.surface_begin(Mesh.PRIMITIVE_LINE_STRIP)
+		for point in _path:
+			mesh.surface_set_color(Color(1.0, 0.62, 0.24, 0.95))
+			mesh.surface_add_vertex(point)
+		mesh.surface_end()
+	if _side:
+		var from := _tube.muzzle().origin
+		mesh.surface_begin(Mesh.PRIMITIVE_LINES)
+		mesh.surface_set_color(Color(0.45, 0.85, 1.0, 0.5))
+		mesh.surface_add_vertex(from)
+		mesh.surface_set_color(Color(0.45, 0.85, 1.0, 0.0))
+		mesh.surface_add_vertex(from - _eye.global_basis.z * 420.0)
+		mesh.surface_end()
 
 
 func _live(fmt: String, value: float) -> String:
@@ -232,8 +297,9 @@ func _readout() -> void:
 			"[color=#ff8866]%s[/color]" % _tube.last if _tube.last != "" else
 			("[color=#ffcc66]перезарядка %.1f с[/color]" % _tube.ready_in
 				if _tube.ready_in > 0.0 else "готова")],
-		"до цели [b]%.0f[/b] м   цель идёт %.0f м/с   взведение с %.0f м" % [
-			to_mark, _mark.velocity.length(), 25.0],
+		"до цели [b]%.0f[/b] м   прицел набран на [b]%.0f[/b] м (+%.1f°)   цель идёт %.0f м/с" % [
+			to_mark, _tube.sight_range, rad_to_deg(_tube.elevation()),
+			_mark.velocity.length()],
 		"полёт %s   от луча %s   тянет %s   прицел на цели %s" % [
 			_live("%.1f с", _flight), _live("%.1f м", _shot.off_beam if _shot else 0.0),
 			_live("%.1f g", _shot.pulled if _shot else 0.0),
@@ -243,6 +309,8 @@ func _readout() -> void:
 		"[b]ЛКМ пуск[/b]   ПКМ прицел   WASD ходить   ESC отпустить мышь",
 		"1 ракета: %s" % kind,
 		"2 цель: %s" % ("идёт" if _mark.speed > 0.0 else "стоит"),
+		"3 взгляд: %s" % ("со стороны — видно траекторию и луч" if _side else "с плеча"),
+		"4 шкала дальности: %.0f м" % _tube.sight_range,
 		"G прогнать четыре пуска с 80 / 160 / 240 / 320 м",
 		"[color=#9fb4c8]за спиной у трубы струя: у стены выстрел не пройдёт[/color]",
 	])

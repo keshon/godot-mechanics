@@ -45,7 +45,7 @@ const SCRIPTED := {
 	"44_missile": {"fire": [40, 44], "hold": [KEY_D, 150, 999], "frames": 380},
 	"45_seeker":  {"keys": [[40, KEY_SPACE]], "hold": [KEY_D, 60, 400], "frames": 500},
 	"46_rocket":  {"keys": [[20, KEY_2], [24, KEY_2], [40, KEY_SPACE], [44, KEY_1]], "frames": 8000},
-	"47_shoulder": {"fire": [60, 64], "frames": 260},
+	"47_shoulder": {"keys": [[20, KEY_3], [24, KEY_1]], "fire": [60, 64], "frames": 340},
 }
 
 

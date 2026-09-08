@@ -48,6 +48,13 @@ size = Vector3(9, 3.2, 0.5)
 [sub_resource type="BoxShape3D" id="ShapeWall"]
 size = Vector3(9, 3.2, 0.5)
 
+[sub_resource type="StandardMaterial3D" id="MatTrace"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+
+[sub_resource type="ImmediateMesh" id="MeshTrace"]
+
 [sub_resource type="CapsuleShape3D" id="ShapeBody"]
 radius = 0.35
 height = 1.8
@@ -106,6 +113,7 @@ shape = SubResource("ShapeBody")
 
 [node name="Eye" type="Camera3D" parent="Body"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+current = true
 fov = 70.0
 near = 0.05
 far = 3000.0
@@ -114,7 +122,18 @@ far = 3000.0
 transform = Transform3D(0.62, 0, 0, 0, 0.62, 0, 0, 0, 0.62, 0.15, -0.13, -0.6)
 
 [node name="Target" parent="." instance=ExtResource("3_target")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -65, 0, -160)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -160)
+
+[node name="Side" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 90, 30, -80)
+fov = 55.0
+near = 0.5
+far = 3000.0
+
+[node name="Trace" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+material_override = SubResource("MatTrace")
+mesh = SubResource("MeshTrace")
 
 [node name="Shots" type="Node3D" parent="."]
 

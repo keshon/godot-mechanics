@@ -23,7 +23,13 @@ enum Kind {
 }
 
 @export var kind := Kind.BEAM
+## Off the rail slowly, because the tube sits on a shoulder and cannot afford the kick.
 @export_range(20.0, 400.0, 5.0) var speed := 115.0
+## What the sustainer works it up to once it is clear. A round that leaves at launch speed and
+## coasts is a mortar bomb: at a hundred and fifteen metres per second it drops nearly ten
+## metres over a hundred and sixty, which is to say it never arrives.
+@export_range(20.0, 500.0, 5.0) var cruise := 170.0
+@export_range(0.0, 3.0, 0.05) var boost := 0.8
 ## Ceiling on lateral acceleration. Beam riding asks for most of it at the moment the round
 ## gathers onto the line, which is why a shot taken while swinging the sight misses.
 @export_range(2.0, 40.0, 0.5) var limit := 9.0
@@ -81,6 +87,8 @@ func _physics_process(delta: float) -> void:
 	travelled += _v.length() * delta
 	armed = travelled >= arming
 
+	if clock < boost and _v.length() < cruise:
+		_v += _v.normalized() * (cruise - speed) / maxf(boost, 0.01) * delta
 	if kind == Kind.BEAM:
 		_ride(delta)
 	else:
@@ -116,7 +124,8 @@ func _ride(delta: float) -> void:
 	if asked > limit:
 		want = want.normalized() * limit * 9.81
 	pulled = want.length() / 9.81
-	_v = (_v + want * delta).normalized() * speed
+	var was := _v.length()
+	_v = (_v + want * delta).normalized() * was
 
 
 func _score(delta: float) -> void:

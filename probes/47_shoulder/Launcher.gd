@@ -27,6 +27,14 @@ signal refused(why: String)
 ## How far back the jet is still dangerous, and how wide. The distance lives on the raycast
 ## node in the scene, so it is dragged rather than typed.
 @export_range(0.0, 4.0, 0.05) var flash_time := 0.35
+## THE SIGHT IS A RANGE SCALE, not a crosshair. An unguided round drops nearly ten metres over
+## a hundred and sixty, so the tube is held ABOVE the line of sight by an angle the shooter
+## dials in. Dial it wrong and the round lands short or long — that is the whole cost of an
+## unguided launcher, and it is paid before the trigger rather than after it.
+@export_range(20.0, 600.0, 10.0) var sight_range := 160.0
+## The speed the scale is cut for. A sight belongs to one round; hand the tube a different one
+## and every mark on it lies.
+@export_range(20.0, 500.0, 5.0) var sight_speed := 170.0
 
 var left := 0
 var ready_in := 0.0
@@ -101,6 +109,13 @@ func reset() -> void:
 	last = ""
 	if _flash != null:
 		_flash.visible = false
+
+
+## How far above the line of sight the tube is held, in radians. Straight out of the ballistic
+## range equation, which is why the far marks on a real scale crowd together.
+func elevation() -> float:
+	var s := clampf(9.81 * sight_range / (sight_speed * sight_speed), -1.0, 1.0)
+	return 0.5 * asin(s)
 
 
 ## Where the round leaves from, in world space. The sight rides on this and not on the eye:
