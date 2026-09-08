@@ -1,0 +1,39 @@
+[gd_scene load_steps=6 format=3 uid="uid://c45seekprey"]
+
+[ext_resource type="Script" path="res://probes/45_seeker/Prey.gd" id="1_prey"]
+
+[sub_resource type="StandardMaterial3D" id="MatPlane"]
+albedo_color = Color(0.16, 0.19, 0.24, 1)
+metallic = 0.2
+roughness = 0.5
+
+[sub_resource type="BoxMesh" id="MeshHull"]
+size = Vector3(1.2, 1.1, 8.0)
+
+[sub_resource type="BoxMesh" id="MeshWing"]
+size = Vector3(11.0, 0.25, 1.8)
+
+[sub_resource type="BoxMesh" id="MeshTail"]
+size = Vector3(0.25, 2.2, 1.4)
+
+[node name="Prey" type="Node3D"]
+script = ExtResource("1_prey")
+
+[node name="Hull" type="MeshInstance3D" parent="."]
+material_override = SubResource("MatPlane")
+mesh = SubResource("MeshHull")
+
+[node name="Wing" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0.6)
+material_override = SubResource("MatPlane")
+mesh = SubResource("MeshWing")
+
+[node name="Tail" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 3.4)
+material_override = SubResource("MatPlane")
+mesh = SubResource("MeshTail")
+
+[node name="Stab" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.45, 0, 0, 0, 1, 0, 0, 0, 0.8, 0, 0.1, 3.4)
+material_override = SubResource("MatPlane")
+mesh = SubResource("MeshWing")

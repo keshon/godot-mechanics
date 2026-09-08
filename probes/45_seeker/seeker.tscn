@@ -1,0 +1,122 @@
+[gd_scene load_steps=11 format=3 uid="uid://c45seekrange"]
+
+[ext_resource type="Script" path="res://probes/45_seeker/Rig.gd" id="1_rig"]
+[ext_resource type="PackedScene" path="res://probes/45_seeker/prey.tscn" id="2_prey"]
+[ext_resource type="PackedScene" path="res://probes/45_seeker/dart.tscn" id="3_dart"]
+[ext_resource type="Shader" path="res://probes/45_seeker/ground.gdshader" id="4_grid"]
+[ext_resource type="Script" path="res://probes/45_seeker/Threat.gd" id="5_threat"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.19, 0.33, 0.56, 1)
+sky_horizon_color = Color(0.66, 0.73, 0.81, 1)
+ground_bottom_color = Color(0.2, 0.22, 0.24, 1)
+ground_horizon_color = Color(0.55, 0.58, 0.6, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+ambient_light_source = 3
+ambient_light_color = Color(0.58, 0.65, 0.74, 1)
+tonemap_mode = 2
+glow_enabled = true
+fog_enabled = true
+fog_light_color = Color(0.68, 0.74, 0.8, 1)
+fog_density = 0.00008
+
+[sub_resource type="ShaderMaterial" id="MatGround"]
+shader = ExtResource("4_grid")
+shader_parameter/pale = Color(0.3, 0.33, 0.28, 1)
+shader_parameter/dark = Color(0.21, 0.23, 0.2, 1)
+shader_parameter/rule = Color(0.62, 0.66, 0.58, 1)
+shader_parameter/cell = 100.0
+shader_parameter/major = 1000.0
+
+[sub_resource type="PlaneMesh" id="MeshGround"]
+size = Vector2(24000, 24000)
+
+[node name="Rig" type="Node3D"]
+script = ExtResource("1_rig")
+
+[node name="World" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.87, -0.29, 0.4, 0, 0.81, 0.59, -0.49, -0.51, 0.71, 0, 200, 0)
+light_color = Color(1, 0.97, 0.93, 1)
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 910, 60)
+fov = 62.0
+near = 0.5
+far = 24000.0
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+material_override = SubResource("MatGround")
+mesh = SubResource("MeshGround")
+
+[node name="Rail" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1400, 400, 2600)
+
+[node name="Prey" parent="." instance=ExtResource("2_prey")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 900, 0)
+
+[node name="Dart" parent="." instance=ExtResource("3_dart")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1400, 400, 2600)
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Threat" type="Control" parent="Ui"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -232.0
+offset_top = -232.0
+mouse_filter = 2
+script = ExtResource("5_threat")
+
+[node name="Frame" type="ColorRect" parent="Ui"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -396.0
+offset_top = 16.0
+offset_right = -20.0
+offset_bottom = 231.0
+mouse_filter = 2
+color = Color(0.09, 0.11, 0.13, 0.85)
+
+[node name="Eye" type="SubViewportContainer" parent="Ui"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -392.0
+offset_top = 20.0
+offset_right = -24.0
+offset_bottom = 227.0
+mouse_filter = 2
+stretch = true
+
+[node name="View" type="SubViewport" parent="Ui/Eye"]
+handle_input_locally = false
+size = Vector2i(368, 207)
+render_target_update_mode = 4
+
+[node name="Cam" type="Camera3D" parent="Ui/Eye/View"]
+fov = 22.0
+near = 0.5
+far = 24000.0
+
+[node name="Info" type="RichTextLabel" parent="Ui"]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 1150.0
+offset_bottom = 560.0
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.93, 0.95, 0.97, 1)
+bbcode_enabled = true
+scroll_active = false

@@ -71,6 +71,7 @@ fire={
 
 3d/physics_engine="Jolt Physics"
 jolt_physics_3d/limits/max_body_pairs=131072
+jolt_physics_3d/limits/max_linear_velocity=20000.0
 
 [rendering]
 

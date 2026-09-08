@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://c46rockupper"]
+
+[ext_resource type="Script" path="res://probes/46_rocket/Stage.gd" id="1_stage"]
+[ext_resource type="PackedScene" path="res://probes/46_rocket/nozzle.tscn" id="2_nozzle"]
+
+[sub_resource type="StandardMaterial3D" id="MatSkin"]
+albedo_color = Color(0.86, 0.87, 0.89, 1)
+metallic = 0.2
+roughness = 0.5
+
+[sub_resource type="CylinderMesh" id="MeshBody"]
+top_radius = 1.335
+bottom_radius = 1.335
+height = 6.7
+radial_segments = 16
+rings = 1
+
+[node name="Upper" type="Node3D"]
+script = ExtResource("1_stage")
+nozzle_scene = ExtResource("2_nozzle")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0)
+material_override = SubResource("MatSkin")
+mesh = SubResource("MeshBody")
+
+[node name="Nozzles" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.35)

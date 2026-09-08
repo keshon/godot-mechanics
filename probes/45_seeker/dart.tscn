@@ -1,0 +1,56 @@
+[gd_scene load_steps=8 format=3 uid="uid://c45seekdart"]
+
+[ext_resource type="Script" path="res://probes/45_seeker/Dart.gd" id="1_dart"]
+[ext_resource type="Script" path="res://probes/45_seeker/Head.gd" id="2_head"]
+
+[sub_resource type="StandardMaterial3D" id="MatDart"]
+albedo_color = Color(0.92, 0.35, 0.2, 1)
+emission_enabled = true
+emission = Color(0.9, 0.3, 0.12, 1)
+emission_energy_multiplier = 1.6
+roughness = 0.5
+
+[sub_resource type="CylinderMesh" id="MeshDart"]
+top_radius = 0.02
+bottom_radius = 0.14
+height = 2.4
+
+[sub_resource type="StandardMaterial3D" id="MatSight"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.45, 1, 0.55, 0.85)
+
+[sub_resource type="TorusMesh" id="MeshSight"]
+inner_radius = 0.4
+outer_radius = 0.75
+rings = 24
+ring_segments = 8
+
+[sub_resource type="SphereMesh" id="MeshSpark"]
+radius = 0.5
+height = 1.0
+radial_segments = 8
+rings = 4
+
+[node name="Dart" type="Node3D"]
+script = ExtResource("1_dart")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0)
+material_override = SubResource("MatDart")
+mesh = SubResource("MeshDart")
+
+[node name="Glow" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.3)
+material_override = SubResource("MatDart")
+mesh = SubResource("MeshSpark")
+
+[node name="Head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.2)
+script = ExtResource("2_head")
+
+[node name="Sight" type="MeshInstance3D" parent="Head"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, -60)
+cast_shadow = 0
+material_override = SubResource("MatSight")
+mesh = SubResource("MeshSight")

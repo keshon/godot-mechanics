@@ -30,7 +30,8 @@ const SETTLE := 150
 ## уже последствие. Остальные снимаются как есть — покой у них и есть предмет.
 ##
 ## `keys` — кадр и клавиша (одиночное нажатие). `fire` — кадр начала и конца удержания
-## огня. Кадры отсчитываются от появления сцены, снимок берётся на SETTLE.
+## огня. `frames` продлевает ожидание: пробе, которая после нажатия что-то СЧИТАЕТ, полутора
+## секунд мало. Кадры отсчитываются от появления сцены, снимок берётся на последнем.
 const SCRIPTED := {
 	"08_boom":    {"keys": [[60, KEY_SPACE]]},
 	"09_fx":      {"keys": [[40, KEY_SPACE], [90, KEY_SPACE]]},
@@ -41,6 +42,9 @@ const SCRIPTED := {
 	"43_stuff":   {"fire": [40, 100]},
 	"01_gunrun":  {"fire": [60, 130]},
 	"03_siege":   {"fire": [40, 70]},
+	"44_missile": {"fire": [40, 44], "hold": [KEY_D, 150, 999], "frames": 380},
+	"45_seeker":  {"keys": [[40, KEY_SPACE]], "hold": [KEY_D, 60, 400], "frames": 500},
+	"46_rocket":  {"keys": [[20, KEY_2], [24, KEY_2], [40, KEY_SPACE], [44, KEY_1]], "frames": 8000},
 }
 
 
@@ -114,7 +118,9 @@ func _take(scene_path: String, name: String, out_path: String) -> void:
 	var script: Dictionary = SCRIPTED.get(name, {})
 	var keys: Array = script.get("keys", [])
 	var fire: Array = script.get("fire", [])
-	for i in SETTLE:
+	var hold: Array = script.get("hold", [])
+	var frames: int = script.get("frames", SETTLE)
+	for i in frames:
 		for k in keys:
 			if k[0] == i:
 				_key(vp, k[1], true)
@@ -124,12 +130,21 @@ func _take(scene_path: String, name: String, out_path: String) -> void:
 				_fire(vp, true)
 			elif fire[1] == i:
 				_fire(vp, false)
+		if hold.size() == 3:
+			if hold[1] == i:
+				_key(vp, hold[0], true)
+			elif hold[2] == i:
+				_key(vp, hold[0], false)
 		await get_tree().process_frame
-	if fire.size() == 2:
-		_fire(vp, false)
-
+	# СНИМОК РАНЬШЕ ОТПУСКАНИЯ. Отпустить клавишу перед кадром значит снять пробу в тот
+	# момент, когда сценарий уже кончился: у пробы 44 руль успевал вернуться к нулю, и на
+	# витрине стояло «руль высоты +0.00» при полной перекладке за кадром.
 	await RenderingServer.frame_post_draw
 	var img := vp.get_texture().get_image()
+	if fire.size() == 2:
+		_fire(vp, false)
+	if hold.size() == 3:
+		_key(vp, hold[0], false)
 	DirAccess.make_dir_recursive_absolute(out_path.get_base_dir())
 	var err := img.save_jpg(out_path, QUALITY)
 	print("[shot] %s  %s" % ["ok " if err == OK else "FAIL", out_path])

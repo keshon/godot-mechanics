@@ -1,0 +1,44 @@
+[gd_scene load_steps=5 format=3 uid="uid://c46rocknozzle"]
+
+[sub_resource type="StandardMaterial3D" id="MatBell"]
+albedo_color = Color(0.55, 0.56, 0.58, 1)
+metallic = 0.7
+roughness = 0.35
+
+[sub_resource type="StandardMaterial3D" id="MatFlame"]
+albedo_color = Color(1, 0.72, 0.32, 1)
+emission_enabled = true
+emission = Color(1, 0.62, 0.24, 1)
+emission_energy_multiplier = 6.0
+shading_mode = 0
+
+[sub_resource type="CylinderMesh" id="MeshBell"]
+top_radius = 0.15
+bottom_radius = 0.42
+height = 0.95
+radial_segments = 12
+rings = 1
+
+[sub_resource type="CylinderMesh" id="MeshFlame"]
+top_radius = 0.1
+bottom_radius = 0.62
+height = 7.0
+radial_segments = 10
+rings = 1
+
+[node name="Nozzle" type="Node3D"]
+
+[node name="Bell" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0.48)
+cast_shadow = 0
+material_override = SubResource("MatBell")
+mesh = SubResource("MeshBell")
+
+[node name="Flame" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.95)
+
+[node name="Cone" type="MeshInstance3D" parent="Flame"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 3.5)
+cast_shadow = 0
+material_override = SubResource("MatFlame")
+mesh = SubResource("MeshFlame")

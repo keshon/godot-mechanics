@@ -1,0 +1,144 @@
+[gd_scene load_steps=11 format=3 uid="uid://c46rockstack"]
+
+[ext_resource type="Script" path="res://probes/46_rocket/Rocket.gd" id="1_stack"]
+[ext_resource type="PackedScene" path="res://probes/46_rocket/booster.tscn" id="2_boost"]
+[ext_resource type="PackedScene" path="res://probes/46_rocket/core.tscn" id="3_core"]
+[ext_resource type="PackedScene" path="res://probes/46_rocket/upper.tscn" id="4_upper"]
+
+[sub_resource type="StandardMaterial3D" id="MatShroud"]
+albedo_color = Color(0.9, 0.91, 0.93, 1)
+metallic = 0.15
+roughness = 0.45
+
+[sub_resource type="StandardMaterial3D" id="MatTower"]
+albedo_color = Color(0.72, 0.73, 0.75, 1)
+metallic = 0.5
+roughness = 0.4
+
+[sub_resource type="CylinderMesh" id="MeshShroud"]
+top_radius = 1.35
+bottom_radius = 1.35
+height = 6.5
+radial_segments = 16
+rings = 1
+
+[sub_resource type="CylinderMesh" id="MeshCone"]
+top_radius = 0.18
+bottom_radius = 1.35
+height = 4.5
+radial_segments = 16
+rings = 1
+
+[sub_resource type="CylinderMesh" id="MeshTower"]
+top_radius = 0.05
+bottom_radius = 0.16
+height = 4.0
+radial_segments = 8
+rings = 1
+
+[sub_resource type="CapsuleShape3D" id="ShapeHull"]
+radius = 4.18
+height = 49.5
+
+[node name="Stack" type="RigidBody3D"]
+collision_layer = 2
+collision_mask = 1
+linear_damp_mode = 1
+angular_damp_mode = 1
+contact_monitor = true
+max_contacts_reported = 4
+continuous_cd = true
+script = ExtResource("1_stack")
+frontal_area = 9.6
+payload = 1400.0
+
+[node name="Shape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, -0.75)
+shape = SubResource("ShapeHull")
+
+[node name="Shroud" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, -13.75)
+material_override = SubResource("MatShroud")
+mesh = SubResource("MeshShroud")
+
+[node name="Cone" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, -19.25)
+material_override = SubResource("MatShroud")
+mesh = SubResource("MeshCone")
+
+[node name="Tower" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, -23.5)
+material_override = SubResource("MatTower")
+mesh = SubResource("MeshTower")
+
+[node name="Cop" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7.0)
+
+[node name="Upper" parent="." instance=ExtResource("4_upper")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7.15)
+dry_mass = 8000.0
+propellant = 3500.0
+engines = 4
+chamber = 38000.0
+ring = 0.42
+exhaust = 3300.0
+gimbal = 6.0
+group = 2
+
+[node name="Core" parent="." instance=ExtResource("3_core")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10.1)
+dry_mass = 20000.0
+propellant = 23800.0
+engines = 4
+chamber = 130000.0
+ring = 0.68
+exhaust = 3050.0
+gimbal = 8.0
+group = 1
+starts_lit = true
+
+[node name="SideA" parent="." instance=ExtResource("2_boost")]
+transform = Transform3D(0.99904823, 0, 0.043619387, 0, 1, 0, -0.043619387, 0, 0.99904823, 2.825, 0, 13.6)
+dry_mass = 5000.0
+propellant = 4900.0
+engines = 4
+chamber = 53000.0
+ring = 0.62
+exhaust = 2580.0
+gimbal = 7.0
+group = 0
+
+[node name="SideB" parent="." instance=ExtResource("2_boost")]
+transform = Transform3D(0.99904823, 0, -0.043619387, 0, 1, 0, 0.043619387, 0, 0.99904823, -2.825, 0, 13.6)
+dry_mass = 5000.0
+propellant = 4900.0
+engines = 4
+chamber = 53000.0
+ring = 0.62
+exhaust = 2580.0
+gimbal = 7.0
+group = 0
+
+[node name="SideC" parent="." instance=ExtResource("2_boost")]
+transform = Transform3D(1, 0, 0, 0, 0.99904823, 0.043619387, 0, -0.043619387, 0.99904823, 0, 2.825, 13.6)
+dry_mass = 5000.0
+propellant = 4900.0
+engines = 4
+chamber = 53000.0
+ring = 0.62
+exhaust = 2580.0
+gimbal = 7.0
+group = 0
+
+[node name="SideD" parent="." instance=ExtResource("2_boost")]
+transform = Transform3D(1, 0, 0, 0, 0.99904823, -0.043619387, 0, 0.043619387, 0.99904823, 0, -2.825, 13.6)
+dry_mass = 5000.0
+propellant = 4900.0
+engines = 4
+chamber = 53000.0
+ring = 0.62
+exhaust = 2580.0
+gimbal = 7.0
+group = 0
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

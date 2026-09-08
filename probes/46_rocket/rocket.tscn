@@ -1,0 +1,160 @@
+[gd_scene load_steps=16 format=3 uid="uid://c46rockrange"]
+
+[ext_resource type="Script" path="res://probes/46_rocket/Rig.gd" id="1_rig"]
+[ext_resource type="Script" path="res://probes/46_rocket/Planet.gd" id="2_planet"]
+[ext_resource type="PackedScene" path="res://probes/46_rocket/stack.tscn" id="3_stack"]
+[ext_resource type="Shader" path="res://probes/46_rocket/ground.gdshader" id="4_grid"]
+[ext_resource type="PackedScene" path="res://probes/46_rocket/spent.tscn" id="5_spent"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.05, 0.08, 0.16, 1)
+sky_horizon_color = Color(0.55, 0.68, 0.82, 1)
+ground_bottom_color = Color(0.1, 0.11, 0.13, 1)
+ground_horizon_color = Color(0.5, 0.6, 0.7, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+ambient_light_source = 2
+ambient_light_color = Color(0.62, 0.7, 0.82, 1)
+ambient_light_energy = 0.85
+tonemap_mode = 2
+tonemap_white = 2.0
+glow_enabled = true
+
+[sub_resource type="ShaderMaterial" id="MatPlanet"]
+shader = ExtResource("4_grid")
+shader_parameter/pale = Color(0.3, 0.34, 0.28, 1)
+shader_parameter/dark = Color(0.21, 0.24, 0.2, 1)
+shader_parameter/rule = Color(0.62, 0.68, 0.56, 1)
+shader_parameter/cell = 500.0
+shader_parameter/major = 5000.0
+
+[sub_resource type="StandardMaterial3D" id="MatSteel"]
+albedo_color = Color(0.34, 0.36, 0.4, 1)
+metallic = 0.5
+roughness = 0.55
+
+[sub_resource type="BoxMesh" id="MeshSlab"]
+size = Vector3(58, 2.5, 58)
+
+[sub_resource type="BoxMesh" id="MeshTower"]
+size = Vector3(1.8, 40, 1.8)
+
+[sub_resource type="BoxMesh" id="MeshMount"]
+size = Vector3(17, 2, 17)
+
+[sub_resource type="SphereMesh" id="MeshPlanet"]
+radius = 120000.0
+height = 240000.0
+radial_segments = 96
+rings = 48
+
+[sub_resource type="SphereShape3D" id="ShapePlanet"]
+radius = 120000.0
+
+[node name="Rig" type="Node3D"]
+script = ExtResource("1_rig")
+vehicle_length = 50.0
+stack_scene = ExtResource("3_stack")
+spent_scene = ExtResource("5_spent")
+
+[node name="World" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.74, 0, -0.67, -0.45, 0.74, -0.5, 0.5, 0.67, 0.55, 0, 300, 0)
+light_color = Color(1, 0.97, 0.93, 1)
+light_energy = 1.2
+
+[node name="Planet" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -120000, 0)
+script = ExtResource("2_planet")
+radius = 120000.0
+surface_gravity = 9.81
+scale_height = 6000.0
+edge = 30000.0
+
+[node name="Ball" type="MeshInstance3D" parent="Planet"]
+material_override = SubResource("MatPlanet")
+mesh = SubResource("MeshPlanet")
+
+[node name="Body" type="StaticBody3D" parent="Planet"]
+collision_layer = 1
+collision_mask = 0
+
+[node name="Shape" type="CollisionShape3D" parent="Planet/Body"]
+shape = SubResource("ShapePlanet")
+
+[node name="Pad" type="Node3D" parent="."]
+
+[node name="Slab" type="MeshInstance3D" parent="Pad"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5, 0)
+material_override = SubResource("MatSteel")
+mesh = SubResource("MeshSlab")
+
+[node name="Mount" type="MeshInstance3D" parent="Pad"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+material_override = SubResource("MatSteel")
+mesh = SubResource("MeshMount")
+
+[node name="TowerA" type="MeshInstance3D" parent="Pad"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 20, 15)
+material_override = SubResource("MatSteel")
+mesh = SubResource("MeshTower")
+
+[node name="TowerB" type="MeshInstance3D" parent="Pad"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 20, 15)
+material_override = SubResource("MatSteel")
+mesh = SubResource("MeshTower")
+
+[node name="TowerC" type="MeshInstance3D" parent="Pad"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 20, -15)
+material_override = SubResource("MatSteel")
+mesh = SubResource("MeshTower")
+
+[node name="TowerD" type="MeshInstance3D" parent="Pad"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 20, -15)
+material_override = SubResource("MatSteel")
+mesh = SubResource("MeshTower")
+
+[node name="Cams" type="Node3D" parent="."]
+
+[node name="Pad" type="Camera3D" parent="Cams"]
+transform = Transform3D(0.27074558, 0.2645228, 0.92559415, 0, 0.9615055, -0.27478576, -0.96265095, 0.074397035, 0.26032335, 64, 9, 18)
+current = true
+fov = 50.0
+near = 0.5
+far = 400000.0
+
+[node name="Scope" type="Camera3D" parent="Cams"]
+transform = Transform3D(0.15596257, 0.0410456, 0.9869098, 0, 0.99913627, -0.0415541, -0.987763, 0.006480884, 0.15582787, 760, 8, 120)
+fov = 8.0
+near = 0.5
+far = 400000.0
+
+[node name="Trail" type="Camera3D" parent="Cams"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 77, 29, 0)
+fov = 46.0
+near = 0.5
+far = 400000.0
+
+[node name="Stack" parent="." instance=ExtResource("3_stack")]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 27, 0)
+
+[node name="Junk" type="Node3D" parent="."]
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Info" type="RichTextLabel" parent="Ui"]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 1150.0
+offset_bottom = 560.0
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.93, 0.95, 0.97, 1)
+bbcode_enabled = true
+scroll_active = false

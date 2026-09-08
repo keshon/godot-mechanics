@@ -1,0 +1,57 @@
+[gd_scene load_steps=7 format=3 uid="uid://c46rockboost"]
+
+[ext_resource type="Script" path="res://probes/46_rocket/Stage.gd" id="1_stage"]
+[ext_resource type="PackedScene" path="res://probes/46_rocket/nozzle.tscn" id="2_nozzle"]
+
+[sub_resource type="StandardMaterial3D" id="MatSkin"]
+albedo_color = Color(0.83, 0.84, 0.86, 1)
+metallic = 0.2
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="MatSkirt"]
+albedo_color = Color(0.83, 0.42, 0.1, 1)
+metallic = 0.1
+roughness = 0.65
+
+[sub_resource type="CylinderMesh" id="MeshNose"]
+top_radius = 0.06
+bottom_radius = 0.85
+height = 6.6
+radial_segments = 16
+rings = 1
+
+[sub_resource type="CylinderMesh" id="MeshBody"]
+top_radius = 0.85
+bottom_radius = 1.28
+height = 9.2
+radial_segments = 16
+rings = 1
+
+[sub_resource type="CylinderMesh" id="MeshSkirt"]
+top_radius = 1.28
+bottom_radius = 1.35
+height = 3.8
+radial_segments = 16
+rings = 1
+
+[node name="Booster" type="Node3D"]
+script = ExtResource("1_stage")
+nozzle_scene = ExtResource("2_nozzle")
+
+[node name="Nose" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, -6.5)
+material_override = SubResource("MatSkin")
+mesh = SubResource("MeshNose")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 1.4)
+material_override = SubResource("MatSkin")
+mesh = SubResource("MeshBody")
+
+[node name="Skirt" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 7.9)
+material_override = SubResource("MatSkirt")
+mesh = SubResource("MeshSkirt")
+
+[node name="Nozzles" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 9.8)

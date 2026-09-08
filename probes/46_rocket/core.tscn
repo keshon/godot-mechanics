@@ -1,0 +1,45 @@
+[gd_scene load_steps=6 format=3 uid="uid://c46rockcore"]
+
+[ext_resource type="Script" path="res://probes/46_rocket/Stage.gd" id="1_stage"]
+[ext_resource type="PackedScene" path="res://probes/46_rocket/nozzle.tscn" id="2_nozzle"]
+
+[sub_resource type="StandardMaterial3D" id="MatSkin"]
+albedo_color = Color(0.83, 0.84, 0.86, 1)
+metallic = 0.2
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="MatSkirt"]
+albedo_color = Color(0.83, 0.42, 0.1, 1)
+metallic = 0.1
+roughness = 0.65
+
+[sub_resource type="CylinderMesh" id="MeshBody"]
+top_radius = 1.475
+bottom_radius = 1.475
+height = 22.9
+radial_segments = 18
+rings = 1
+
+[sub_resource type="CylinderMesh" id="MeshSkirt"]
+top_radius = 1.475
+bottom_radius = 1.2
+height = 4.9
+radial_segments = 18
+rings = 1
+
+[node name="Core" type="Node3D"]
+script = ExtResource("1_stage")
+nozzle_scene = ExtResource("2_nozzle")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, -2.45)
+material_override = SubResource("MatSkin")
+mesh = SubResource("MeshBody")
+
+[node name="Skirt" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 11.45)
+material_override = SubResource("MatSkirt")
+mesh = SubResource("MeshSkirt")
+
+[node name="Nozzles" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 13.9)
