@@ -97,9 +97,15 @@ func _ready() -> void:
 ## and it leaves only once thrust outweighs it. Saturn V spent nine seconds between those two
 ## events; on a Soyuz the clamps swing open under the weight of the rocket itself, the moment
 ## the thrust unloads them. Nowhere does a rocket leave the pad the instant a switch is thrown.
-func ignite() -> void:
+##
+## THE CLAMPS BELONG TO THE PAD, and `hold` is how that is said. Lighting a stage in flight
+## must not re-clamp the vehicle: the first version did, so every separation zeroed the
+## velocity for a tick. The stack began each stage from a standstill while the blocks it had
+## just released kept their speed and sailed past it — and the ascent read as short of thrust
+## for a reason that had nothing to do with thrust.
+func ignite(hold := false) -> void:
 	flying = true
-	clamped = true
+	clamped = hold
 	for st in stages:
 		if st.lit:
 			continue
@@ -119,13 +125,9 @@ func drop() -> void:
 		return
 	for st in going:
 		stages.erase(st)
-		# Outward and back, which is how side blocks leave. The Korolev cross falls out of
-		# four of them doing that at once; nothing about it is authored.
-		#
-		# ACROSS the body, and only across. The block sits fourteen metres aft of the origin,
-		# so the raw vector to it points mostly BACKWARDS: the blocks used to leave in line
-		# astern and there was no cross at all. What makes the shape is the part of that
-		# vector that is perpendicular to the axis.
+		# Outward and back, and the outward part is taken ACROSS the body only. The block sits
+		# fourteen metres aft of the origin, so the raw vector to it points mostly backwards:
+		# the blocks used to leave in line astern with no cross at all.
 		var axis := global_basis.z
 		var out := st.global_position - global_position
 		out -= axis * out.dot(axis)
@@ -313,9 +315,8 @@ func _on_body_entered(_b: Node) -> void:
 		struck.emit(global_position, speed)
 
 
-## Nothing is running any more, so nothing should still be reading as if it were. The last
-## tick's thrust and thrust-to-weight left on the readout describe a rocket that no longer
-## exists, and that is the same lie the forty-fifth probe was printing next to a dead missile.
+## Nothing is running, so nothing should still read as if it were: the last tick's thrust left
+## on the readout describes a rocket that no longer exists.
 func _shut_down() -> void:
 	flying = false
 	push = 0.0

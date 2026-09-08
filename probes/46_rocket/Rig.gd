@@ -250,7 +250,7 @@ func _on_struck(_where: Vector3, at_speed: float) -> void:
 
 func _lift() -> void:
 	_stack.freeze = false
-	_stack.ignite()
+	_stack.ignite(true)
 
 
 ## Rebuilt, not reloaded, and the world goes back to zero with it: the accumulated shift is
@@ -303,6 +303,8 @@ func _finish_row() -> void:
 		"time": _flight,
 		"ok": _orbited(),
 	})
+	print("[row] kick=%.0f apo=%.1f peri=%.1f v=%.0f q=%.1f ok=%s" % [
+		_kick, o["apo"] * 0.001, o["peri"] * 0.001, _stack.speed, _peak_q * 0.001, _orbited()])
 	_row += 1
 	if _row < KICKS.size():
 		_start_row()

@@ -7,7 +7,7 @@
 разобраться в движке. Игра из этого не собирается: для игры нужен отдельный репозиторий,
 с нуля и с пониманием, чего хочешь.
 
-Правила проекта — в [PURPOSE.md](PURPOSE.md). Сейчас проб 45, закрыто 45,
+Правила проекта — в [PURPOSE.md](PURPOSE.md). Сейчас проб 46, закрыто 45,
 мультипроб 3.
 
 ## Запуск
@@ -61,7 +61,7 @@
 | <img src="img/probes/40_hit.jpg" width="440"><br><b>40_hit</b> — попадание: импульс, рычаг, разрушение<br><sub><a href="probes/40_hit/NOTES.md">заметка</a> · эталон: Half-Life 2</sub> | <img src="img/probes/41_ruin.jpg" width="440"><br><b>41_ruin</b> — конструкция: связи, порог, обрушение<br><sub><a href="probes/41_ruin/NOTES.md">заметка</a> · эталон: Red Faction</sub> |
 | <img src="img/probes/42_voronoi.jpg" width="440"><br><b>42_voronoi</b> — скол: ячейки Вороного, куски складываются в целое<br><sub><a href="probes/42_voronoi/NOTES.md">заметка</a> · эталон: Red Faction Guerrilla</sub> | <img src="img/probes/43_stuff.jpg" width="440"><br><b>43_stuff</b> — материал: прочность против вязкости, узор ломания<br><sub><a href="probes/43_stuff/NOTES.md">заметка</a> · эталон: Red Faction Guerrilla</sub> |
 | <img src="img/probes/44_missile.jpg" width="440"><br><b>44_missile</b> — ракета как аппарат: тяга, сопротивление, рули<br><sub><a href="probes/44_missile/NOTES.md">заметка</a> · эталон: ArmA, DCS</sub> | <img src="img/probes/45_seeker.jpg" width="440"><br><b>45_seeker</b> — головка наведения: захват, сближение, срыв<br><sub><a href="probes/45_seeker/NOTES.md">заметка</a> · эталон: DCS, Ace Combat</sub> |
-| <img src="img/probes/46_rocket.jpg" width="440"><br><b>46_rocket</b> — ракета-носитель: тяга, устойчивость, ступени<br><sub><a href="probes/46_rocket/NOTES.md">заметка</a> · эталон: Kerbal Space Program</sub> |  |
+| <img src="img/probes/46_rocket.jpg" width="440"><br><b>46_rocket</b> — ракета-носитель: тяга, устойчивость, ступени<br><sub><a href="probes/46_rocket/NOTES.md">заметка</a> · эталон: Kerbal Space Program</sub> | <img src="img/probes/47_shoulder.jpg" width="440"><br><b>47_shoulder</b> — пуск с плеча: струя назад, взведение, ведение цели рукой<br><sub><a href="probes/47_shoulder/NOTES.md">заметка</a> · эталон: ArmA · не закрыта</sub> |
 
 ## Мультипробы
 

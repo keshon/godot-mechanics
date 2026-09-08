@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=3 uid="uid://c47shoultarget"]
+
+[ext_resource type="Script" path="res://probes/47_shoulder/Target.gd" id="1_target"]
+
+[sub_resource type="StandardMaterial3D" id="MatHull"]
+albedo_color = Color(0.24, 0.27, 0.22, 1)
+metallic = 0.2
+roughness = 0.65
+
+[sub_resource type="BoxMesh" id="MeshHull"]
+size = Vector3(3.2, 1.1, 6.4)
+
+[sub_resource type="BoxMesh" id="MeshTurret"]
+size = Vector3(2.2, 0.8, 2.6)
+
+[sub_resource type="BoxMesh" id="MeshGun"]
+size = Vector3(0.16, 0.16, 3.4)
+
+[node name="Target" type="Node3D"]
+script = ExtResource("1_target")
+
+[node name="Hull" type="Node3D" parent="."]
+
+[node name="Body" type="MeshInstance3D" parent="Hull"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+material_override = SubResource("MatHull")
+mesh = SubResource("MeshHull")
+
+[node name="Turret" type="MeshInstance3D" parent="Hull"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85, -0.4)
+material_override = SubResource("MatHull")
+mesh = SubResource("MeshTurret")
+
+[node name="Gun" type="MeshInstance3D" parent="Hull"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85, -2.8)
+material_override = SubResource("MatHull")
+mesh = SubResource("MeshGun")

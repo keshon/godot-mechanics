@@ -1,0 +1,108 @@
+[gd_scene load_steps=12 format=3 uid="uid://c47shoultube"]
+
+[ext_resource type="Script" path="res://probes/47_shoulder/Launcher.gd" id="1_tube"]
+[ext_resource type="PackedScene" path="res://probes/47_shoulder/round.tscn" id="2_round"]
+
+[sub_resource type="StandardMaterial3D" id="MatTube"]
+albedo_color = Color(0.26, 0.25, 0.21, 1)
+metallic = 0.3
+roughness = 0.55
+
+[sub_resource type="StandardMaterial3D" id="MatWood"]
+albedo_color = Color(0.5, 0.34, 0.16, 1)
+roughness = 0.75
+
+[sub_resource type="StandardMaterial3D" id="MatSight"]
+albedo_color = Color(0.32, 0.33, 0.29, 1)
+metallic = 0.4
+roughness = 0.45
+
+[sub_resource type="StandardMaterial3D" id="MatLens"]
+albedo_color = Color(0.16, 0.3, 0.26, 1)
+metallic = 0.9
+roughness = 0.12
+
+[sub_resource type="StandardMaterial3D" id="MatBlast"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.7, 0.35, 0.5)
+
+[sub_resource type="CylinderMesh" id="MeshTube"]
+top_radius = 0.05
+bottom_radius = 0.062
+height = 1.2
+radial_segments = 12
+rings = 1
+
+[sub_resource type="CylinderMesh" id="MeshWrap"]
+top_radius = 0.074
+bottom_radius = 0.074
+height = 0.34
+radial_segments = 12
+rings = 1
+
+[sub_resource type="BoxMesh" id="MeshSight"]
+size = Vector3(0.06, 0.11, 0.2)
+
+[sub_resource type="CylinderMesh" id="MeshLens"]
+top_radius = 0.03
+bottom_radius = 0.03
+height = 0.03
+radial_segments = 12
+rings = 1
+
+[sub_resource type="CylinderMesh" id="MeshBlast"]
+top_radius = 0.08
+bottom_radius = 0.85
+height = 3.2
+radial_segments = 10
+rings = 1
+
+[node name="Tube" type="Node3D"]
+script = ExtResource("1_tube")
+round_scene = ExtResource("2_round")
+
+[node name="Pipe" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0)
+cast_shadow = 0
+material_override = SubResource("MatTube")
+mesh = SubResource("MeshTube")
+
+[node name="Wrap" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0.32)
+cast_shadow = 0
+material_override = SubResource("MatWood")
+mesh = SubResource("MeshWrap")
+
+[node name="Grip" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0, 0.9, 0, -0.5, 0, 0, -0.14, 0.1)
+cast_shadow = 0
+material_override = SubResource("MatWood")
+mesh = SubResource("MeshWrap")
+
+[node name="Sight" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.16, 0.075, 0.05)
+
+[node name="Block" type="MeshInstance3D" parent="Sight"]
+cast_shadow = 0
+material_override = SubResource("MatSight")
+mesh = SubResource("MeshSight")
+
+[node name="Lens" type="MeshInstance3D" parent="Sight"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0.12)
+cast_shadow = 0
+material_override = SubResource("MatLens")
+mesh = SubResource("MeshLens")
+
+[node name="Muzzle" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.62)
+
+[node name="Blast" type="RayCast3D" parent="."]
+target_position = Vector3(0, 0, 3.5)
+collision_mask = 1
+
+[node name="Flash" type="MeshInstance3D" parent="Blast"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 2.0)
+cast_shadow = 0
+material_override = SubResource("MatBlast")
+mesh = SubResource("MeshBlast")
