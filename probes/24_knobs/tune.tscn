@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/24_knobs/Tune.gd" id="1_t"]
-[ext_resource type="Script" path="res://probes/24_knobs/Panel.gd" id="2_p"]
+[ext_resource type="Script" path="res://probes/24_knobs/tune.gd" id="1_t"]
+[ext_resource type="Script" path="res://probes/24_knobs/panel.gd" id="2_p"]
 [ext_resource type="Shader" path="res://probes/24_knobs/water.gdshader" id="3_w"]
 [ext_resource type="Shader" path="res://probes/24_knobs/psx.gdshader" id="4_x"]
 
@@ -73,7 +73,7 @@ rings = 12
 [sub_resource type="BoxMesh" id="Slab"]
 size = Vector3(2.4, 2.4, 2.4)
 
-[node name="Knobs" type="Node3D"]
+[node name="Tune" type="Node3D"]
 script = ExtResource("1_t")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -84,7 +84,7 @@ rotation_degrees = Vector3(-42, -38, 0)
 light_energy = 1.2
 shadow_enabled = true
 
-[node name="Cam" type="Camera3D" parent="."]
+[node name="Camera" type="Camera3D" parent="."]
 fov = 55.0
 far = 200.0
 
@@ -152,7 +152,7 @@ offset_top = 14.0
 offset_right = -14.0
 offset_bottom = -14.0
 
-[node name="List" type="VBoxContainer" parent="Ui/Box"]
+[node name="Panel" type="VBoxContainer" parent="Ui/Box"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 3

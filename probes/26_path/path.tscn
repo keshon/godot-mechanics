@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/26_path/Run.gd" id="1_r"]
+[ext_resource type="Script" path="res://probes/26_path/path.gd" id="1_r"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 sky_top_color = Color(0.1, 0.13, 0.2, 1)
@@ -58,7 +58,7 @@ mesh = SubResource("Cell")
 transform_format = 1
 mesh = SubResource("Agent")
 
-[node name="PathRun" type="Node3D"]
+[node name="Path" type="Node3D"]
 script = ExtResource("1_r")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -69,7 +69,7 @@ rotation_degrees = Vector3(-62, -38, 0)
 light_energy = 1.1
 shadow_enabled = true
 
-[node name="Cam" type="Camera3D" parent="."]
+[node name="Camera" type="Camera3D" parent="."]
 fov = 55.0
 far = 400.0
 

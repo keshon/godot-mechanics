@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/25_map/World.gd" id="1_w"]
-[ext_resource type="Script" path="res://probes/25_map/MapView.gd" id="2_m"]
+[ext_resource type="Script" path="res://probes/25_map/map.gd" id="1_w"]
+[ext_resource type="Script" path="res://probes/25_map/view.gd" id="2_m"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 sky_top_color = Color(0.24, 0.38, 0.6, 1)
@@ -32,7 +32,7 @@ emission_energy_multiplier = 0.6
 radius = 0.45
 height = 1.8
 
-[node name="MapWorld" type="Node3D"]
+[node name="Map" type="Node3D"]
 script = ExtResource("1_w")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -43,7 +43,7 @@ rotation_degrees = Vector3(-56, -42, 0)
 light_energy = 1.15
 shadow_enabled = true
 
-[node name="Cam" type="Camera3D" parent="."]
+[node name="Camera" type="Camera3D" parent="."]
 rotation_degrees = Vector3(-52, 0, 0)
 fov = 58.0
 far = 400.0
@@ -111,5 +111,5 @@ offset_right = -60.0
 offset_bottom = -60.0
 clip_contents = true
 script = ExtResource("2_m")
-big = true
+full = true
 span = 96.0
