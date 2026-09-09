@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://bgknccj6v55ra"]
 
-[ext_resource type="Script" uid="uid://chwluffdiybo0" path="res://probes/04_crowd/Crowd.gd" id="1_crowd"]
-[ext_resource type="Script" uid="uid://b1q1rc2yx8rw" path="res://probes/04_crowd/FlyCam.gd" id="2_cam"]
-[ext_resource type="Script" uid="uid://c0xvwg0iloro" path="res://probes/04_crowd/Hud.gd" id="3_hud"]
+[ext_resource type="Script" uid="uid://chwluffdiybo0" path="res://probes/04_crowd/flock.gd" id="1_crowd"]
+[ext_resource type="Script" uid="uid://b1q1rc2yx8rw" path="res://probes/04_crowd/fly_cam.gd" id="2_cam"]
+[ext_resource type="Script" uid="uid://c0xvwg0iloro" path="res://probes/04_crowd/hud.gd" id="3_hud"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_1"]
 sky_top_color = Color(0.26, 0.33, 0.46, 1)
@@ -37,7 +37,7 @@ size = Vector3(0.3, 0.3, 0.9)
 transform_format = 1
 mesh = SubResource("BoxMesh_1")
 
-[node name="CrowdScene" type="Node3D" unique_id=1622441579]
+[node name="Crowd" type="Node3D" unique_id=1622441579]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=868122818]
 environment = SubResource("Environment_1")
@@ -73,17 +73,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 42, -8, 42)
 size = Vector3(1.4, 28, 1.4)
 material = SubResource("MatPost")
 
-[node name="Crowd" type="Node3D" parent="." unique_id=281204966]
+[node name="Flock" type="Node3D" parent="." unique_id=281204966]
 script = ExtResource("1_crowd")
 count = 5000
 draw_mode = 1
 neighbour_samples = 5
 
-[node name="MultiMesh" type="MultiMeshInstance3D" parent="Crowd" unique_id=1427509118]
+[node name="MultiMesh" type="MultiMeshInstance3D" parent="Flock" unique_id=1427509118]
 material_override = SubResource("MatBoid")
 multimesh = SubResource("MultiMesh_1")
 
-[node name="Nodes" type="Node3D" parent="Crowd" unique_id=311712097]
+[node name="Nodes" type="Node3D" parent="Flock" unique_id=311712097]
 
 [node name="FlyCam" type="Camera3D" parent="." unique_id=668480068]
 transform = Transform3D(1, 0, 0, 0, 0.9903, 0.1392, 0, -0.1392, 0.9903, 0, 8, 46)
@@ -103,7 +103,7 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("3_hud")
 
-[node name="Big" type="Label" parent="Ui/Hud" unique_id=366239040]
+[node name="Fps" type="Label" parent="Ui/Hud" unique_id=366239040]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -149,7 +149,7 @@ text = "WASD fly    SPACE up    SHIFT hurry    WHEEL speed    ESC free the mouse
 F freezes the flock without deleting anything.
 V turns vsync off - do that before believing any fps.
 
-Crowd node, Remote tab: set Count to 10000 in NODES mode
+Flock node, Remote tab: set Count to 10000 in NODES mode
 and watch it crawl. Now press F. Same ten thousand nodes,
 still drawn, still there — and the frame time collapses.
 
