@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://c47shoultarget"]
+[gd_scene load_steps=7 format=3 uid="uid://c47shoultarget"]
 
 [ext_resource type="Script" path="res://probes/47_shoulder/Target.gd" id="1_target"]
 
@@ -6,6 +6,13 @@
 albedo_color = Color(0.24, 0.27, 0.22, 1)
 metallic = 0.2
 roughness = 0.65
+
+[sub_resource type="StandardMaterial3D" id="MatStruck"]
+albedo_color = Color(0.85, 0.16, 0.1, 1)
+emission_enabled = true
+emission = Color(0.7, 0.1, 0.05, 1)
+emission_energy_multiplier = 1.4
+roughness = 0.6
 
 [sub_resource type="BoxMesh" id="MeshHull"]
 size = Vector3(3.2, 1.1, 6.4)
@@ -18,8 +25,13 @@ size = Vector3(0.16, 0.16, 3.4)
 
 [node name="Target" type="Node3D"]
 script = ExtResource("1_target")
+calm = SubResource("MatHull")
+struck = SubResource("MatStruck")
 
 [node name="Hull" type="Node3D" parent="."]
+
+[node name="Centre" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
 
 [node name="Body" type="MeshInstance3D" parent="Hull"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)

@@ -12,7 +12,12 @@ class_name ShoulderRig
 ## kind of round. Two tables side by side are what the probe is for: one says how far a thrown
 ## thing drifts, the other says what a steady hand buys.
 
-const RANGES := [80.0, 160.0, 240.0, 320.0]
+## TWO ROUNDS, TWO ENVELOPES, AND THEY BARELY OVERLAP. This is a finding and not a setting. A
+## thrown round is a three-hundred-metre weapon because that is how far it stays flat enough to
+## aim; a ridden one is not worth its wire until past the range where the thrown one has already
+## stopped working. Measuring both over one set of ranges hid that behind a column of misses.
+const THROWN := [80.0, 160.0, 240.0, 320.0]
+const RIDDEN := [300.0, 600.0, 900.0, 1200.0]
 ## How steady the machine's hand is during a measured shot, degrees of wobble. Zero would be a
 ## hand nobody has; this is roughly a trained one on a rest.
 const STEADY := 0.25
@@ -24,6 +29,7 @@ const STEADY := 0.25
 @export_range(8.0, 70.0, 1.0) var zoom_fov := 18.0
 @export_range(40.0, 100.0, 1.0) var open_fov := 70.0
 
+var _kind := ShoulderRound.Kind.BEAM
 var _yaw := 0.0
 var _pitch := 0.0
 var _zoom := false
@@ -53,10 +59,18 @@ var _flight := 0.0
 @onready var _hud: RichTextLabel = $Ui/Info
 @onready var _shots: Node3D = $Shots
 
+## Where the shooter stands and what height the target sits at. The shooter is on a RISE, so
+## neither of these is the origin any more and neither can be reset to it.
+var _stand := Vector3.ZERO
+var _floor := 0.0
+
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	_stand = _body.position
+	_floor = _mark.position.y
 	_tube.refused.connect(func(why: String) -> void: _last = why)
+	_set_range(_ranges()[1])
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -83,9 +97,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		KEY_2: _mark.speed = 0.0 if _mark.speed > 0.0 else 11.0
 		KEY_3: _side = not _side
 		KEY_4:
-			var marks := [80.0, 160.0, 240.0, 320.0, 500.0]
-			var i := marks.find(_tube.sight_range)
-			_tube.sight_range = marks[(i + 1) % marks.size()]
+			var marks := _ranges()
+			var i: int = marks.find(_tube.sight_range)
+			_set_range(marks[(i + 1) % marks.size()])
 		KEY_G:
 			_table.clear()
 			_row = 0
@@ -96,14 +110,34 @@ func _unhandled_input(event: InputEvent) -> void:
 				if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED else Input.MOUSE_MODE_CAPTURED)
 
 
-## The round kind lives on the ROUND, not on the tube, so switching it means switching what
-## comes out — and the tube neither knows nor cares which one it just handed over.
-var _kind := ShoulderRound.Kind.BEAM
+func _ranges() -> Array:
+	return THROWN if _kind == ShoulderRound.Kind.DUMB else RIDDEN
 
+
+## The round kind lives on the ROUND, not on the tube, so switching it means switching what
+## comes out — and the tube neither knows nor cares which one it just handed over. What the tube
+## DOES have to be told is the range, because a sight is cut for one round and one speed.
 func _kind_flip() -> void:
 	_kind = (ShoulderRound.Kind.DUMB if _kind == ShoulderRound.Kind.BEAM
 		else ShoulderRound.Kind.BEAM)
 	_table.clear()
+	_set_range(_ranges()[1])
+
+
+## The dial moves the SIGHT AND THE TARGET together. Dialling a range with nothing standing at it
+## measures nothing, and the two kinds are only comparable when each is asked for the distance it
+## was built for.
+func _set_range(d: float) -> void:
+	_tube.sight_range = d
+	_mark.place(Vector3(0.0, _floor, _stand.z - d))
+	if _tube.round_scene == null:
+		return
+	# CUT AGAINST THE ROUND ITSELF, with a throwaway copy rather than a table of its numbers: a
+	# sight has to be asking the thing it will actually fire.
+	var sample := _tube.round_scene.instantiate() as ShoulderRound
+	sample.kind = _kind
+	_tube.cut(sample, _mark.centre().y - _tube.muzzle().origin.y)
+	sample.free()
 
 
 func _pull() -> void:
@@ -131,7 +165,7 @@ func _physics_process(delta: float) -> void:
 		_settle -= delta
 		if _settle <= 0.0:
 			_row += 1
-			if _row < RANGES.size():
+			if _row < _ranges().size():
 				_start_row()
 			else:
 				_row = -1
@@ -156,7 +190,9 @@ func _watch() -> void:
 	flat.y = 0.0
 	var span := maxf(flat.length(), 40.0)
 	var side := Vector3(-flat.z, 0.0, flat.x).normalized() if flat.length() > 1.0 		else Vector3.RIGHT
-	_off.global_position = mid + side * span * 0.9 + Vector3.UP * span * 0.2
+	# A vertical fov of 55 spans roughly 43 degrees each way on a wide viewport, so 0.78 of the
+	# baseline holds both ends with room for the round to overshoot the far one.
+	_off.global_position = mid + side * span * 0.78 + Vector3.UP * span * 0.14
 	# Aimed at the middle of the baseline and not at the round: the whole flight has to stay in
 	# frame, and a camera that follows the round swings the ground out from under it.
 	_off.look_at(mid, Vector3.UP)
@@ -166,8 +202,11 @@ func _walk(delta: float) -> void:
 	var f := Input.get_action_strength(&"move_back") - Input.get_action_strength(&"move_forward")
 	var s := Input.get_action_strength(&"move_right") - Input.get_action_strength(&"move_left")
 	var step := (_body.global_basis.z * f + _body.global_basis.x * s)
-	_body.velocity = step.normalized() * walk * step.length() if step.length() > 0.01 \
-		else Vector3.ZERO
+	var flat := step.normalized() * walk if step.length() > 0.01 else Vector3.ZERO
+	# Gravity, which the flat range never needed: the shooter now stands on something with
+	# an edge, and walking off it has to cost something.
+	var fall := 0.0 if _body.is_on_floor() else _body.velocity.y - 9.81 * delta
+	_body.velocity = Vector3(flat.x, fall, flat.z)
 	_body.move_and_slide()
 
 
@@ -175,11 +214,12 @@ func _walk(delta: float) -> void:
 ## memory of where the sight was at launch; it goes wherever the line is NOW. Look away and
 ## the round follows the look.
 func _feed(delta: float) -> void:
-	# The TUBE is held above the line of sight by the dialled elevation; the BEAM stays on the
-	# sight. So a beam rider leaves high and settles down onto the line, and that settling is
-	# the thing the side view was added to show.
-	_tube.aim((-_eye.global_basis.z).rotated(_eye.global_basis.x, _tube.elevation()),
-		Vector3.UP)
+	# The TUBE is held above the line of sight; the BEAM stays on the sight, so a round leaves
+	# high and settles down onto the line, and that settling is what the side view was added to
+	# show. How high depends on WHICH round: a thrown one needs the whole ballistic elevation the
+	# scale gives, a ridden one only the token degree a real launcher uses — asked to gather five
+	# degrees it spends its first three hundred metres doing nothing else.
+	_point()
 	if _shot == null:
 		return
 	_flight += delta
@@ -189,7 +229,7 @@ func _feed(delta: float) -> void:
 		_path.append(_shot.global_position)
 	# How much of the flight the sight actually spent on the target. This is the price of
 	# guidance, expressed in the only currency the shooter has.
-	var to_mark := _mark.global_position - _eye.global_position
+	var to_mark := _mark.centre() - _eye.global_position
 	if to_mark.length_squared() > 1.0 and (-_eye.global_basis.z).angle_to(
 			to_mark.normalized()) < deg_to_rad(1.5):
 		_hold += delta
@@ -197,8 +237,29 @@ func _feed(delta: float) -> void:
 
 ## ONE ROW. The machine holds the sight on the target with a small tremor, so the two kinds
 ## are compared with the same hand. What differs is only the round.
+## HOW HIGH THE TUBE IS HELD, and the one place that decides it, because the readout has to say
+## what the hand is actually doing. The whole cut scale for a thrown round; for a ridden one the
+## token degree a real launcher leaves on — asked to gather five degrees it would spend its first
+## three hundred metres doing nothing else.
+## POINT THE TUBE, its own step because it has to happen after the eye has moved and before the
+## trigger, and those are not always the same moment.
+##
+## The tube is a CHILD of the eye, so `look_at` pins its LOCAL basis: turn the eye afterwards and
+## the tube comes along still carrying the old elevation. In the measured run that mattered — the
+## `physics_frame` signal fires BEFORE `_physics_process`, so an `await` on it resumes a tick
+## early: the eye had been swung onto the new range and the tube was still holding the previous
+## row's elevation. Two metres low at three hundred metres, which the ground turned into nine
+## metres short. Same family as the rig-before-children ordering in the forty-fourth.
+func _point() -> void:
+	_tube.aim((-_eye.global_basis.z).rotated(_eye.global_basis.x, _lift()), Vector3.UP)
+
+
+func _lift() -> float:
+	return _tube.lift if _kind == ShoulderRound.Kind.DUMB else deg_to_rad(1.0)
+
+
 func _aim_for_measurement(delta: float) -> void:
-	var to_mark := _mark.global_position - _eye.global_position
+	var to_mark := _mark.centre() - _eye.global_position
 	if to_mark.length_squared() < 1.0:
 		return
 	var want := to_mark.normalized()
@@ -210,16 +271,15 @@ func _aim_for_measurement(delta: float) -> void:
 
 
 func _start_row() -> void:
-	_mark.reset()
-	var d: float = RANGES[_row]
-	_mark.position = Vector3(0.0, _mark.position.y, -d)
-	_body.position = Vector3.ZERO
+	_set_range(_ranges()[_row])
+	_body.position = _stand
 	_tube.reset()
 	_settle = 0.8
 	_flight = 0.0
 	_hold = 0.0
 	await get_tree().physics_frame
 	_aim_for_measurement(0.0)
+	_point()
 	_pull()
 
 
@@ -229,7 +289,7 @@ func _on_finished(miss: float, hit: bool, reason: String) -> void:
 		_mark.wreck()
 	if _row >= 0:
 		_table.append({
-			"range": RANGES[_row],
+			"range": _ranges()[_row],
 			"miss": miss,
 			"hit": hit,
 			"reason": reason,
@@ -249,7 +309,7 @@ func _reset() -> void:
 	_shot = null
 	_mark.reset()
 	_tube.reset()
-	_body.position = Vector3.ZERO
+	_body.position = _stand
 	_flight = 0.0
 	_hold = 0.0
 
@@ -274,14 +334,27 @@ func _draw() -> void:
 			mesh.surface_set_color(Color(1.0, 0.62, 0.24, 0.95))
 			mesh.surface_add_vertex(point)
 		mesh.surface_end()
-	if _side:
-		var from := _tube.muzzle().origin
-		mesh.surface_begin(Mesh.PRIMITIVE_LINES)
-		mesh.surface_set_color(Color(0.45, 0.85, 1.0, 0.5))
-		mesh.surface_add_vertex(from)
-		mesh.surface_set_color(Color(0.45, 0.85, 1.0, 0.0))
-		mesh.surface_add_vertex(from - _eye.global_basis.z * 420.0)
-		mesh.surface_end()
+	if not _side:
+		return
+	var from := _tube.muzzle().origin
+	mesh.surface_begin(Mesh.PRIMITIVE_LINES)
+	mesh.surface_set_color(Color(0.45, 0.85, 1.0, 0.5))
+	mesh.surface_add_vertex(from)
+	mesh.surface_set_color(Color(0.45, 0.85, 1.0, 0.0))
+	mesh.surface_add_vertex(from - _eye.global_basis.z * _tube.sight_range * 1.2)
+	mesh.surface_end()
+	# WHERE THE TARGET IS, drawn rather than looked for. From half a kilometre off to one side a
+	# two-metre box is four pixels, and a trace is only readable next to something that says
+	# where it was supposed to end.
+	var at := _mark.centre()
+	var tint := Color(1.0, 0.3, 0.25, 0.9) if _mark.hit else Color(0.5, 1.0, 0.6, 0.75)
+	mesh.surface_begin(Mesh.PRIMITIVE_LINES)
+	for axis in [Vector3.UP, Vector3.RIGHT, Vector3.BACK]:
+		mesh.surface_set_color(tint)
+		mesh.surface_add_vertex(at - axis * 9.0)
+		mesh.surface_set_color(tint)
+		mesh.surface_add_vertex(at + axis * 9.0)
+	mesh.surface_end()
 
 
 func _live(fmt: String, value: float) -> String:
@@ -290,7 +363,7 @@ func _live(fmt: String, value: float) -> String:
 
 func _readout() -> void:
 	var kind := "по лучу" if _kind == ShoulderRound.Kind.BEAM else "неуправляемая"
-	var to_mark := _mark.global_position.distance_to(_eye.global_position)
+	var to_mark := _mark.centre().distance_to(_eye.global_position)
 	var lines := PackedStringArray([
 		"[b]ПУСК С ПЛЕЧА[/b]   ракета: [b]%s[/b]   в трубе %d   %s" % [
 			kind, _tube.left,
@@ -298,7 +371,7 @@ func _readout() -> void:
 			("[color=#ffcc66]перезарядка %.1f с[/color]" % _tube.ready_in
 				if _tube.ready_in > 0.0 else "готова")],
 		"до цели [b]%.0f[/b] м   прицел набран на [b]%.0f[/b] м (+%.1f°)   цель идёт %.0f м/с" % [
-			to_mark, _tube.sight_range, rad_to_deg(_tube.elevation()),
+			to_mark, _tube.sight_range, rad_to_deg(_lift()),
 			_mark.velocity.length()],
 		"полёт %s   от луча %s   тянет %s   прицел на цели %s" % [
 			_live("%.1f с", _flight), _live("%.1f м", _shot.off_beam if _shot else 0.0),
@@ -310,13 +383,14 @@ func _readout() -> void:
 		"1 ракета: %s" % kind,
 		"2 цель: %s" % ("идёт" if _mark.speed > 0.0 else "стоит"),
 		"3 взгляд: %s" % ("со стороны — видно траекторию и луч" if _side else "с плеча"),
-		"4 шкала дальности: %.0f м" % _tube.sight_range,
-		"G прогнать четыре пуска с 80 / 160 / 240 / 320 м",
+		"4 дальность (двигает и прицел, и цель): %.0f м" % _tube.sight_range,
+		"G прогнать четыре пуска: %s м" % " / ".join(PackedStringArray(
+			_ranges().map(func(d: float) -> String: return "%.0f" % d))),
 		"[color=#9fb4c8]за спиной у трубы струя: у стены выстрел не пройдёт[/color]",
 	])
 	if _row >= 0:
 		lines.append("")
-		lines.append("[color=#66ccff]замер: %.0f м[/color]" % RANGES[_row])
+		lines.append("[color=#66ccff]замер: %.0f м[/color]" % _ranges()[_row])
 	if not _table.is_empty():
 		lines.append("")
 		lines.append("[b]%s, цель %s[/b]" % [kind, "идёт" if _mark.speed > 0.0 else "стоит"])

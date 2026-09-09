@@ -31,10 +31,11 @@ signal refused(why: String)
 ## a hundred and sixty, so the tube is held ABOVE the line of sight by an angle the shooter
 ## dials in. Dial it wrong and the round lands short or long — that is the whole cost of an
 ## unguided launcher, and it is paid before the trigger rather than after it.
-@export_range(20.0, 600.0, 10.0) var sight_range := 160.0
-## The speed the scale is cut for. A sight belongs to one round; hand the tube a different one
-## and every mark on it lies.
-@export_range(20.0, 500.0, 5.0) var sight_speed := 170.0
+@export_range(20.0, 1600.0, 10.0) var sight_range := 600.0
+## How high the tube is held above the line of sight for the dialled range, in radians. Cut by
+## FIRING — `cut()` below — and cut once, when the range is dialled, because a range scale is a
+## thing you set and then hold, not a thing that recomputes itself while you are trying to aim.
+var lift := 0.0
 
 var left := 0
 var ready_in := 0.0
@@ -111,15 +112,20 @@ func reset() -> void:
 		_flash.visible = false
 
 
-## How far above the line of sight the tube is held, in radians. Straight out of the ballistic
-## range equation, which is why the far marks on a real scale crowd together.
-func elevation() -> float:
-	var s := clampf(9.81 * sight_range / (sight_speed * sight_speed), -1.0, 1.0)
-	return 0.5 * asin(s)
+## CUT THE SCALE for the dialled range, against a target sitting `drop` metres above the muzzle.
+## The tube carries no ballistics of its own and asks the round instead — a sight belongs to ONE
+## round, and one that computes its own marks is a sight for a round that may no longer exist.
+func cut(sample: ShoulderRound, drop: float) -> void:
+	lift = sample.angle_for(sight_range, drop) if sample != null else 0.0
 
 
 ## Where the round leaves from, in world space. The sight rides on this and not on the eye:
 ## the beam a round follows is the one the TUBE is holding, and the two differ by the width
 ## of a shoulder — which is exactly the error a beam rider has to gather out at short range.
 func muzzle() -> Transform3D:
-	return _muzzle.global_transform
+	# ORTHONORMALIZED. The tube is scaled down in the scene so the model sits right in the view,
+	# and that scale is a fact about the MODEL — but a raw global basis carries it, and the round
+	# starts with `-basis.z * speed`. So every shot left at sixty-two per cent of the number on
+	# the export and the unguided one fell a quarter of the range short. A transform handed
+	# across a seam has to be the transform it claims to be.
+	return _muzzle.global_transform.orthonormalized()

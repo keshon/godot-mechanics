@@ -13,31 +13,59 @@ class_name ShoulderTarget
 @export_range(0.0, 40.0, 0.5) var speed := 11.0
 ## How far it runs before turning back. Kept short so the shot happens across the front and
 ## not away down the range.
-@export_range(20.0, 400.0, 5.0) var run := 130.0
+@export_range(20.0, 400.0, 5.0) var run := 200.0
+## What it looks like whole and what it looks like hit. A shot that lands and changes nothing
+## on screen is a shot the eye has to take on trust from a line of text.
+@export var calm: Material
+@export var struck: Material
+@export_range(0.2, 8.0, 0.1) var burn := 3.0
 
 var velocity := Vector3.ZERO
 var hit := false
 
 var _home := Vector3.ZERO
 var _way := 1.0
+var _left := 0.0
 
 @onready var _hull: Node3D = $Hull
+@onready var _centre: Node3D = $Centre
 
 
 func _ready() -> void:
 	_home = position
 
 
+## WHAT IS AIMED AT AND WHAT IS SCORED AGAINST — the middle of the hull, not the patch of
+## ground the node stands on. Aiming at the origin pointed the beam INTO the dirt: the round
+## rode it down, grazed in short, and a shot that went through the side of the vehicle was
+## already booked as a metre of miss before anything else went wrong.
+func centre() -> Vector3:
+	return _centre.global_position
+
+
+## Moved to a new stand. The patrol runs from wherever it is PUT, so the range dial can walk the
+## target down the field without it snapping back to where the scene left it on the next reset.
+func place(where: Vector3) -> void:
+	_home = where
+	reset()
+
+
 func reset() -> void:
 	position = _home
 	_way = 1.0
 	hit = false
+	_left = 0.0
+	_paint(calm)
 	velocity = Vector3.ZERO
 	if _hull != null:
 		_hull.rotation.y = 0.0
 
 
 func _physics_process(delta: float) -> void:
+	if _left > 0.0:
+		_left -= delta
+		if _left <= 0.0:
+			_paint(calm)
 	if hit or speed <= 0.0:
 		velocity = Vector3.ZERO
 		return
@@ -49,7 +77,19 @@ func _physics_process(delta: float) -> void:
 		_hull.rotation.y = 0.0 if _way > 0.0 else PI
 
 
-## Struck. Stops where it stands: a wreck is a landmark, and the next shot is aimed past it.
+## Struck. Stops where it stands and goes red for a few seconds: a wreck is a landmark, and
+## the colour is the only thing that tells the eye the shot landed.
 func wreck() -> void:
 	hit = true
 	velocity = Vector3.ZERO
+	_left = burn
+	_paint(struck)
+
+
+func _paint(what: Material) -> void:
+	if _hull == null:
+		return
+	for c in _hull.get_children():
+		var m := c as MeshInstance3D
+		if m != null:
+			m.material_override = what
