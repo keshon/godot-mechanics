@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/09_fx/FxRange.gd" id="1_range"]
-[ext_resource type="Script" path="res://probes/09_fx/Fx.gd" id="2_fx"]
+[ext_resource type="Script" path="res://probes/09_fx/fx_range.gd" id="1_range"]
+[ext_resource type="Script" path="res://probes/09_fx/fx.gd" id="2_fx"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_1"]
 sky_top_color = Color(0.1, 0.12, 0.18, 1)
@@ -146,7 +146,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Big" type="Label" parent="Ui/Hud"]
+[node name="Counts" type="Label" parent="Ui/Hud"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0

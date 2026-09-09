@@ -1,9 +1,9 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/07_psx/Look.gd" id="1_look"]
+[ext_resource type="Script" path="res://probes/07_psx/psx.gd" id="1_look"]
 [ext_resource type="Shader" path="res://probes/07_psx/psx.gdshader" id="2_psx"]
 [ext_resource type="Shader" path="res://probes/07_psx/post.gdshader" id="3_post"]
-[ext_resource type="Script" path="res://probes/07_psx/Hud.gd" id="4_hud"]
+[ext_resource type="Script" path="res://probes/07_psx/hud.gd" id="4_hud"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_1"]
 sky_top_color = Color(0.16, 0.18, 0.26, 1)
@@ -78,7 +78,7 @@ size = Vector3(1.6, 6, 1.6)
 [sub_resource type="BoxMesh" id="RampMesh"]
 size = Vector3(9, 1, 16)
 
-[node name="PsxScene" type="Node"]
+[node name="Psx" type="Node"]
 script = ExtResource("1_look")
 
 [node name="Screen" type="SubViewportContainer" parent="."]
@@ -192,7 +192,7 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("4_hud")
 
-[node name="Big" type="Label" parent="Ui/Hud"]
+[node name="Resolution" type="Label" parent="Ui/Hud"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0

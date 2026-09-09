@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/08_boom/Range.gd" id="1_range"]
+[ext_resource type="Script" path="res://probes/08_boom/boom.gd" id="1_range"]
 [ext_resource type="PackedScene" path="res://probes/08_boom/blast.tscn" id="2_boom"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_1"]
@@ -40,9 +40,9 @@ size = Vector3(3, 6, 3)
 [sub_resource type="BoxMesh" id="WallMesh"]
 size = Vector3(30, 8, 1.2)
 
-[node name="BoomRange" type="Node3D"]
+[node name="Boom" type="Node3D"]
 script = ExtResource("1_range")
-boom_scene = ExtResource("2_boom")
+blast_scene = ExtResource("2_boom")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_1")
@@ -95,7 +95,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Big" type="Label" parent="Ui/Hud"]
+[node name="Clock" type="Label" parent="Ui/Hud"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0

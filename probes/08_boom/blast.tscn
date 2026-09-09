@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/08_boom/Boom.gd" id="1_boom"]
+[ext_resource type="Script" path="res://probes/08_boom/blast.gd" id="1_boom"]
 [ext_resource type="Shader" path="res://probes/08_boom/ring.gdshader" id="2_ring"]
 
 [sub_resource type="ShaderMaterial" id="MatRing"]
@@ -15,7 +15,7 @@ shader_parameter/softness = 1.0
 [sub_resource type="QuadMesh" id="RingQuad"]
 size = Vector2(18, 18)
 
-[node name="Boom" type="Node3D"]
+[node name="Blast" type="Node3D"]
 script = ExtResource("1_boom")
 
 [node name="Flash" type="OmniLight3D" parent="."]
