@@ -52,6 +52,11 @@ signal landed(speed_delta: float)
 ## Local gravity, m/s². Godot's project default is 9.8 — real, and far too
 ## floaty for this school of shooter. Heavier gravity buys a short arc and a
 ## hard landing.
+##
+## Not taken from physics. Solved from the SHAPE of the jump: pick the height
+## and the time in the air, then g = 8h/t². For h 0.7 m and t 0.5 s that is
+## exactly 20, and jump_velocity = g*t/2 = 5.2. Quake 3 runs at about 25.6,
+## the same family.
 @export_range(1.0, 60.0, 0.5) var gravity := 20.0
 ## Grace period after walking off an edge during which a jump still works, s.
 @export_range(0.0, 0.3, 0.005) var coyote_time := 0.1

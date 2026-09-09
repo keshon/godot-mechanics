@@ -7,7 +7,8 @@
 разобраться в движке. Игра из этого не собирается: для игры нужен отдельный репозиторий,
 с нуля и с пониманием, чего хочешь.
 
-Правила проекта — в [PURPOSE.md](PURPOSE.md). Сейчас проб 46, закрыто 45,
+Правила проекта — в [PURPOSE.md](PURPOSE.md), стиль кода — в [STYLE.md](STYLE.md),
+формат заметки — в [NOTE.md](NOTE.md), грабли движка — в [GODOT.md](GODOT.md). Сейчас проб 46, закрыто 45,
 мультипроб 3.
 
 ## Запуск
@@ -39,11 +40,11 @@
 
 | | |
 |---|---|
-| <img src="img/probes/01_walk.jpg" width="440"><br><b>01_walk</b> — ходьба и прыжок<br><sub><a href="probes/01_walk/NOTES.md">заметка</a> · эталон: Quake 3</sub> | <img src="img/probes/02_orbit.jpg" width="440"><br><b>02_orbit</b> — третье лицо: орбита камеры<br><sub><a href="probes/02_orbit/NOTES.md">заметка</a> · эталон: Godot TPS demo</sub> |
-| <img src="img/probes/03_shoot.jpg" width="440"><br><b>03_shoot</b> — стрельба: сцена как заготовка<br><sub><a href="probes/03_shoot/NOTES.md">заметка</a> · эталон: Quake 3</sub> | <img src="img/probes/04_crowd.jpg" width="440"><br><b>04_crowd</b> — толпа: где ломается узел на объект<br><sub><a href="probes/04_crowd/NOTES.md">заметка</a> · эталон: Homeworld</sub> |
-| <img src="img/probes/05_truck.jpg" width="440"><br><b>05_truck</b> — шестиколёсник: подвеска и раскладка привода<br><sub><a href="probes/05_truck/NOTES.md">заметка</a> · эталон: SnowRunner</sub> | <img src="img/probes/06_command.jpg" width="440"><br><b>06_command</b> — командование сверху и тактическая пауза<br><sub><a href="probes/06_command/NOTES.md">заметка</a> · эталон: Homeworld</sub> |
-| <img src="img/probes/07_psx.jpg" width="440"><br><b>07_psx</b> — стиль как набор ограничений<br><sub><a href="probes/07_psx/NOTES.md">заметка</a> · эталон: PlayStation</sub> | <img src="img/probes/08_boom.jpg" width="440"><br><b>08_boom</b> — взрыв, разобранный на слои<br><sub><a href="probes/08_boom/NOTES.md">заметка</a></sub> |
-| <img src="img/probes/09_fx.jpg" width="440"><br><b>09_fx</b> — эффекты без кода: реестр, таймлайн, пул<br><sub><a href="probes/09_fx/NOTES.md">заметка</a></sub> | <img src="img/probes/10_possess.jpg" width="440"><br><b>10_possess</b> — вселение: два взгляда на один мир<br><sub><a href="probes/10_possess/NOTES.md">заметка</a> · эталон: Battlezone</sub> |
+| <img src="img/probes/01_walk.jpg" width="440"><br><b>01_walk</b> — ходьба и прыжок<br><sub><a href="probes/01_walk/README.md">заметка</a> · эталон: Quake 3</sub> | <img src="img/probes/02_orbit.jpg" width="440"><br><b>02_orbit</b> — третье лицо: орбита камеры<br><sub><a href="probes/02_orbit/README.md">заметка</a> · эталон: Godot TPS demo</sub> |
+| <img src="img/probes/03_shoot.jpg" width="440"><br><b>03_shoot</b> — стрельба: сцена как заготовка<br><sub><a href="probes/03_shoot/README.md">заметка</a> · эталон: Quake 3</sub> | <img src="img/probes/04_crowd.jpg" width="440"><br><b>04_crowd</b> — толпа: где ломается узел на объект<br><sub><a href="probes/04_crowd/README.md">заметка</a> · эталон: Homeworld</sub> |
+| <img src="img/probes/05_truck.jpg" width="440"><br><b>05_truck</b> — шестиколёсник: подвеска и раскладка привода<br><sub><a href="probes/05_truck/README.md">заметка</a> · эталон: SnowRunner</sub> | <img src="img/probes/06_command.jpg" width="440"><br><b>06_command</b> — командование сверху и тактическая пауза<br><sub><a href="probes/06_command/README.md">заметка</a> · эталон: Homeworld</sub> |
+| <img src="img/probes/07_psx.jpg" width="440"><br><b>07_psx</b> — стиль как набор ограничений<br><sub><a href="probes/07_psx/README.md">заметка</a> · эталон: PlayStation</sub> | <img src="img/probes/08_boom.jpg" width="440"><br><b>08_boom</b> — взрыв, разобранный на слои<br><sub><a href="probes/08_boom/README.md">заметка</a></sub> |
+| <img src="img/probes/09_fx.jpg" width="440"><br><b>09_fx</b> — эффекты без кода: реестр, таймлайн, пул<br><sub><a href="probes/09_fx/README.md">заметка</a></sub> | <img src="img/probes/10_possess.jpg" width="440"><br><b>10_possess</b> — вселение: два взгляда на один мир<br><sub><a href="probes/10_possess/README.md">заметка</a> · эталон: Battlezone</sub> |
 | <img src="img/probes/11_turn.jpg" width="440"><br><b>11_turn</b> — ход: мир движется, только когда двигаюсь я<br><sub><a href="probes/11_turn/NOTES.md">заметка</a> · эталон: рогалик</sub> | <img src="img/probes/12_gen.jpg" width="440"><br><b>12_gen</b> — генерация: число на входе, подземелье на выходе<br><sub><a href="probes/12_gen/NOTES.md">заметка</a> · эталон: Rogue</sub> |
 | <img src="img/probes/13_dress.jpg" width="440"><br><b>13_dress</b> — одевание: та же сетка, три раза<br><sub><a href="probes/13_dress/NOTES.md">заметка</a> · эталон: Diablo</sub> | <img src="img/probes/14_chunks.jpg" width="440"><br><b>14_chunks</b> — уровень из ручных кусков<br><sub><a href="probes/14_chunks/NOTES.md">заметка</a> · эталон: Diablo</sub> |
 | <img src="img/probes/15_data.jpg" width="440"><br><b>15_data</b> — контент как данные<br><sub><a href="probes/15_data/NOTES.md">заметка</a> · эталон: Diablo</sub> | <img src="img/probes/16_save.jpg" width="440"><br><b>16_save</b> — что в мире правда<br><sub><a href="probes/16_save/NOTES.md">заметка</a> · эталон: рогалик</sub> |

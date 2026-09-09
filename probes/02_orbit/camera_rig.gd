@@ -9,6 +9,18 @@ extends Node3D
 ## node tree rather than as a calculation. That is the part worth taking away
 ## from this probe: in Godot the scene graph often IS the maths.
 ##
+## The arm keeps the camera out of walls with no code at all, but two of its
+## properties do not behave the way the names suggest.
+##
+## `margin` DOES NOTHING while the spring casts a ray. Measured at 0.3 and at
+## 1.0, the results matched to the hundredth. Only a SHAPE holds the camera off
+## a surface: give the arm a SphereShape3D of radius 0.35 and it stops exactly
+## 0.35 m short of any wall.
+##
+## The arm OVERWRITES the position of its direct children every frame. The
+## camera therefore cannot be moved directly — it hangs under a `Mount` node
+## that the arm moves, and the shoulder offset goes on the camera below that.
+##
 ## The one thing the tree cannot give us is LAG. A child node follows its
 ## parent exactly, and exactness is what made the first version of this rig
 ## feel weightless. So this node opts out of its parent's transform entirely

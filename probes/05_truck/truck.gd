@@ -8,6 +8,14 @@ extends VehicleBody3D
 ## scene tree. This script only flips those checkboxes in useful combinations
 ## and hands the engine a number.
 ##
+## A wheel here is a RAY AND A SPRING, not a linkage. VehicleWheel3D extends
+## Node3D, not a physics body: it has no mass, no collision shape and no
+## inertia, and the only physics body in the vehicle is the hull. Its whole
+## vocabulary is six numbers about the spring and the tyre plus roll_influence
+## — no camber, no caster, no toe, no arm lengths, no roll centre. The wheel
+## travels straight, perpendicular to the hull. Looking for those knobs is a
+## waste of an afternoon.
+##
 ## The suspension is free too, and worth knowing about: the engine moves the
 ## WHEEL NODE ITSELF as the spring compresses — measured range on this truck is
 ## 0.40 m, exactly `suspension_travel`. Hang the wheel mesh under the node and
