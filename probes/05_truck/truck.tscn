@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://bfoa8m810idcu"]
 
-[ext_resource type="Script" uid="uid://dq0d4jmp863xd" path="res://probes/05_truck/Truck.gd" id="1_truck"]
-[ext_resource type="Script" uid="uid://dg4rp23b0xsf" path="res://probes/05_truck/ChaseCam.gd" id="2_cam"]
-[ext_resource type="Script" uid="uid://do30kk0vylhxb" path="res://probes/05_truck/Hud.gd" id="3_hud"]
+[ext_resource type="Script" uid="uid://dq0d4jmp863xd" path="res://probes/05_truck/truck.gd" id="1_truck"]
+[ext_resource type="Script" uid="uid://dg4rp23b0xsf" path="res://probes/05_truck/chase_cam.gd" id="2_cam"]
+[ext_resource type="Script" uid="uid://do30kk0vylhxb" path="res://probes/05_truck/hud.gd" id="3_hud"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_1"]
 sky_top_color = Color(0.31, 0.39, 0.52, 1)
@@ -271,7 +271,7 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("3_hud")
 
-[node name="Big" type="Label" parent="Ui/Hud" unique_id=1304098737]
+[node name="Speed" type="Label" parent="Ui/Hud" unique_id=1304098737]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -317,7 +317,7 @@ text = "W/S throttle    A/D steer    SPACE brake    C switch view
 C gives you the side view. Take the washboard in it and
 watch three axles ride the same bump one after another.
 
-Truck node, Remote tab: Drive, Middle Axle, Split Torque.
-Turn Split Torque OFF to see why the comparison needs it."
+Truck node, Remote tab: Drive, Middle Axle Enabled, Use Split Torque.
+Turn Use Split Torque OFF to see why the comparison needs it."
 horizontal_alignment = 2
 vertical_alignment = 2

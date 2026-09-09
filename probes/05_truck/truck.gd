@@ -1,4 +1,4 @@
-class_name Truck
+class_name TruckBody
 extends VehicleBody3D
 ## A 6x6, so that "which wheels drive" stops being a word and becomes a switch.
 ##
@@ -14,35 +14,48 @@ extends VehicleBody3D
 ## it rides along with no code at all. Read the node's own y back and you have
 ## the compression as a number, which is what the HUD does.
 
-enum Drive {ALL_SIX, FRONT, MIDDLE, REAR, FRONT_AND_REAR}
-enum Steer {FRONT_ONLY, FRONT_AND_REAR}
+enum DriveLayout {
+	ALL_SIX,
+	FRONT,
+	MIDDLE,
+	REAR,
+	FRONT_AND_REAR,
+}
+
+enum SteerLayout {
+	FRONT_ONLY,
+	FRONT_AND_REAR,
+}
+
+## The three axles, by name. Everything that walks the wheels goes through here.
+const AXLES := ["front", "middle", "rear"]
 
 @export_group("Layout")
-@export var drive: Drive = Drive.ALL_SIX:
-	set(v):
-		drive = v
+@export var drive: DriveLayout = DriveLayout.ALL_SIX:
+	set(value):
+		drive = value
 		if is_inside_tree():
 			_apply_layout()
 
-@export var steer_axles: Steer = Steer.FRONT_ONLY:
-	set(v):
-		steer_axles = v
+@export var steer_axles: SteerLayout = SteerLayout.FRONT_ONLY:
+	set(value):
+		steer_axles = value
 		if is_inside_tree():
 			_apply_layout()
 
 ## Lift the middle axle out of the truck entirely, turning the 6x6 into a 4x4
 ## on the same wheelbase. Real trucks do this to save tyres when running empty.
 ## Watch what it does to the hump: two axles have to carry what three did.
-@export var middle_axle := true:
-	set(v):
-		middle_axle = v
+@export var middle_axle_enabled := true:
+	set(value):
+		middle_axle_enabled = value
 		if is_inside_tree():
 			_apply_layout()
 
 
 @export_group("Engine")
-## Total pull, before it is shared out. Whether it is shared is the next knob,
-## and that knob decides whether this probe measures anything at all.
+## Total pull in newtons, before it is shared out. Whether it is shared is the
+## next knob, and that knob decides whether this probe measures anything at all.
 @export_range(200.0, 12000.0, 50.0) var engine_power := 3000.0
 
 ## Divide the engine force between the driven wheels instead of giving every
@@ -69,10 +82,10 @@ enum Steer {FRONT_ONLY, FRONT_AND_REAR}
 ## grip in hand. Which axles drive starts to matter only once a driven wheel
 ## runs out of grip — so if you want to feel a difference, take `grip` down
 ## until the wheels start slipping, or go and find the side slope.
-@export var split_torque := true
+@export var use_split_torque := true
 
-## Tyre grip, written into every wheel. THE knob that makes the drive layout
-## mean anything.
+## Tyre grip, dimensionless, written into every wheel. THE knob that makes the
+## drive layout mean anything.
 ##
 ## Measured on this truck: with grip to spare, six-wheel drive, front drive and
 ## rear drive accelerate absolutely identically as long as the total pull is
@@ -83,15 +96,18 @@ enum Steer {FRONT_ONLY, FRONT_AND_REAR}
 ## decides who can use their share of the torque, and weight moves backwards
 ## the moment you open the throttle.
 @export_range(0.3, 12.0, 0.1) var grip := 4.0:
-	set(v):
-		grip = v
+	set(value):
+		grip = value
 		if is_inside_tree():
-			for w in wheels():
-				w.wheel_friction_slip = v
+			for wheel in wheels():
+				wheel.wheel_friction_slip = value
 
+## Braking force written into `brake` while the brake is held, newtons.
 @export_range(0.0, 300.0, 5.0) var brake_power := 60.0
+## Furthest the front wheels will turn, radians.
 @export_range(0.05, 0.8, 0.01) var max_steer := 0.42
-## How fast the wheels swing to the requested angle. Trucks are not go-karts.
+## How fast the wheels swing to the requested angle, rad/s. Trucks are not
+## go-karts.
 @export_range(0.5, 20.0, 0.5) var steer_speed := 3.5
 
 
@@ -125,6 +141,12 @@ enum Steer {FRONT_ONLY, FRONT_AND_REAR}
 @export_range(0.0, 20000.0, 250.0) var bar_middle := 0.0
 @export_range(0.0, 20000.0, 250.0) var bar_rear := 0.0
 
+## Where each wheel node sat before the engine started moving it. Needed to
+## turn its live y back into a compression figure, and to put the middle axle
+## back where it belongs after lifting it.
+var _rest := {}
+var _steer_angle := 0.0
+var _detached: Array[VehicleWheel3D] = []
 
 @onready var _axles := {
 	"front": [$FL, $FR],
@@ -132,19 +154,12 @@ enum Steer {FRONT_ONLY, FRONT_AND_REAR}
 	"rear": [$RL, $RR],
 }
 
-## Where each wheel node sat before the engine started moving it. Needed to
-## turn its live y back into a compression figure, and to put the middle axle
-## back where it belongs after lifting it.
-var _rest: Dictionary = {}
-var _steer_now := 0.0
-var _detached: Array[VehicleWheel3D] = []
-
 
 func _ready() -> void:
 	for group in _axles.values():
-		for w in group:
-			_rest[w] = w.position
-			w.wheel_friction_slip = grip
+		for wheel: VehicleWheel3D in group:
+			_rest[wheel] = wheel.position
+			wheel.wheel_friction_slip = grip
 	_apply_layout()
 
 
@@ -153,7 +168,9 @@ func _physics_process(delta: float) -> void:
 	var turn := Input.get_axis(&"move_right", &"move_left")
 
 	var driven := _driven_count()
-	var per_wheel := 0.0 if driven == 0 else (engine_power / float(driven) if split_torque else engine_power)
+	var per_wheel := 0.0
+	if driven > 0:
+		per_wheel = engine_power / float(driven) if use_split_torque else engine_power
 	# Measured, not assumed: a POSITIVE engine_force drives this vehicle toward
 	# its own +Z. Everything else in Godot treats -Z as forward — look_at, the
 	# camera behind us, the cab on the front — so the sign is flipped here once
@@ -161,37 +178,18 @@ func _physics_process(delta: float) -> void:
 	engine_force = -throttle * per_wheel
 	brake = brake_power if Input.is_action_pressed(&"jump") else 0.0
 
-	_steer_now = move_toward(_steer_now, turn * max_steer, steer_speed * delta)
-	steering = _steer_now
+	_steer_angle = move_toward(_steer_angle, turn * max_steer, steer_speed * delta)
+	steering = _steer_angle
 
-	_bar("front", bar_front)
-	_bar("middle", bar_middle)
-	_bar("rear", bar_rear)
+	_apply_anti_roll("front", bar_front)
+	_apply_anti_roll("middle", bar_middle)
+	_apply_anti_roll("rear", bar_rear)
 
 
-## One axle's anti-roll bar.
-##
-## The force goes on only where the wheel is actually touching. That is not a
-## shortcut, it is the behaviour: a bar stiff enough will happily lift the
-## inside wheel clean off the ground in a bend, and then it has nothing to push
-## against. This is exactly why stiff bars and rough ground do not mix.
-func _bar(key: String, k: float) -> void:
-	if k <= 0.0:
-		return
-	var l: VehicleWheel3D = _axles[key][0]
-	var r: VehicleWheel3D = _axles[key][1]
-	if not l.is_inside_tree() or not r.is_inside_tree():
-		return
-	var diff := compression(l) - compression(r)
-	if absf(diff) < 0.002:
-		return
-	# Left squashed more than right means the body is leaning left, so lift the
-	# left side of the chassis and press the right one down.
-	var f := global_basis.y * (diff * k)
-	if l.is_in_contact():
-		apply_force(f, l.global_position - global_position)
-	if r.is_in_contact():
-		apply_force(-f, r.global_position - global_position)
+func _exit_tree() -> void:
+	for wheel in _detached:
+		if is_instance_valid(wheel):
+			wheel.free()
 
 
 ## Roll angle in degrees, positive leaning right. Read by the HUD, and the only
@@ -206,67 +204,92 @@ func roll_degrees() -> float:
 ## engine writes the answer straight into the wheel node's own position, so the
 ## distance it has travelled from its resting place, over `suspension_travel`,
 ## IS the compression.
-func compression(w: VehicleWheel3D) -> float:
-	if not _rest.has(w) or w.suspension_travel <= 0.0:
+func compression(wheel: VehicleWheel3D) -> float:
+	if not _rest.has(wheel) or wheel.suspension_travel <= 0.0:
 		return 0.0
-	var extended: float = _rest[w].y - w.wheel_rest_length
-	return clampf((w.position.y - extended) / w.suspension_travel, 0.0, 1.0)
+	var extended: float = _rest[wheel].y - wheel.wheel_rest_length
+	return clampf((wheel.position.y - extended) / wheel.suspension_travel, 0.0, 1.0)
 
 
-func wheels() -> Array:
-	var out := []
-	for key in ["front", "middle", "rear"]:
-		for w in _axles[key]:
-			if w.is_inside_tree():
-				out.append(w)
-	return out
+## Every wheel currently IN the tree. The middle pair drops out of this list
+## when the axle is lifted, which is the whole point of lifting it.
+func wheels() -> Array[VehicleWheel3D]:
+	var found: Array[VehicleWheel3D] = []
+	for key in AXLES:
+		for wheel: VehicleWheel3D in _axles[key]:
+			if wheel.is_inside_tree():
+				found.append(wheel)
+	return found
 
 
 func driving_axles() -> String:
-	return Drive.keys()[drive].to_lower().replace("_", " ")
+	var layout: String = DriveLayout.keys()[drive]
+	return layout.to_lower().replace("_", " ")
 
 
 func _driven_count() -> int:
-	var n := 0
-	for w in wheels():
-		if w.use_as_traction:
-			n += 1
-	return n
+	var driven := 0
+	for wheel in wheels():
+		if wheel.use_as_traction:
+			driven += 1
+	return driven
 
 
 func _apply_layout() -> void:
 	# Lifting an axle means taking the wheels out of the tree. VehicleBody3D
 	# reads its wheel children every step, so removing two of them genuinely
 	# makes it a four-wheeler — the weight has to go somewhere else.
-	for w in _axles["middle"]:
-		if middle_axle and not w.is_inside_tree():
-			add_child(w)
-			w.position = _rest[w]
-			_detached.erase(w)
-		elif not middle_axle and w.is_inside_tree():
-			remove_child(w)
-			_detached.append(w)
+	for wheel: VehicleWheel3D in _axles["middle"]:
+		if middle_axle_enabled and not wheel.is_inside_tree():
+			add_child(wheel)
+			wheel.position = _rest[wheel]
+			_detached.erase(wheel)
+		elif not middle_axle_enabled and wheel.is_inside_tree():
+			remove_child(wheel)
+			_detached.append(wheel)
 
-	var pull: Array = {
-		Drive.ALL_SIX: ["front", "middle", "rear"],
-		Drive.FRONT: ["front"],
-		Drive.MIDDLE: ["middle"],
-		Drive.REAR: ["rear"],
-		Drive.FRONT_AND_REAR: ["front", "rear"],
+	var pulling: Array = {
+		DriveLayout.ALL_SIX: ["front", "middle", "rear"],
+		DriveLayout.FRONT: ["front"],
+		DriveLayout.MIDDLE: ["middle"],
+		DriveLayout.REAR: ["rear"],
+		DriveLayout.FRONT_AND_REAR: ["front", "rear"],
 	}[drive]
 
 	for key in _axles:
-		for w in _axles[key]:
-			w.use_as_traction = key in pull
+		for wheel: VehicleWheel3D in _axles[key]:
+			wheel.use_as_traction = key in pulling
 			# Godot has ONE steering angle for the whole vehicle, applied to
 			# every wheel with this flag. So "rear steering" here is crab
 			# steering — both ends turn the same way — not the counter-steer a
 			# real 6x6 does. Worth knowing before believing the feel.
-			w.use_as_steering = (key == "front") or (
-				key == "rear" and steer_axles == Steer.FRONT_AND_REAR)
+			wheel.use_as_steering = (
+					key == "front"
+					or (key == "rear" and steer_axles == SteerLayout.FRONT_AND_REAR)
+			)
 
 
-func _exit_tree() -> void:
-	for w in _detached:
-		if is_instance_valid(w):
-			w.free()
+## One axle's anti-roll bar, at `stiffness` newtons per unit of spring
+## difference.
+##
+## The force goes on only where the wheel is actually touching. That is not a
+## shortcut, it is the behaviour: a bar stiff enough will happily lift the
+## inside wheel clean off the ground in a bend, and then it has nothing to push
+## against. This is exactly why stiff bars and rough ground do not mix.
+func _apply_anti_roll(key: String, stiffness: float) -> void:
+	if stiffness <= 0.0:
+		return
+	var left: VehicleWheel3D = _axles[key][0]
+	var right: VehicleWheel3D = _axles[key][1]
+	if not left.is_inside_tree() or not right.is_inside_tree():
+		return
+	var difference := compression(left) - compression(right)
+	if absf(difference) < 0.002:
+		return
+	# Left squashed more than right means the body is leaning left, so lift the
+	# left side of the chassis and press the right one down.
+	var force := global_basis.y * (difference * stiffness)
+	if left.is_in_contact():
+		apply_force(force, left.global_position - global_position)
+	if right.is_in_contact():
+		apply_force(-force, right.global_position - global_position)

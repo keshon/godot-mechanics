@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://d4gio0wvjvk4p"]
 
-[ext_resource type="Script" uid="uid://3a5oiiappg22" path="res://probes/06_command/Field.gd" id="1_field"]
-[ext_resource type="PackedScene" path="res://probes/06_command/Unit.tscn" id="2_unit"]
-[ext_resource type="Script" uid="uid://c1nq8y7o7sees" path="res://probes/06_command/Hud.gd" id="3_hud"]
+[ext_resource type="Script" uid="uid://3a5oiiappg22" path="res://probes/06_command/field.gd" id="1_field"]
+[ext_resource type="PackedScene" path="res://probes/06_command/unit.tscn" id="2_unit"]
+[ext_resource type="Script" uid="uid://c1nq8y7o7sees" path="res://probes/06_command/hud.gd" id="3_hud"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_1"]
 sky_top_color = Color(0.28, 0.35, 0.48, 1)
@@ -31,7 +31,7 @@ roughness = 0.9
 albedo_color = Color(0.42, 0.5, 0.6, 1)
 roughness = 0.8
 
-[node name="CommandScene" type="Node3D" unique_id=934950448]
+[node name="Command" type="Node3D" unique_id=934950448]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=922456967]
 environment = SubResource("Environment_1")
@@ -111,7 +111,7 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("3_hud")
 
-[node name="Big" type="Label" parent="Ui/Hud" unique_id=917605671]
+[node name="SelectedCount" type="Label" parent="Ui/Hud" unique_id=917605671]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0

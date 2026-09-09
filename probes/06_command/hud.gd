@@ -7,6 +7,24 @@ extends Control
 ## `unproject_position`, the same call the box selection uses. Once you have
 ## that one function, anything in the world can have a label on it.
 
+enum DotStyle {
+	CIRCLES,
+	CROSSES,
+	NONE,
+}
+
+enum PathStyle {
+	PER_UNIT,
+	PER_ORDER,
+}
+
+const SELECT_FILL := Color(0.45, 0.75, 1.0, 0.12)
+const SELECT_EDGE := Color(0.55, 0.82, 1.0, 0.85)
+const ORDER_LINE := Color(0.55, 0.9, 0.6, 0.55)
+const ORDER_DOT := Color(0.6, 1.0, 0.65, 0.9)
+## Half-width of a cross marker, pixels.
+const DOT_REACH := 3.0
+
 ## One draw call for every line, instead of one per line.
 ##
 ## Kept as a switch, and worth being honest about: it is worth almost nothing.
@@ -16,7 +34,7 @@ extends Control
 ## The switch stays because batching draw calls is the right habit, and because
 ## watching it NOT matter here is as instructive as watching it matter in probe
 ## 04. The thing that actually cost fifteen milliseconds was the dots.
-@export var batch_lines := true
+@export var use_batched_lines := true
 
 ## How the waypoint markers are drawn. THE knob, and not the one expected.
 ##
@@ -32,8 +50,7 @@ extends Control
 ## before the renderer sees them: each circle is a tessellated polygon built
 ## from scratch every frame. A cross is two straight segments, and two straight
 ## segments can join the multiline that is already being sent.
-enum Dots {CIRCLES, CROSSES, NONE}
-@export var dot_style: Dots = Dots.CROSSES
+@export var dot_style: DotStyle = DotStyle.CROSSES
 
 ## Whether every unit gets its own thread of orders, or every ORDER does.
 ##
@@ -62,48 +79,46 @@ enum Dots {CIRCLES, CROSSES, NONE}
 ## while every unit went to the exact same spot, which stops being true the
 ## moment anything spreads them into a formation. Grouping belongs to the
 ## command, not to a coincidence in the data.
-enum Paths {PER_UNIT, PER_ORDER}
-@export var path_style: Paths = Paths.PER_ORDER
+@export var path_style: PathStyle = PathStyle.PER_ORDER
 
 @export var field_path: NodePath = ^"../../Field"
-
-@onready var field: Field = get_node(field_path)
-@onready var _big: Label = $Big
-@onready var _detail: RichTextLabel = $Detail
-
-const SELECT_FILL := Color(0.45, 0.75, 1.0, 0.12)
-const SELECT_EDGE := Color(0.55, 0.82, 1.0, 0.85)
-const ORDER_LINE := Color(0.55, 0.9, 0.6, 0.55)
-const ORDER_DOT := Color(0.6, 1.0, 0.65, 0.9)
 
 ## Microseconds the last _draw took, start to finish. Immune to vsync, which
 ## the frames-per-second number is not.
 var draw_usec := 0
-var _seg := PackedVector2Array()
-var _dots := PackedVector2Array()
-var _groups := {}
 ## How many distinct routes the selection is actually following. Shown on the
 ## HUD next to the selected count: the gap between the two numbers is how much
 ## work PER_UNIT was doing for nothing.
 var group_count := 0
 
+var _segments := PackedVector2Array()
+var _dot_segments := PackedVector2Array()
+var _groups := {}
+
+@onready var field: CommandField = get_node(field_path)
+
+@onready var _selected_count: Label = $SelectedCount
+@onready var _detail: RichTextLabel = $Detail
+
 
 func _process(_delta: float) -> void:
 	queue_redraw()
-	var paused := get_tree().paused
-	_big.text = "%d" % field.selected.size()
+	var all_units := field.units()
 	var moving := 0
-	for u in field.units():
-		if u.busy():
+	for unit in all_units:
+		if unit.is_busy():
 			moving += 1
+	_selected_count.text = "%d" % field.selected.size()
 	_detail.text = "\n".join([
 		"selected",
-		"units    %d    moving    %d    routes    [b]%d[/b]"
-			% [field.units().size(), moving, group_count],
-		"time     %s" % ("[color=#ffcf7a][b]PAUSED[/b][/color]" if paused
+		"units    %d    moving    %d    routes    [b]%d[/b]" % [
+			all_units.size(), moving, group_count],
+		"time     %s" % (
+			"[color=#ffcf7a][b]PAUSED[/b][/color]" if get_tree().paused
 			else "[b]x%.0f[/b]" % Engine.time_scale),
-		"draw     [b]%.2f ms[/b]   lines %s, dots %s" % [draw_usec / 1000.0,
-			"batched" if batch_lines else "[color=#ffcf7a]one by one[/color]",
+		"draw     [b]%.2f ms[/b]   lines %s, dots %s" % [
+			draw_usec / 1000.0,
+			"batched" if use_batched_lines else "[color=#ffcf7a]one by one[/color]",
 			["[color=#ff8f7a]circles[/color]", "crosses", "off"][dot_style]],
 		"",
 		"[color=#8ecbff]orders still register while paused —[/color]",
@@ -112,76 +127,77 @@ func _process(_delta: float) -> void:
 
 
 func _draw() -> void:
-	var t0 := Time.get_ticks_usec()
-	var cam: Camera3D = field.get_node(^"CamPivot/Camera3D")
-	_seg.clear()
-	_dots.clear()
+	var draw_start: int = Time.get_ticks_usec()
+	var camera := field.camera()
+	_segments.clear()
+	_dot_segments.clear()
 
-	if path_style == Paths.PER_ORDER:
-		_grouped(cam)
+	if path_style == PathStyle.PER_ORDER:
+		_draw_grouped(camera)
 	else:
-		_per_unit(cam)
+		_draw_per_unit(camera)
 
-	if not _seg.is_empty():
-		draw_multiline(_seg, ORDER_LINE, 2.0)
-	if not _dots.is_empty():
-		draw_multiline(_dots, ORDER_DOT, 2.0)
+	if not _segments.is_empty():
+		draw_multiline(_segments, ORDER_LINE, 2.0)
+	if not _dot_segments.is_empty():
+		draw_multiline(_dot_segments, ORDER_DOT, 2.0)
 
 	if field.dragging:
-		var box := Rect2(field.drag_from, get_global_mouse_position() - field.drag_from).abs()
+		var corner := get_global_mouse_position() - field.drag_from
+		var box := Rect2(field.drag_from, corner).abs()
 		draw_rect(box, SELECT_FILL, true)
 		draw_rect(box, SELECT_EDGE, false, 1.5)
 
-	draw_usec = Time.get_ticks_usec() - t0
+	draw_usec = Time.get_ticks_usec() - draw_start
 
 
 ## One thread per distinct route.
 ##
 ## The key is the order id the unit was handed when it was told to move.
-func _grouped(cam: Camera3D) -> void:
+func _draw_grouped(camera: Camera3D) -> void:
 	_groups.clear()
-	for u in field.selected:
-		var p := u.path()
-		if p.is_empty():
+	for unit in field.selected:
+		var path := unit.path()
+		if path.is_empty():
 			continue
-		var key := u.order_id
+		var key := unit.order_id
 		if _groups.has(key):
-			var g: Dictionary = _groups[key]
-			g.sum += u.global_position
-			g.n += 1
+			var group: Dictionary = _groups[key]
+			group.sum += unit.global_position
+			group.count += 1
 		else:
-			_groups[key] = {"sum": u.global_position, "n": 1, "path": p}
+			_groups[key] = {"sum": unit.global_position, "count": 1, "path": path}
 	group_count = _groups.size()
-	for g in _groups.values():
-		_thread(cam, g.sum / float(g.n), g.path)
+	for group in _groups.values():
+		_draw_thread(camera, group.sum / float(group.count), group.path)
 
 
 ## One thread per unit. Kept so the difference can be measured, not used.
-func _per_unit(cam: Camera3D) -> void:
+func _draw_per_unit(camera: Camera3D) -> void:
 	group_count = field.selected.size()
-	for u in field.selected:
-		_thread(cam, u.global_position, u.path())
+	for unit in field.selected:
+		_draw_thread(camera, unit.global_position, unit.path())
 
 
-func _thread(cam: Camera3D, from: Vector3, path: Array[Vector3]) -> void:
-	if cam.is_position_behind(from):
+func _draw_thread(camera: Camera3D, from: Vector3, path: Array[Vector3]) -> void:
+	if camera.is_position_behind(from):
 		return
-	var prev := cam.unproject_position(from)
+	var previous := camera.unproject_position(from)
 	for point in path:
-		if cam.is_position_behind(point):
+		if camera.is_position_behind(point):
 			continue
-		var at := cam.unproject_position(point)
-		if batch_lines:
-			_seg.append(prev)
-			_seg.append(at)
+		var at := camera.unproject_position(point)
+		if use_batched_lines:
+			_segments.append(previous)
+			_segments.append(at)
 		else:
-			draw_line(prev, at, ORDER_LINE, 2.0)
+			draw_line(previous, at, ORDER_LINE, 2.0)
 		match dot_style:
-			Dots.CIRCLES:
+			DotStyle.CIRCLES:
 				draw_circle(at, 4.0, ORDER_DOT)
-			Dots.CROSSES:
-				_dots.append(at + Vector2(-3.0, 0.0))
-				_dots.append(at + Vector2(3.0, 0.0))
-				_dots.append(at + Vector2(0.0, -3.0))
-				_dots.append(at + Vector2(0.0, 3.0))
-		prev = at
+			DotStyle.CROSSES:
+				_dot_segments.append(at + Vector2(-DOT_REACH, 0.0))
+				_dot_segments.append(at + Vector2(DOT_REACH, 0.0))
+				_dot_segments.append(at + Vector2(0.0, -DOT_REACH))
+				_dot_segments.append(at + Vector2(0.0, DOT_REACH))
+		previous = at
