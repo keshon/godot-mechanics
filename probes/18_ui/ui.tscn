@@ -1,8 +1,8 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/18_ui/Ui.gd" id="1_ui"]
-[ext_resource type="Script" path="res://probes/18_ui/BagView.gd" id="2_bag"]
-[ext_resource type="Script" path="res://probes/18_ui/Skeleton.gd" id="3_skel"]
+[ext_resource type="Script" path="res://probes/18_ui/ui.gd" id="1_ui"]
+[ext_resource type="Script" path="res://probes/18_ui/bag_view.gd" id="2_bag"]
+[ext_resource type="Script" path="res://probes/18_ui/skeleton.gd" id="3_skel"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 sky_top_color = Color(0.09, 0.1, 0.15, 1)
@@ -42,7 +42,7 @@ height = 2.0
 [sub_resource type="BoxMesh" id="Bit"]
 size = Vector3(0.3, 0.3, 0.3)
 
-[node name="UiScene" type="Node3D"]
+[node name="Ui" type="Node3D"]
 script = ExtResource("1_ui")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -75,9 +75,9 @@ mesh = SubResource("Bit")
 transform = Transform3D(0.94, -0.13, 0.32, 0, 0.93, 0.37, -0.34, -0.35, 0.87, 4.6, 4.4, 11.6)
 fov = 36.0
 
-[node name="Ui" type="CanvasLayer" parent="."]
+[node name="Hud" type="CanvasLayer" parent="."]
 
-[node name="Root" type="MarginContainer" parent="Ui"]
+[node name="Root" type="MarginContainer" parent="Hud"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -89,28 +89,28 @@ theme_override_constants/margin_top = 40
 theme_override_constants/margin_right = 44
 theme_override_constants/margin_bottom = 40
 
-[node name="Main" type="HBoxContainer" parent="Ui/Root"]
+[node name="Main" type="HBoxContainer" parent="Hud/Root"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 48
 
-[node name="Left" type="VBoxContainer" parent="Ui/Root/Main"]
+[node name="Left" type="VBoxContainer" parent="Hud/Root/Main"]
 layout_mode = 2
 size_flags_horizontal = 0
 mouse_filter = 2
 theme_override_constants/separation = 34
 
-[node name="Bag" type="Control" parent="Ui/Root/Main/Left"]
+[node name="Bag" type="Control" parent="Hud/Root/Main/Left"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 script = ExtResource("2_bag")
-cols = 10
+columns = 10
 rows = 6
 cell = 46
 title = "bag"
 
-[node name="Cover" type="ColorRect" parent="Ui/Root/Main/Left/Bag"]
+[node name="Cover" type="ColorRect" parent="Hud/Root/Main/Left/Bag"]
 offset_left = 92.0
 offset_top = 92.0
 offset_right = 322.0
@@ -118,35 +118,35 @@ offset_bottom = 222.0
 color = Color(1, 0.42, 0.32, 0.3)
 mouse_filter = 2
 
-[node name="Floor" type="Control" parent="Ui/Root/Main/Left"]
+[node name="Floor" type="Control" parent="Hud/Root/Main/Left"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 script = ExtResource("2_bag")
-cols = 12
+columns = 12
 rows = 2
 cell = 40
 title = "the floor"
 
-[node name="Right" type="VBoxContainer" parent="Ui/Root/Main"]
+[node name="Right" type="VBoxContainer" parent="Hud/Root/Main"]
 layout_mode = 2
 size_flags_horizontal = 10
 mouse_filter = 2
 theme_override_constants/separation = 30
 
-[node name="Worn" type="Control" parent="Ui/Root/Main/Right"]
+[node name="Worn" type="Control" parent="Hud/Root/Main/Right"]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 0
 script = ExtResource("2_bag")
-cols = 3
+columns = 3
 rows = 1
 cell = 62
 compact = true
 slot_tags = PackedStringArray("weapon", "armour", "trinket")
 title = "worn"
 
-[node name="Info" type="RichTextLabel" parent="Ui/Root/Main/Right"]
+[node name="Info" type="RichTextLabel" parent="Hud/Root/Main/Right"]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 3
@@ -157,7 +157,7 @@ bbcode_enabled = true
 scroll_active = false
 mouse_filter = 2
 
-[node name="Skeleton" type="Control" parent="Ui"]
+[node name="Skeleton" type="Control" parent="Hud"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

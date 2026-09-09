@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/20_spec/Bench.gd" id="1_bench"]
-[ext_resource type="Script" path="res://probes/20_spec/SpecBar.gd" id="2_bar"]
+[ext_resource type="Script" path="res://probes/20_spec/spec.gd" id="1_bench"]
+[ext_resource type="Script" path="res://probes/20_spec/bar.gd" id="2_bar"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 sky_top_color = Color(0.1, 0.11, 0.16, 1)
@@ -46,7 +46,7 @@ height = 3.0
 radius = 0.45
 height = 1.8
 
-[node name="SpecScene" type="Node3D"]
+[node name="Spec" type="Node3D"]
 script = ExtResource("1_bench")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]

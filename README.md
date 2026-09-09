@@ -8,8 +8,8 @@
 с нуля и с пониманием, чего хочешь.
 
 Правила проекта — в [PURPOSE.md](PURPOSE.md), стиль кода — в [STYLE.md](STYLE.md),
-формат заметки — в [NOTE.md](NOTE.md), грабли движка — в [GODOT.md](GODOT.md). Сейчас проб 46, закрыто 45,
-мультипроб 3.
+формат заметки — в [NOTE.md](NOTE.md), грабли движка — в [GODOT.md](GODOT.md).
+Сейчас проб 46, закрыто 45, мультипроб 3.
 
 ## Запуск
 
@@ -48,8 +48,8 @@
 | <img src="img/probes/11_turn.jpg" width="440"><br><b>11_turn</b> — ход: мир движется, только когда двигаюсь я<br><sub><a href="probes/11_turn/README.md">заметка</a> · эталон: рогалик</sub> | <img src="img/probes/12_gen.jpg" width="440"><br><b>12_gen</b> — генерация: число на входе, подземелье на выходе<br><sub><a href="probes/12_gen/README.md">заметка</a> · эталон: Rogue</sub> |
 | <img src="img/probes/13_dress.jpg" width="440"><br><b>13_dress</b> — одевание: та же сетка, три раза<br><sub><a href="probes/13_dress/README.md">заметка</a> · эталон: Diablo</sub> | <img src="img/probes/14_chunks.jpg" width="440"><br><b>14_chunks</b> — уровень из ручных кусков<br><sub><a href="probes/14_chunks/README.md">заметка</a> · эталон: Diablo</sub> |
 | <img src="img/probes/15_data.jpg" width="440"><br><b>15_data</b> — контент как данные<br><sub><a href="probes/15_data/README.md">заметка</a> · эталон: Diablo</sub> | <img src="img/probes/16_save.jpg" width="440"><br><b>16_save</b> — что в мире правда<br><sub><a href="probes/16_save/README.md">заметка</a> · эталон: рогалик</sub> |
-| <img src="img/probes/17_sight.jpg" width="440"><br><b>17_sight</b> — зрение: вижу, помню, не знаю<br><sub><a href="probes/17_sight/README.md">заметка</a> · эталон: X-COM</sub> | <img src="img/probes/18_ui.jpg" width="440"><br><b>18_ui</b> — интерфейс руками: сетка, перетаскивание, раскладка<br><sub><a href="probes/18_ui/NOTES.md">заметка</a> · эталон: Diablo</sub> |
-| <img src="img/probes/19_hud.jpg" width="440"><br><b>19_hud</b> — боевой HUD: часы и геометрия<br><sub><a href="probes/19_hud/NOTES.md">заметка</a> · эталон: WoW</sub> | <img src="img/probes/20_spec.jpg" width="440"><br><b>20_spec</b> — спека как данные: ресурс, баффы, процы, симулятор<br><sub><a href="probes/20_spec/NOTES.md">заметка</a> · эталон: WoW</sub> |
+| <img src="img/probes/17_sight.jpg" width="440"><br><b>17_sight</b> — зрение: вижу, помню, не знаю<br><sub><a href="probes/17_sight/README.md">заметка</a> · эталон: X-COM</sub> | <img src="img/probes/18_ui.jpg" width="440"><br><b>18_ui</b> — интерфейс руками: сетка, перетаскивание, раскладка<br><sub><a href="probes/18_ui/README.md">заметка</a> · эталон: Diablo</sub> |
+| <img src="img/probes/19_hud.jpg" width="440"><br><b>19_hud</b> — боевой HUD: часы и геометрия<br><sub><a href="probes/19_hud/README.md">заметка</a> · эталон: WoW</sub> | <img src="img/probes/20_spec.jpg" width="440"><br><b>20_spec</b> — спека как данные: ресурс, баффы, процы, симулятор<br><sub><a href="probes/20_spec/README.md">заметка</a> · эталон: WoW</sub> |
 | <img src="img/probes/21_water.jpg" width="440"><br><b>21_water</b> — вода: шесть слоёв и то, что вокруг неё<br><sub><a href="probes/21_water/NOTES.md">заметка</a> · эталон: Sea of Thieves, MGS2</sub> | <img src="img/probes/22_swell.jpg" width="440"><br><b>22_swell</b> — одна волна, два счётчика<br><sub><a href="probes/22_swell/NOTES.md">заметка</a> · эталон: Корсары</sub> |
 | <img src="img/probes/23_fft.jpg" width="440"><br><b>23_fft</b> — два океана под одним небом<br><sub><a href="probes/23_fft/NOTES.md">заметка</a> · эталон: Sea of Thieves</sub> | <img src="img/probes/24_knobs.jpg" width="440"><br><b>24_knobs</b> — ручки, собранные из самого шейдера<br><sub><a href="probes/24_knobs/NOTES.md">заметка</a> · эталон: инструмент</sub> |
 | <img src="img/probes/25_map.jpg" width="440"><br><b>25_map</b> — карта: живая, рисованная, запечённая<br><sub><a href="probes/25_map/NOTES.md">заметка</a> · эталон: Diablo, X-COM</sub> | <img src="img/probes/26_path.jpg" width="440"><br><b>26_path</b> — путь: A* против поля потока<br><sub><a href="probes/26_path/NOTES.md">заметка</a> · эталон: X-COM, RTS</sub> |

@@ -1,8 +1,8 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/19_hud/Arena.gd" id="1_arena"]
-[ext_resource type="Script" path="res://probes/19_hud/Bar.gd" id="2_bar"]
-[ext_resource type="Script" path="res://probes/19_hud/Overlay.gd" id="3_over"]
+[ext_resource type="Script" path="res://probes/19_hud/hud.gd" id="1_arena"]
+[ext_resource type="Script" path="res://probes/19_hud/bar.gd" id="2_bar"]
+[ext_resource type="Script" path="res://probes/19_hud/overlay.gd" id="3_over"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 sky_top_color = Color(0.1, 0.11, 0.16, 1)
@@ -55,7 +55,7 @@ transform_format = 1
 use_colors = true
 mesh = SubResource("Foe")
 
-[node name="HudScene" type="Node3D"]
+[node name="Hud" type="Node3D"]
 script = ExtResource("1_arena")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]

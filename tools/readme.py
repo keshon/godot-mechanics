@@ -33,8 +33,16 @@ def title_of(notes):
 	return re.sub(r'^(М?\d+|Мультипроба \d+)\s*—\s*', '', head)
 
 
+def note_of(kind, name):
+	"""README.md — новый формат (NOTE.md), NOTES.md — ещё не переведённые пробы."""
+	new = '%s/%s/README.md' % (kind, name)
+	if os.path.exists(os.path.join(ROOT, new)):
+		return new
+	return '%s/%s/NOTES.md' % (kind, name)
+
+
 def cell(kind, name):
-	notes = '%s/%s/NOTES.md' % (kind, name)
+	notes = note_of(kind, name)
 	shot = 'img/%s/%s.jpg' % (kind, name)
 	title = title_of(os.path.join(ROOT, notes)) if os.path.exists(os.path.join(ROOT, notes)) else ''
 	mech, ref, done = purpose_rows().get(name, ('', '—', False))
@@ -43,7 +51,7 @@ def cell(kind, name):
 		tail.append('не закрыта')
 	img = '<img src="%s" width="440">' % shot if os.path.exists(os.path.join(ROOT, shot)) else ''
 	line = '%s<br><b>%s</b> — %s' % (img, name, title)
-	line += '<br><sub><a href="%s/%s/NOTES.md">заметка</a>' % (kind, name)
+	line += '<br><sub><a href="%s">заметка</a>' % notes
 	if tail:
 		line += ' · ' + ' · '.join(tail)
 	return line + '</sub>'
