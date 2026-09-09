@@ -1,24 +1,33 @@
 class_name DungeonGen
 extends Resource
+## A generator is not one clever algorithm. It is a pipeline of dumb passes, and the
+## level is what falls out at the end:
+##
+##   1 rooms    throw rectangles at the grid, keep the ones that do not overlap
+##   2 links    decide which rooms connect
+##   3 carve    dig the corridors
+##   4 region   flood fill: which cells can actually be walked to
+##   5 ends     put the stairs at the two ends of the longest walk
+##
+## Pass 4 is the one people skip, because passes 1-3 always produce something that
+## looks like a dungeon. Then a room turns out to have no way in and you hear about
+## it from a player.
+##
+## Nothing here touches a node, and nothing here calls randi(). Every random number
+## comes out of _random, which is seeded once. Same seed, same dungeon, forever.
 
-# A generator is not one clever algorithm. It is a pipeline of dumb passes, and the
-# level is what falls out at the end:
-#
-#   1 rooms    throw rectangles at the grid, keep the ones that do not overlap
-#   2 links    decide which rooms connect
-#   3 carve    dig the corridors
-#   4 region   flood fill: which cells can actually be walked to
-#   5 ends     put the stairs at the two ends of the longest walk
-#
-# Pass 4 is the one people skip, because passes 1-3 always produce something that
-# looks like a dungeon. Then a room turns out to have no way in and you hear about
-# it from a player.
-#
-# Nothing here touches a node, and nothing here calls randi(). Every random number
-# comes out of _rng, which is seeded once. Same seed, same dungeon, forever.
+## What is in a cell. ROOM and HALL are both walkable; the difference is only
+## which pass carved it, and the drawing uses it to shade corridors darker.
+enum Cell {
+	ROCK,
+	ROOM,
+	HALL,
+}
 
-enum { ROCK, ROOM, HALL }
-enum Style { ROOMS, CAVE }
+enum Style {
+	ROOMS,
+	CAVE,
+}
 
 @export var width := 49
 @export var height := 33
@@ -50,13 +59,13 @@ var entrance := Vector2i(-1, -1)
 var stairs := Vector2i(-1, -1)
 var stats := {}
 
-var _rng := RandomNumberGenerator.new()
+var _random := RandomNumberGenerator.new()
 var _far := 0
 var _far_dist := 0
 
 
 func build(seed_value: int, stop_after: int) -> void:
-	_rng.seed = seed_value
+	_random.seed = seed_value
 	cells = PackedByteArray()
 	cells.resize(width * height)
 	region = PackedByteArray()
@@ -85,17 +94,15 @@ func build(seed_value: int, stop_after: int) -> void:
 	_place_ends()
 
 
-# --- 1. rooms -----------------------------------------------------------------
-
 func _place_rooms() -> void:
 	for _i in room_tries:
-		var rw := _rng.randi_range(room_min, room_max)
-		var rh := _rng.randi_range(room_min, room_max)
-		if rw + 2 >= width or rh + 2 >= height:
+		var room_width := _random.randi_range(room_min, room_max)
+		var room_height := _random.randi_range(room_min, room_max)
+		if room_width + 2 >= width or room_height + 2 >= height:
 			continue
 		var r := Rect2i(
-			_rng.randi_range(1, width - rw - 2),
-			_rng.randi_range(1, height - rh - 2), rw, rh)
+			_random.randi_range(1, width - room_width - 2),
+			_random.randi_range(1, height - room_height - 2), room_width, room_height)
 		var clear := true
 		for other in rooms:
 			# grow by one so rooms never share a wall
@@ -107,11 +114,9 @@ func _place_rooms() -> void:
 		rooms.append(r)
 		for y in range(r.position.y, r.end.y):
 			for x in range(r.position.x, r.end.x):
-				cells[y * width + x] = ROOM
+				cells[y * width + x] = Cell.ROOM
 	stats["rooms"] = "%d kept of %d thrown" % [rooms.size(), room_tries]
 
-
-# --- 2. links -----------------------------------------------------------------
 
 func _centre(i: int) -> Vector2i:
 	return rooms[i].position + rooms[i].size / 2
@@ -133,13 +138,13 @@ func _choose_links() -> void:
 		# form a pair the rest of the map never touches. nothing here notices.
 		for i in rooms.size():
 			var best := -1
-			var bd := INF
+			var best_distance := INF
 			for j in rooms.size():
 				if i == j:
 					continue
 				var d := Vector2(_centre(i) - _centre(j)).length_squared()
-				if d < bd:
-					bd = d
+				if d < best_distance:
+					best_distance = d
 					best = j
 			_link(i, best)
 	else:
@@ -150,33 +155,33 @@ func _choose_links() -> void:
 		for i in range(1, rooms.size()):
 			outside.append(i)
 		while not outside.is_empty():
-			var ba := -1
-			var bb := -1
-			var bd := INF
+			var box_a := -1
+			var box_b := -1
+			var best_distance := INF
 			for a in inside:
 				for b in outside:
 					var d := Vector2(_centre(a) - _centre(b)).length_squared()
-					if d < bd:
-						bd = d
-						ba = a
-						bb = b
-			_link(ba, bb)
-			inside.append(bb)
-			outside.erase(bb)
+					if d < best_distance:
+						best_distance = d
+						box_a = a
+						box_b = b
+			_link(box_a, box_b)
+			inside.append(box_b)
+			outside.erase(box_b)
 		# extra edges turn the tree into a graph: circles to run around instead of
 		# corridors you can only back out of
 		for _i in loops:
-			_link(_rng.randi_range(0, rooms.size() - 1), _rng.randi_range(0, rooms.size() - 1))
+			_link(
+				_random.randi_range(0, rooms.size() - 1),
+				_random.randi_range(0, rooms.size() - 1))
 	stats["links"] = str(links.size())
 
-
-# --- 3. carve -----------------------------------------------------------------
 
 func _carve() -> void:
 	for e in links:
 		var a := _centre(e.x)
 		var b := _centre(e.y)
-		if _rng.randi() % 2 == 0:
+		if _random.randi() % 2 == 0:
 			_dig(Vector2i(a.x, a.y), Vector2i(b.x, a.y))
 			_dig(Vector2i(b.x, a.y), Vector2i(b.x, b.y))
 		else:
@@ -189,20 +194,18 @@ func _dig(from: Vector2i, to: Vector2i) -> void:
 	var at := from
 	while true:
 		var i := at.y * width + at.x
-		if cells[i] == ROCK:
-			cells[i] = HALL
+		if cells[i] == Cell.ROCK:
+			cells[i] = Cell.HALL
 		if at == to:
 			return
 		at += step
 
 
-# --- cave: a different first pass, the same passes after it -------------------
-
 func _grow_cave() -> void:
 	for y in height:
 		for x in width:
 			var edge := x == 0 or y == 0 or x == width - 1 or y == height - 1
-			cells[y * width + x] = ROCK if edge or _rng.randf() < cave_fill else ROOM
+			cells[y * width + x] = Cell.ROCK if edge or _random.randf() < cave_fill else Cell.ROOM
 	for _i in cave_smooth:
 		var next := cells.duplicate()
 		for y in range(1, height - 1):
@@ -212,14 +215,12 @@ func _grow_cave() -> void:
 					for dx in [-1, 0, 1]:
 						if dx == 0 and dy == 0:
 							continue
-						if cells[(y + dy) * width + x + dx] == ROCK:
+						if cells[(y + dy) * width + x + dx] == Cell.ROCK:
 							solid += 1
-				next[y * width + x] = ROCK if solid >= 5 else ROOM
+				next[y * width + x] = Cell.ROCK if solid >= 5 else Cell.ROOM
 		cells = next
 	stats["rooms"] = "no rooms: a cave is one shape"
 
-
-# --- 4. region ----------------------------------------------------------------
 
 func _find_region() -> void:
 	var mark := PackedInt32Array()
@@ -230,7 +231,7 @@ func _find_region() -> void:
 	var best_n := 0
 	var parts := 0
 	for start in width * height:
-		if cells[start] == ROCK or mark[start] != -1:
+		if cells[start] == Cell.ROCK or mark[start] != -1:
 			continue
 		var queue: Array[int] = [start]
 		mark[start] = parts
@@ -238,10 +239,10 @@ func _find_region() -> void:
 		while not queue.is_empty():
 			var c: int = queue.pop_back()
 			n += 1
-			for nb in _around(c):
-				if cells[nb] != ROCK and mark[nb] == -1:
-					mark[nb] = parts
-					queue.append(nb)
+			for neighbour in _around(c):
+				if cells[neighbour] != Cell.ROCK and mark[neighbour] == -1:
+					mark[neighbour] = parts
+					queue.append(neighbour)
 		floor_cells += n
 		if n > best_n:
 			best_n = n
@@ -252,17 +253,16 @@ func _find_region() -> void:
 		region[i] = 1 if mark[i] == best_id else 0
 
 	stats["floor"] = "%d cells in %d piece(s)" % [floor_cells, parts]
-	stats["reach"] = "%d%% of the floor" % (0 if floor_cells == 0 else roundi(100.0 * best_n / floor_cells))
+	var reach := 0 if floor_cells == 0 else roundi(100.0 * best_n / floor_cells)
+	stats["reach"] = "%d%% of the floor" % reach
 	if keep_largest:
 		var cut := 0
 		for i in width * height:
-			if cells[i] != ROCK and region[i] == 0:
-				cells[i] = ROCK
+			if cells[i] != Cell.ROCK and region[i] == 0:
+				cells[i] = Cell.ROCK
 				cut += 1
 		stats["reach"] = "100%% (filled %d cells back in)" % cut
 
-
-# --- 5. ends ------------------------------------------------------------------
 
 func _place_ends() -> void:
 	var start := -1
@@ -297,22 +297,22 @@ func _walk_from(start: int) -> void:
 		if dist[c] > _far_dist:
 			_far_dist = dist[c]
 			_far = c
-		for nb in _around(c):
-			if cells[nb] != ROCK and dist[nb] == -1:
-				dist[nb] = dist[c] + 1
-				queue.append(nb)
+		for neighbour in _around(c):
+			if cells[neighbour] != Cell.ROCK and dist[neighbour] == -1:
+				dist[neighbour] = dist[c] + 1
+				queue.append(neighbour)
 
 
 func _around(i: int) -> Array[int]:
 	var x := i % width
 	var y := i / width
-	var out: Array[int] = []
+	var found: Array[int] = []
 	if x > 0:
-		out.append(i - 1)
+		found.append(i - 1)
 	if x < width - 1:
-		out.append(i + 1)
+		found.append(i + 1)
 	if y > 0:
-		out.append(i - width)
+		found.append(i - width)
 	if y < height - 1:
-		out.append(i + width)
-	return out
+		found.append(i + width)
+	return found

@@ -1,15 +1,26 @@
 class_name DressGen
 extends Resource
+## The same pipeline as probe 12, cut down to what this probe needs: rooms, a spanning
+## tree, corridors, props, flood fill. No cave, no broken-links mode, no step-by-step.
+##
+## What matters here is the OUTPUT: a byte per cell and nothing else. Four meanings.
+## Not one word about how any of it looks.
 
-# The same pipeline as probe 12, cut down to what this probe needs: rooms, a spanning
-# tree, corridors, props, flood fill. No cave, no broken-links mode, no step-by-step.
-#
-# What matters here is the OUTPUT: a byte per cell and nothing else. Four meanings.
-# Not one word about how any of it looks.
+## What is in a cell. The tiler reads nothing else.
+enum Cell {
+	ROCK,
+	ROOM,
+	HALL,
+	PROP,
+	WATER,
+}
 
-enum { ROCK, ROOM, HALL, PROP, WATER }
-
-const AROUND: Array[Vector2i] = [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]
+const AROUND: Array[Vector2i] = [
+	Vector2i(1, 0),
+	Vector2i(-1, 0),
+	Vector2i(0, 1),
+	Vector2i(0, -1),
+]
 
 # Hand-drawn rooms. A generator will never invent these, and that is the whole point.
 #   O pillar    ~ water    . leave whatever the generator put there
@@ -61,11 +72,11 @@ var region := PackedByteArray()
 var stamped: Array[Rect2i] = []
 var stats := {}
 
-var _rng := RandomNumberGenerator.new()
+var _random := RandomNumberGenerator.new()
 
 
 func build(seed_value: int, with_prefabs: bool) -> void:
-	_rng.seed = seed_value
+	_random.seed = seed_value
 	cells = PackedByteArray()
 	cells.resize(width * height)
 	region = PackedByteArray()
@@ -82,23 +93,23 @@ func build(seed_value: int, with_prefabs: bool) -> void:
 
 func at(x: int, y: int) -> int:
 	if x < 0 or y < 0 or x >= width or y >= height:
-		return ROCK
+		return Cell.ROCK
 	return cells[y * width + x]
 
 
 func walkable(x: int, y: int) -> bool:
 	var c := at(x, y)
-	return c == ROOM or c == HALL
+	return c == Cell.ROOM or c == Cell.HALL
 
 
 func _place_rooms() -> void:
 	for _i in room_tries:
-		var rw := _rng.randi_range(room_min, room_max)
-		var rh := _rng.randi_range(room_min, room_max)
+		var rw := _random.randi_range(room_min, room_max)
+		var rh := _random.randi_range(room_min, room_max)
 		if rw + 3 >= width or rh + 3 >= height:
 			continue
-		var r := Rect2i(_rng.randi_range(1, width - rw - 2),
-			_rng.randi_range(1, height - rh - 2), rw, rh)
+		var r := Rect2i(_random.randi_range(1, width - rw - 2),
+			_random.randi_range(1, height - rh - 2), rw, rh)
 		var clear := true
 		for other in rooms:
 			if r.grow(1).intersects(other):
@@ -109,7 +120,7 @@ func _place_rooms() -> void:
 		rooms.append(r)
 		for y in range(r.position.y, r.end.y):
 			for x in range(r.position.x, r.end.x):
-				cells[y * width + x] = ROOM
+				cells[y * width + x] = Cell.ROOM
 	stats["rooms"] = str(rooms.size())
 
 
@@ -136,8 +147,8 @@ func _choose_links() -> Array[Vector2i]:
 		inside.append(bb)
 		outside.erase(bb)
 	for _i in loops:
-		links.append(Vector2i(_rng.randi_range(0, rooms.size() - 1),
-			_rng.randi_range(0, rooms.size() - 1)))
+		links.append(Vector2i(_random.randi_range(0, rooms.size() - 1),
+			_random.randi_range(0, rooms.size() - 1)))
 	return links
 
 
@@ -151,7 +162,7 @@ func _carve(links: Array[Vector2i]) -> void:
 			continue
 		var a := _centre(e.x)
 		var b := _centre(e.y)
-		if _rng.randi() % 2 == 0:
+		if _random.randi() % 2 == 0:
 			_dig(a, Vector2i(b.x, a.y))
 			_dig(Vector2i(b.x, a.y), b)
 		else:
@@ -164,14 +175,12 @@ func _dig(from: Vector2i, to: Vector2i) -> void:
 	var at_ := from
 	while true:
 		var i := at_.y * width + at_.x
-		if cells[i] == ROCK:
-			cells[i] = HALL
+		if cells[i] == Cell.ROCK:
+			cells[i] = Cell.HALL
 		if at_ == to:
 			return
 		at_ += step
 
-
-# --- the hand-made part -------------------------------------------------------
 
 func _stamp() -> void:
 	var props := 0
@@ -180,7 +189,7 @@ func _stamp() -> void:
 	for r in rooms:
 		if used >= prefabs:
 			break
-		var pat: Array = PREFABS[_rng.randi_range(0, PREFABS.size() - 1)]
+		var pat: Array = PREFABS[_random.randi_range(0, PREFABS.size() - 1)]
 		var ph: int = pat.size()
 		var pw: int = (pat[0] as String).length()
 		if r.size.x < pw or r.size.y < ph:
@@ -197,22 +206,20 @@ func _stamp() -> void:
 				var cx := ox + x
 				var cy := oy + y
 				# never block a corridor or the mouth of one
-				if at(cx, cy) != ROOM or _near_hall(cx, cy):
+				if at(cx, cy) != Cell.ROOM or _near_hall(cx, cy):
 					skipped += 1
 					continue
-				cells[cy * width + cx] = PROP if glyph == "O" else WATER
+				cells[cy * width + cx] = Cell.PROP if glyph == "O" else Cell.WATER
 				props += 1
 	stats["hand-placed"] = "%d rooms, %d props (%d skipped by a doorway)" % [used, props, skipped]
 
 
 func _near_hall(x: int, y: int) -> bool:
 	for d: Vector2i in AROUND:
-		if at(x + d.x, y + d.y) == HALL:
+		if at(x + d.x, y + d.y) == Cell.HALL:
 			return true
 	return false
 
-
-# --- the pass that catches what the hand broke --------------------------------
 
 func _find_region() -> void:
 	var mark := PackedInt32Array()

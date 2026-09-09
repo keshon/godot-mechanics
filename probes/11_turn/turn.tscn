@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/11_turn/World.gd" id="1_world"]
-[ext_resource type="PackedScene" path="res://probes/11_turn/Actor.tscn" id="2_actor"]
+[ext_resource type="Script" path="res://probes/11_turn/turn.gd" id="1_world"]
+[ext_resource type="PackedScene" path="res://probes/11_turn/actor.tscn" id="2_actor"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_1"]
 sky_top_color = Color(0.16, 0.18, 0.24, 1)
@@ -31,7 +31,7 @@ albedo_color = Color(0.72, 0.75, 0.8, 1)
 roughness = 0.85
 vertex_color_use_as_albedo = true
 
-[node name="TurnScene" type="Node3D"]
+[node name="Turn" type="Node3D"]
 script = ExtResource("1_world")
 actor_scene = ExtResource("2_actor")
 
@@ -67,7 +67,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Big" type="Label" parent="Ui/Hud"]
+[node name="Tally" type="Label" parent="Ui/Hud"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -114,6 +114,6 @@ walk into somebody to shove them    WHEEL zooms    R resets
 T is the whole point: it makes input wait for the animation.
 hold a direction with T off, then with T on.
 
-the map is a block of text at the top of World.gd. edit it, press R."
+the map is a block of text at the top of turn.gd. edit it, press R."
 horizontal_alignment = 2
 vertical_alignment = 2

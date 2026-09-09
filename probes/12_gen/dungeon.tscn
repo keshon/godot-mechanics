@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/12_gen/World.gd" id="1_world"]
-[ext_resource type="Script" path="res://probes/12_gen/Gen.gd" id="2_gen"]
+[ext_resource type="Script" path="res://probes/12_gen/dungeon.gd" id="1_world"]
+[ext_resource type="Script" path="res://probes/12_gen/gen.gd" id="2_gen"]
 
 [sub_resource type="Resource" id="Cfg"]
 script = ExtResource("2_gen")
@@ -65,9 +65,9 @@ top_radius = 0.18
 bottom_radius = 0.35
 height = 1.0
 
-[node name="DungeonScene" type="Node3D"]
+[node name="Dungeon" type="Node3D"]
 script = ExtResource("1_world")
-cfg = SubResource("Cfg")
+rules = SubResource("Cfg")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_1")
@@ -110,7 +110,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Big" type="Label" parent="Ui/Hud"]
+[node name="Seed" type="Label" parent="Ui/Hud"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0

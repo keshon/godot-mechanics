@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/14_chunks/World.gd" id="1_world"]
+[ext_resource type="Script" path="res://probes/14_chunks/chunks.gd" id="1_world"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 sky_top_color = Color(0.12, 0.13, 0.18, 1)
@@ -99,7 +99,7 @@ size = Vector3(1, 0.9, 0.3)
 transform_format = 1
 mesh = SubResource("WallSeg")
 
-[node name="ChunkScene" type="Node3D"]
+[node name="Chunks" type="Node3D"]
 script = ExtResource("1_world")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -339,7 +339,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Big" type="Label" parent="Ui/Hud"]
+[node name="Seed" type="Label" parent="Ui/Hud"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0

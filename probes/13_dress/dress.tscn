@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/13_dress/World.gd" id="1_world"]
-[ext_resource type="Script" path="res://probes/13_dress/Gen.gd" id="2_gen"]
+[ext_resource type="Script" path="res://probes/13_dress/dress.gd" id="1_world"]
+[ext_resource type="Script" path="res://probes/13_dress/gen.gd" id="2_gen"]
 
 [sub_resource type="Resource" id="Cfg"]
 script = ExtResource("2_gen")
@@ -111,9 +111,9 @@ mesh = SubResource("WaterMesh")
 transform_format = 1
 mesh = SubResource("BeamMesh")
 
-[node name="DressScene" type="Node3D"]
+[node name="Dress" type="Node3D"]
 script = ExtResource("1_world")
-cfg = SubResource("Cfg")
+rules = SubResource("Cfg")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_1")
@@ -126,31 +126,31 @@ shadow_enabled = true
 
 [node name="Board" type="Node3D" parent="."]
 
-[node name="floor" type="MultiMeshInstance3D" parent="Board"]
+[node name="Floor" type="MultiMeshInstance3D" parent="Board"]
 multimesh = SubResource("MmFloor")
 material_override = SubResource("MatFloor")
 
-[node name="plain" type="MultiMeshInstance3D" parent="Board"]
+[node name="Plain" type="MultiMeshInstance3D" parent="Board"]
 multimesh = SubResource("MmPlain")
 material_override = SubResource("MatPlain")
 
-[node name="slab" type="MultiMeshInstance3D" parent="Board"]
+[node name="Slab" type="MultiMeshInstance3D" parent="Board"]
 multimesh = SubResource("MmSlab")
 material_override = SubResource("MatStone")
 
-[node name="post" type="MultiMeshInstance3D" parent="Board"]
+[node name="Post" type="MultiMeshInstance3D" parent="Board"]
 multimesh = SubResource("MmPost")
 material_override = SubResource("MatPost")
 
-[node name="pillar" type="MultiMeshInstance3D" parent="Board"]
+[node name="Pillar" type="MultiMeshInstance3D" parent="Board"]
 multimesh = SubResource("MmPillar")
 material_override = SubResource("MatPillar")
 
-[node name="water" type="MultiMeshInstance3D" parent="Board"]
+[node name="Water" type="MultiMeshInstance3D" parent="Board"]
 multimesh = SubResource("MmWater")
 material_override = SubResource("MatWater")
 
-[node name="beam" type="MultiMeshInstance3D" parent="Board"]
+[node name="Beam" type="MultiMeshInstance3D" parent="Board"]
 multimesh = SubResource("MmBeam")
 material_override = SubResource("MatPost")
 
@@ -170,7 +170,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Big" type="Label" parent="Ui/Hud"]
+[node name="Seed" type="Label" parent="Ui/Hud"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
