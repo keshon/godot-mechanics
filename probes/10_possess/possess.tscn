@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/10_possess/Director.gd" id="1_dir"]
-[ext_resource type="PackedScene" path="res://probes/10_possess/Unit.tscn" id="2_unit"]
+[ext_resource type="Script" path="res://probes/10_possess/director.gd" id="1_dir"]
+[ext_resource type="PackedScene" path="res://probes/10_possess/unit.tscn" id="2_unit"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_1"]
 sky_top_color = Color(0.26, 0.33, 0.45, 1)
@@ -46,7 +46,7 @@ size = Vector3(30, 4, 1.5)
 [sub_resource type="BoxShape3D" id="WallShape"]
 size = Vector3(30, 4, 1.5)
 
-[node name="PossessScene" type="Node3D"]
+[node name="Possess" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_1")
@@ -128,7 +128,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Big" type="Label" parent="Ui/Hud"]
+[node name="Viewpoint" type="Label" parent="Ui/Hud"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0

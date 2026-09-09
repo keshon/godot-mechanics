@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/10_possess/Unit.gd" id="1_unit"]
+[ext_resource type="Script" path="res://probes/10_possess/unit.gd" id="1_unit"]
 
 [sub_resource type="CapsuleShape3D" id="Shape"]
 radius = 0.45
