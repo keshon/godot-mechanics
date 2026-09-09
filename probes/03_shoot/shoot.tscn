@@ -1,8 +1,8 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/03_shoot/Player.gd" id="1_player"]
-[ext_resource type="PackedScene" path="res://probes/03_shoot/Bullet.tscn" id="2_bullet"]
-[ext_resource type="Script" path="res://probes/03_shoot/Hud.gd" id="3_hud"]
+[ext_resource type="Script" path="res://probes/03_shoot/player.gd" id="1_player"]
+[ext_resource type="PackedScene" path="res://probes/03_shoot/bullet.tscn" id="2_bullet"]
+[ext_resource type="Script" path="res://probes/03_shoot/hud.gd" id="3_hud"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_1"]
 sky_top_color = Color(0.3, 0.37, 0.5, 1)

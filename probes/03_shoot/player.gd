@@ -33,7 +33,7 @@ extends CharacterBody3D
 @export_range(0.03, 1.0, 0.01) var fire_interval := 0.12
 
 ## Everything below is written into each bullet the moment it is made. It lives
-## here rather than in Bullet.tscn on purpose: the prefab answers "what is a
+## here rather than in bullet.tscn on purpose: the prefab answers "what is a
 ## bullet", the gun answers "how hard does it hit today". One place to look —
 ## and, less nobly, a node that stays alive long enough to be clicked on in the
 ## Remote tree while the game runs.

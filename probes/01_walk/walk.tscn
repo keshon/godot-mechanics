@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://6qa1raaspw0s"]
 
-[ext_resource type="Script" uid="uid://iib6enmj5vcl" path="res://probes/01_walk/Player.gd" id="1_player"]
-[ext_resource type="Script" uid="uid://btny1s387ga4e" path="res://probes/01_walk/Hud.gd" id="2_hud"]
+[ext_resource type="Script" uid="uid://iib6enmj5vcl" path="res://probes/01_walk/player.gd" id="1_player"]
+[ext_resource type="Script" uid="uid://btny1s387ga4e" path="res://probes/01_walk/hud.gd" id="2_hud"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_1"]
 sky_top_color = Color(0.38, 0.47, 0.6, 1)

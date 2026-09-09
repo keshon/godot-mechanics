@@ -1,8 +1,8 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/02_orbit/Player.gd" id="1_player"]
-[ext_resource type="Script" path="res://probes/02_orbit/CameraRig.gd" id="2_rig"]
-[ext_resource type="Script" path="res://probes/02_orbit/Hud.gd" id="3_hud"]
+[ext_resource type="Script" path="res://probes/02_orbit/player.gd" id="1_player"]
+[ext_resource type="Script" path="res://probes/02_orbit/camera_rig.gd" id="2_rig"]
+[ext_resource type="Script" path="res://probes/02_orbit/hud.gd" id="3_hud"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_1"]
 sky_top_color = Color(0.32, 0.4, 0.53, 1)

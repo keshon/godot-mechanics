@@ -122,7 +122,7 @@ func _resolve(body: Node) -> void:
 	queue_free()
 
 
-## Wired in Bullet.tscn to the Area3D's own body_entered signal.
+## Wired in bullet.tscn to the Area3D's own body_entered signal.
 func _on_body_entered(body: Node3D) -> void:
 	# The sweep already owns hit detection; letting this through would report
 	# the same hit twice.
