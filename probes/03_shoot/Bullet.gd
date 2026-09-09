@@ -20,10 +20,17 @@ extends Area3D
 ## firing today, not about bullets in general. One place to look, and it stays
 ## on a node that does not vanish while you are reaching for it.
 
+## Emitted once, where the bullet died. The bullet does not know who fired it
+## and does not call back into him: it announces what happened and lets whoever
+## cares listen. Reaching up into the shooter through `has_method()` is knowing
+## him by the name of a method, which is no better than knowing him by the name
+## of a node.
+signal hit(body: Node, at: Vector3)
+
 ## Metres per second. Set by the gun before the bullet enters the tree.
 var speed := 25.0
 
-## Push given to anything with mass that gets hit.
+## Impulse given to anything with mass that gets hit, N·s.
 var punch := 6.0
 
 ## How the bullet notices it hit something.
@@ -48,9 +55,9 @@ var punch := 6.0
 ##           is exactly why probes 01 and 02 never noticed. Level geometry that
 ##           has to be SHOT needs a real StaticBody3D, which is why the
 ##           blockout here carries one under every wall.
-var sweep := true
+var use_sweep := true
 
-## How much of the shooter's own motion the bullet carries away with it.
+## How much of the shooter's own motion the bullet carries away with it, 0 to 1.
 ##
 ## 0 — the bullet leaves as if fired from a tripod. Strafe while holding the
 ##     trigger and the stream visibly hinges: every bullet flies dead straight,
@@ -62,48 +69,44 @@ var sweep := true
 ##     most modern shooters copy.
 var inherit_shooter_velocity := 0.0
 
-var _dir := Vector3.FORWARD
+var _direction := Vector3.FORWARD
 ## The shooter's motion, already scaled by inherit_shooter_velocity.
 var _carried := Vector3.ZERO
+## Only ever used to keep the bullet from hitting the muzzle it left. Empty
+## until setup() runs, which the gun does before the bullet enters the tree.
 var _shooter: Node3D
+
+
+func _physics_process(delta: float) -> void:
+	var step := (_direction * speed + _carried) * delta
+	if use_sweep and _sweep_hit(step):
+		return
+	global_position += step
 
 
 ## Called by the gun once the numbers above have been written in, and before
 ## the bullet enters the tree.
 func setup(direction: Vector3, shooter: Node3D) -> void:
-	_dir = direction.normalized()
+	_direction = direction.normalized()
 	_shooter = shooter
 	if inherit_shooter_velocity > 0.0 and shooter is CharacterBody3D:
 		_carried = shooter.velocity * inherit_shooter_velocity
 
 
-func _physics_process(delta: float) -> void:
-	var step := (_dir * speed + _carried) * delta
-	if sweep and _sweep_hit(step):
-		return
-	global_position += step
-
-
 ## Look along the step before taking it. Returns true if the bullet died here.
 func _sweep_hit(step: Vector3) -> bool:
 	var from := global_position
-	var q := PhysicsRayQueryParameters3D.create(from, from + step)
-	q.exclude = [_shooter.get_rid()] if _shooter is CollisionObject3D else []
+	var query := PhysicsRayQueryParameters3D.create(from, from + step)
+	query.exclude = [_shooter.get_rid()] if _shooter is CollisionObject3D else []
 	# Areas are not solid; only bodies stop a bullet.
-	q.collide_with_areas = false
-	var hit := get_world_3d().direct_space_state.intersect_ray(q)
-	if hit.is_empty():
+	query.collide_with_areas = false
+	var found := get_world_3d().direct_space_state.intersect_ray(query)
+	if found.is_empty():
 		return false
-	global_position = hit.position
-	_resolve(hit.collider)
+	var at: Vector3 = found.position
+	global_position = at
+	_resolve(found.collider)
 	return true
-
-
-## Wired in Bullet.tscn to the Area3D's own body_entered signal.
-func _on_body_entered(body: Node3D) -> void:
-	if sweep:
-		return  # the sweep already owns hit detection; do not report twice
-	_resolve(body)
 
 
 func _resolve(body: Node) -> void:
@@ -112,8 +115,17 @@ func _resolve(body: Node) -> void:
 	if body is RigidBody3D:
 		# The only thing that separates a target from scenery: it has mass, so
 		# it can be told about the hit in the only language physics speaks.
-		body.apply_impulse((_dir * speed + _carried).normalized() * punch,
-			global_position - body.global_position)
-	if _shooter and _shooter.has_method(&"register_hit"):
-		_shooter.register_hit(body, global_position)
+		body.apply_impulse(
+				(_direction * speed + _carried).normalized() * punch,
+				global_position - body.global_position)
+	hit.emit(body, global_position)
 	queue_free()
+
+
+## Wired in Bullet.tscn to the Area3D's own body_entered signal.
+func _on_body_entered(body: Node3D) -> void:
+	# The sweep already owns hit detection; letting this through would report
+	# the same hit twice.
+	if use_sweep:
+		return
+	_resolve(body)

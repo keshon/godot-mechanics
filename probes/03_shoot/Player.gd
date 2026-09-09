@@ -7,11 +7,17 @@ extends CharacterBody3D
 ## Probe 01 owns that lesson and this probe should not re-teach it.
 
 @export_group("Move")
+## Top speed on the ground, m/s.
 @export_range(1.0, 15.0, 0.1) var max_speed := 6.5
-@export_range(1.0, 200.0, 1.0) var accel := 50.0
+## How fast velocity climbs toward max_speed, m/s².
+@export_range(1.0, 200.0, 1.0) var acceleration := 50.0
+## How fast it bleeds off once you let go, m/s².
 @export_range(1.0, 200.0, 1.0) var brake := 70.0
+## Upward speed given at takeoff, m/s.
 @export_range(1.0, 15.0, 0.1) var jump_velocity := 5.0
+## Local gravity, m/s².
 @export_range(1.0, 60.0, 0.5) var gravity := 20.0
+## Radians of rotation per pixel of mouse motion.
 @export_range(0.0005, 0.01, 0.0001) var mouse_sensitivity := 0.0022
 
 
@@ -31,23 +37,27 @@ extends CharacterBody3D
 ## bullet", the gun answers "how hard does it hit today". One place to look —
 ## and, less nobly, a node that stays alive long enough to be clicked on in the
 ## Remote tree while the game runs.
+##
+## Muzzle velocity, m/s.
 @export_range(5.0, 200.0, 1.0) var bullet_speed := 25.0
+## Impulse delivered to anything with mass, N·s.
 @export_range(0.0, 30.0, 0.5) var bullet_punch := 6.0
 ## See ShootBullet.inherit_shooter_velocity — 0 is a tripod, 1 is a real gun.
 @export_range(0.0, 1.0, 0.05) var inherit_shooter_velocity := 0.0
-## See ShootBullet.sweep. Off is cheaper and lies in two interesting ways.
-@export var sweep_detection := true
+## See ShootBullet.use_sweep. Off is cheaper and lies in two interesting ways.
+@export var use_sweep_detection := true
 
+var shots := 0
+var hits := 0
+## Range at which the last bullet died, m.
+var last_hit_distance := 0.0
+
+var _spawn: Transform3D
 
 @onready var _camera: Camera3D = $Camera3D
 @onready var _muzzle: Marker3D = $Camera3D/Muzzle
 @onready var _cooldown: Timer = $Cooldown
 @onready var _bullets: Node3D = get_node(bullet_parent)
-
-var _spawn: Transform3D
-var shots := 0
-var hits := 0
-var last_hit_distance := 0.0
 
 
 func _ready() -> void:
@@ -56,20 +66,9 @@ func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		rotate_y(-event.relative.x * mouse_sensitivity)
-		_camera.rotation.x = clampf(
-			_camera.rotation.x - event.relative.y * mouse_sensitivity,
-			-deg_to_rad(89.0), deg_to_rad(89.0))
-	elif event.is_action_pressed(&"ui_cancel"):
-		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-
-
 func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed(&"respawn"):
-		global_transform = _spawn
-		velocity = Vector3.ZERO
+		_respawn()
 		return
 
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
@@ -79,9 +78,11 @@ func _physics_process(delta: float) -> void:
 		_fire()
 
 	velocity.y -= gravity * delta
-	var wish := _wish_dir()
+	var wish := _wish_direction()
 	var planar := Vector3(velocity.x, 0.0, velocity.z)
-	planar = planar.move_toward(wish * max_speed, (accel if wish != Vector3.ZERO else brake) * delta)
+	planar = planar.move_toward(
+			wish * max_speed,
+			(acceleration if wish != Vector3.ZERO else brake) * delta)
 	velocity.x = planar.x
 	velocity.z = planar.z
 	if is_on_floor() and Input.is_action_just_pressed(&"jump"):
@@ -89,11 +90,15 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 
-## Called by a bullet the moment it dies against something.
-func register_hit(body: Node, at: Vector3) -> void:
-	if body is RigidBody3D:
-		hits += 1
-	last_hit_distance = _muzzle.global_position.distance_to(at)
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		rotate_y(-event.relative.x * mouse_sensitivity)
+		_camera.rotation.x = clampf(
+				_camera.rotation.x - event.relative.y * mouse_sensitivity,
+				-deg_to_rad(89.0),
+				deg_to_rad(89.0))
+	elif event.is_action_pressed(&"ui_cancel"):
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 
 func alive_bullets() -> int:
@@ -105,18 +110,19 @@ func accuracy() -> float:
 
 
 ## The ceremony worth memorising: make one, write into it everything it needs
-## to know, put it in the WORLD, place it. In that order — the numbers have to
-## be in before setup() reads them, and setup() has to run before the bullet
-## starts moving.
+## to know, listen to it, put it in the WORLD, place it. In that order — the
+## numbers have to be in before setup() reads them, and setup() has to run
+## before the bullet starts moving.
 func _fire() -> void:
 	if not _cooldown.is_stopped() or bullet_scene == null:
 		return
 	var bullet: ShootBullet = bullet_scene.instantiate()
 	bullet.speed = bullet_speed
 	bullet.punch = bullet_punch
-	bullet.sweep = sweep_detection
+	bullet.use_sweep = use_sweep_detection
 	bullet.inherit_shooter_velocity = inherit_shooter_velocity
 	bullet.setup((_aim_point() - _muzzle.global_position).normalized(), self)
+	bullet.hit.connect(_on_bullet_hit)
 	_bullets.add_child(bullet)
 	bullet.global_position = _muzzle.global_position
 	shots += 1
@@ -134,20 +140,34 @@ func _fire() -> void:
 func _aim_point() -> Vector3:
 	var from := _camera.global_position
 	var far := from - _camera.global_basis.z * 500.0
-	var q := PhysicsRayQueryParameters3D.create(from, far)
-	q.exclude = [get_rid()]
-	var hit := get_world_3d().direct_space_state.intersect_ray(q)
-	if hit.is_empty():
+	var query := PhysicsRayQueryParameters3D.create(from, far)
+	query.exclude = [get_rid()]
+	var found := get_world_3d().direct_space_state.intersect_ray(query)
+	if found.is_empty():
 		return far
 	# Too close and the convergence angle gets silly; keep a sane minimum.
-	var p: Vector3 = hit.position
-	return p if from.distance_to(p) > 1.5 else from - _camera.global_basis.z * 1.5
+	var at: Vector3 = found.position
+	return at if from.distance_to(at) > 1.5 else from - _camera.global_basis.z * 1.5
 
 
-func _wish_dir() -> Vector3:
-	var input := Input.get_vector(&"move_left", &"move_right", &"move_forward", &"move_back")
+func _wish_direction() -> Vector3:
+	var input: Vector2 = Input.get_vector(
+			&"move_left", &"move_right", &"move_forward", &"move_back")
 	if input == Vector2.ZERO:
 		return Vector3.ZERO
-	var dir := global_basis * Vector3(input.x, 0.0, input.y)
-	dir.y = 0.0
-	return dir.normalized()
+	var direction := global_basis * Vector3(input.x, 0.0, input.y)
+	direction.y = 0.0
+	return direction.normalized()
+
+
+func _respawn() -> void:
+	global_transform = _spawn
+	velocity = Vector3.ZERO
+
+
+## A bullet died somewhere. Only things with mass count as targets — scenery
+## takes the impulse but not the credit.
+func _on_bullet_hit(body: Node, at: Vector3) -> void:
+	if body is RigidBody3D:
+		hits += 1
+	last_hit_distance = _muzzle.global_position.distance_to(at)

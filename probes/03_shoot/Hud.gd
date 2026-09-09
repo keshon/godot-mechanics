@@ -8,14 +8,16 @@ extends Control
 @export var player_path: NodePath = ^"../../Player"
 
 @onready var player: ShootPlayer = get_node(player_path)
-@onready var _big: Label = $Big
+
+@onready var _alive_count: Label = $AliveCount
 @onready var _detail: RichTextLabel = $Detail
 
+
 func _process(_delta: float) -> void:
-	_big.text = "%d" % player.alive_bullets()
+	_alive_count.text = "%d" % player.alive_bullets()
 	# Read straight off the gun. Reading it off a living bullet, as this used
 	# to, meant the readout went blank whenever nothing was in the air.
-	var mode := ("[color=#7ee081]sweep[/color]" if player.sweep_detection
+	var mode := ("[color=#7ee081]sweep[/color]" if player.use_sweep_detection
 		else "[color=#ffcf7a]area only[/color]")
 	_detail.text = "\n".join([
 		"alive bullets",

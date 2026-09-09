@@ -22,7 +22,7 @@ func _process(_delta: float) -> void:
 	var got := rig.actual_length()
 	var squeezed := got < want - 0.05
 	_detail.text = "\n".join([
-		"mode    %s" % ("[color=#ffcf7a][b]AIM[/b][/color]" if player.aiming()
+		"mode    %s" % ("[color=#ffcf7a][b]AIM[/b][/color]" if player.is_aiming()
 			else "[color=#7a7f88]free[/color]"),
 		"facing    %s" % _facing_text(),
 		"camera    %.2f m %s" % [got,
@@ -34,6 +34,6 @@ func _process(_delta: float) -> void:
 
 
 func _facing_text() -> String:
-	var e := player.facing_error()
-	var color := "#7ee081" if absf(e) < 5.0 else "#ffffff"
-	return "[color=%s][b]%+.0f°[/b][/color]" % [color, e]
+	var error := player.facing_error()
+	var color := "#7ee081" if absf(error) < 5.0 else "#ffffff"
+	return "[color=%s][b]%+.0f°[/b][/color]" % [color, error]

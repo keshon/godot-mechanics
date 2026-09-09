@@ -257,4 +257,4 @@ hold aim and watch FACING collapse to zero."
 horizontal_alignment = 2
 vertical_alignment = 2
 
-[connection signal="mode_changed" from="Player" to="Player/CameraRig" method="set_aiming"]
+[connection signal="mode_changed" from="Player" to="Player/CameraRig" method="_on_player_mode_changed"]
