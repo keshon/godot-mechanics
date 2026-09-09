@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/17_sight/World.gd" id="1_world"]
+[ext_resource type="Script" path="res://probes/17_sight/sight.gd" id="1_world"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 sky_top_color = Color(0.05, 0.05, 0.08, 1)
@@ -68,7 +68,7 @@ transform_format = 1
 use_colors = true
 mesh = SubResource("Pawn")
 
-[node name="SightScene" type="Node3D"]
+[node name="Sight" type="Node3D"]
 script = ExtResource("1_world")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -112,7 +112,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Big" type="Label" parent="Ui/Hud"]
+[node name="Lit" type="Label" parent="Ui/Hud"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0

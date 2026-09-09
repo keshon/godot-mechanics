@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/15_data/Bench.gd" id="1_bench"]
+[ext_resource type="Script" path="res://probes/15_data/bench.gd" id="1_bench"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 sky_top_color = Color(0.11, 0.12, 0.17, 1)
@@ -90,7 +90,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Big" type="Label" parent="Ui/Hud"]
+[node name="Damage" type="Label" parent="Ui/Hud"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -167,6 +167,6 @@ UP DOWN pick a foe    R rereads the folder
 every item and every foe is one .tres file in content/.
 open one in the editor: it is a title, a colour and a list of effects.
 
-Bench.gd knows four verbs and has never heard of a sword."
+bench.gd knows four verbs and has never heard of a sword."
 horizontal_alignment = 2
 vertical_alignment = 2
