@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/21_water/Water.gd" id="1_water"]
+[ext_resource type="Script" path="res://probes/21_water/water.gd" id="1_water"]
 [ext_resource type="Shader" path="res://probes/21_water/water.gdshader" id="2_surf"]
 [ext_resource type="Shader" path="res://probes/21_water/wet.gdshader" id="3_wet"]
 
@@ -135,7 +135,7 @@ disable_receive_shadows = true
 [sub_resource type="QuadMesh" id="Mote"]
 size = Vector2(0.08, 0.08)
 
-[node name="WaterScene" type="Node3D"]
+[node name="Water" type="Node3D"]
 script = ExtResource("1_water")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -191,7 +191,7 @@ position = Vector3(4.5, -1.6, 12)
 mesh = SubResource("Post")
 material_override = SubResource("MatRock")
 
-[node name="Water" type="MeshInstance3D" parent="."]
+[node name="Surface" type="MeshInstance3D" parent="."]
 mesh = SubResource("Surface")
 material_override = SubResource("MatWater")
 
@@ -240,27 +240,27 @@ position = Vector3(-70, 3.5, 8)
 mesh = SubResource("RoomLid")
 material_override = SubResource("MatSteel")
 
-[node name="S1" type="MeshInstance3D" parent="Room"]
+[node name="Step1" type="MeshInstance3D" parent="Room"]
 position = Vector3(-70, -7.6, 9)
 mesh = SubResource("Step")
 material_override = SubResource("MatSteel")
 
-[node name="S2" type="MeshInstance3D" parent="Room"]
+[node name="Step2" type="MeshInstance3D" parent="Room"]
 position = Vector3(-70, -6.4, 7.6)
 mesh = SubResource("Step")
 material_override = SubResource("MatSteel")
 
-[node name="S3" type="MeshInstance3D" parent="Room"]
+[node name="Step3" type="MeshInstance3D" parent="Room"]
 position = Vector3(-70, -5.2, 6.2)
 mesh = SubResource("Step")
 material_override = SubResource("MatSteel")
 
-[node name="S4" type="MeshInstance3D" parent="Room"]
+[node name="Step4" type="MeshInstance3D" parent="Room"]
 position = Vector3(-70, -4, 4.8)
 mesh = SubResource("Step")
 material_override = SubResource("MatSteel")
 
-[node name="S5" type="MeshInstance3D" parent="Room"]
+[node name="Step5" type="MeshInstance3D" parent="Room"]
 position = Vector3(-70, -2.8, 3.4)
 mesh = SubResource("Step")
 material_override = SubResource("MatSteel")
@@ -273,7 +273,7 @@ shadow_enabled = true
 spot_range = 34.0
 spot_angle = 24.0
 
-[node name="Cam" type="Camera3D" parent="."]
+[node name="Camera" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.99, -0.12, 0, 0.12, 0.99, 0, 3.2, 18)
 fov = 68.0
 far = 500.0

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://m800b5xjfaeb"]
 
-[ext_resource type="Script" uid="uid://doskgl2tnnam8" path="res://probes/23_fft/Ocean.gd" id="1_o"]
+[ext_resource type="Script" uid="uid://doskgl2tnnam8" path="res://probes/23_fft/fft.gd" id="1_o"]
 [ext_resource type="Shader" uid="uid://btbg68o42yx2e" path="res://probes/23_fft/sines.gdshader" id="2_s"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
@@ -93,7 +93,7 @@ radius = 90.0
 height = 180.0
 radial_segments = 96
 
-[node name="FftScene" type="Node3D" unique_id=1332484369]
+[node name="Fft" type="Node3D" unique_id=1332484369]
 script = ExtResource("1_o")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=932497200]
@@ -121,7 +121,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -60, 0)
 material_override = SubResource("Sand")
 mesh = SubResource("Dome")
 
-[node name="Cam" type="Camera3D" parent="." unique_id=961235060]
+[node name="Camera" type="Camera3D" parent="." unique_id=961235060]
 transform = Transform3D(0.94, -0.12, 0.33, 0, 0.94, 0.35, -0.35, -0.32, 0.88, 0, 12, 34)
 fov = 60.0
 far = 3000.0
