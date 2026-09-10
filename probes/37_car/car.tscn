@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3]
 
-[ext_resource type="Script" path="res://probes/37_car/Drive.gd" id="1_drive"]
+[ext_resource type="Script" path="res://probes/37_car/drive.gd" id="1_drive"]
 [ext_resource type="PackedScene" path="res://probes/37_car/track.tscn" id="2_track"]
 [ext_resource type="PackedScene" path="res://probes/37_car/machine.tscn" id="3_machine"]
 
@@ -22,7 +22,7 @@ ambient_light_energy = 0.55
 tonemap_mode = 2
 ssao_enabled = false
 
-[node name="CarScene" type="Node3D"]
+[node name="Drive" type="Node3D"]
 script = ExtResource("1_drive")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]

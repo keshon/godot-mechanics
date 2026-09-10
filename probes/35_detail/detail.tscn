@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/35_detail/Detail.gd" id="1_d"]
+[ext_resource type="Script" path="res://probes/35_detail/detail.gd" id="1_d"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 sky_top_color = Color(0.26, 0.42, 0.68, 1)
@@ -22,7 +22,7 @@ ssao_enabled = true
 ssao_radius = 1.2
 ssao_intensity = 1.4
 
-[node name="DetailScene" type="Node3D"]
+[node name="Detail" type="Node3D"]
 script = ExtResource("1_d")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -37,7 +37,7 @@ directional_shadow_max_distance = 120.0
 
 [node name="Ground" type="MeshInstance3D" parent="."]
 
-[node name="Cam" type="Camera3D" parent="."]
+[node name="Camera" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 40)
 fov = 72.0
 near = 0.05

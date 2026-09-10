@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/36_forest/Wood.gd" id="1_w"]
+[ext_resource type="Script" path="res://probes/36_forest/forest.gd" id="1_w"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 sky_top_color = Color(0.36, 0.52, 0.72, 1)
@@ -59,7 +59,7 @@ vertex_color_use_as_albedo = true
 material = SubResource("LeafMat")
 size = Vector2(0.34, 0.22)
 
-[node name="ForestScene" type="Node3D"]
+[node name="Forest" type="Node3D"]
 script = ExtResource("1_w")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -74,7 +74,7 @@ directional_shadow_max_distance = 60.0
 
 [node name="Ground" type="MeshInstance3D" parent="."]
 
-[node name="Cam" type="Camera3D" parent="."]
+[node name="Camera" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 fov = 70.0
 near = 0.08

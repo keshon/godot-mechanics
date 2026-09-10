@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3]
 
-[ext_resource type="Script" path="res://probes/37_car/Track.gd" id="1_track"]
+[ext_resource type="Script" path="res://probes/37_car/track.gd" id="1_track"]
 
 [sub_resource type="PlaneMesh" id="GroundMesh"]
 size = Vector2(400, 400)
