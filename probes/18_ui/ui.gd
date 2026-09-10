@@ -47,9 +47,9 @@ const ITEMS: Array[Dictionary] = [
 
 ## Read by mouse_filter, so the order is the engine's: STOP, PASS, IGNORE.
 const FILTERS := [
-	"STOP — the panel eats every click",
-	"PASS — panel first, then through",
-	"IGNORE — as if the panel were not there",
+	"STOP — панель съедает каждый щелчок",
+	"PASS — сперва панель, потом дальше",
+	"IGNORE — как будто панели нет",
 ]
 
 const LOOT_COUNT := 13
@@ -140,20 +140,22 @@ func _pack(biggest_first: bool) -> void:
 
 func _draw_hud() -> void:
 	var filter: int = _cover.mouse_filter
-	var text := "[b]drag anything anywhere.[/b]  bag %d/%d cells used, %d items\n" % [
-		_bag.grid.cells_used(), _bag.columns * _bag.rows, _bag.grid.items.size()]
-	text += "worn %d/3    on the floor %d    packed in %.0f us\n\n" % [
-		_worn_view.grid.items.size(), _floor.grid.items.size(), pack_usec]
-	text += "[b]the red rectangle is a ColorRect INSIDE the bag Control.[/b]\n"
-	text += "a plain Control does not lay its children out, so it stays where\n"
-	text += "you put it. Move it into a Container and the Container takes over.\n\n"
-	text += "[b]F  its mouse_filter:[/b]\n"
-	text += "   [color=#ffd479]%s[/color]\n" % FILTERS[filter]
-	text += "   clicks: panel %d, bag %d\n\n" % [clicks_panel, _bag.clicks]
-	text += "L  draw every Control's rectangle\n"
-	text += "R  turn the item under the cursor\n"
-	text += "1  pack biggest first     2  pack in the order found\n"
-	text += "SPACE  new loot"
+	var text := "сумка [b]%d/%d[/b] клеток, предметов %d   надето %d/3   на полу %d\n" % [
+		_bag.grid.cells_used(), _bag.columns * _bag.rows, _bag.grid.items.size(),
+		_worn_view.grid.items.size(), _floor.grid.items.size()]
+	text += "уложено за [b]%.0f[/b] мкс   щелчков: по панели %d, по сумке %d\n\n" % [
+		pack_usec, clicks_panel, _bag.clicks]
+
+	text += "тащи что угодно куда угодно   ПРОБЕЛ новая добыча\n"
+	text += "R повернуть предмет под курсором   L обвести каждый Control\n"
+	text += "1 уложить крупные вперёд   2 уложить в порядке находки\n"
+	text += "F mouse_filter у красного прямоугольника:\n"
+	text += "   [color=#ffd479]%s[/color]\n\n" % FILTERS[filter]
+
+	text += "красный прямоугольник — это ColorRect ВНУТРИ Control сумки: голый Control не"
+	text += " раскладывает детей, поэтому он стоит где положили\n\n"
+	text += "[color=#66ccff]сетка с перетаскиванием — это не инвентарь, а целый класс"
+	text += " интерфейсов: сумка, умения, таланты, крафт[/color]"
 	_info.text = text
 
 
@@ -178,3 +180,4 @@ func _on_bag_changed() -> void:
 func _on_cover_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed:
 		clicks_panel += 1
+

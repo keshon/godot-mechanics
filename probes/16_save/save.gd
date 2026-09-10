@@ -44,9 +44,7 @@ var _last_signature := ""
 @onready var _floor: MultiMeshInstance3D = $Floor
 @onready var _actors: MultiMeshInstance3D = $Actors
 @onready var _camera: Camera3D = $Camera
-@onready var _verdict_label: Label = $Ui/Hud/Verdict
-@onready var _detail: RichTextLabel = $Ui/Hud/Detail
-@onready var _which: RichTextLabel = $Ui/Hud/Which
+@onready var _hud: RichTextLabel = $Ui/Info
 
 
 func _ready() -> void:
@@ -181,29 +179,35 @@ func _draw_world() -> void:
 
 func _draw_hud() -> void:
 	var agreed := _all_ok()
-	_verdict_label.text = "all four agree" if agreed else "they disagree"
-	_verdict_label.modulate = Color(0.6, 1, 0.7) if agreed else Color(1, 0.6, 0.5)
+	var names := ["правда (не сохранялась)", "загружено из СОСТОЯНИЯ",
+			"загружено из ЗАПИСИ"]
+	var text := "зерно [b]%d[/b]   сохранено на %d ходу, сыграно ещё %d   %s\n" % [
+		seed_value, turns_before, turns_after,
+		"[color=#7fe08a]все четыре сходятся[/color]" if agreed
+			else "[color=#ff8a6a]расходятся[/color]"]
+	text += "на доске: [b]%s[/b]\n\n" % names[show - 1]
 
-	var text := "[b]seed %d    %d turns saved, %d more played[/b]\n\n[table=3]" % [
-		seed_value, turns_before, turns_after]
-	text += "[cell][b]format[/b]  [/cell][cell][b]brings back the past[/b]  [/cell]"
-	text += "[cell][b]same future[/b][/cell]"
+	text += "[table=3][cell][b]формат[/b]  [/cell][cell][b]вернул прошлое[/b]  [/cell]"
+	text += "[cell][b]то же будущее[/b][/cell]"
 	for format in ["state", "replay"]:
 		var one: Dictionary = verdict.get(format, {})
-		text += "[cell]%-7s  [/cell][cell]%s  [/cell][cell]%s[/cell]" % [
-			format, _mark(one.get("past", false)), _mark(one.get("future", false))]
+		text += "[cell]%-11s  [/cell][cell]%s  [/cell][cell]%s[/cell]" % [
+			"состояние" if format == "state" else "запись",
+			_mark(one.get("past", false)), _mark(one.get("future", false))]
 	text += "[/table]\n\n[table=2]"
-	text += "[cell]state file  [/cell][cell]%d bytes[/cell]" % bytes_state
-	text += "[cell]replay file  [/cell][cell]%d bytes[/cell]" % bytes_replay
-	text += "[cell]whole experiment  [/cell][cell]%.1f ms[/cell]" % experiment_ms
+	text += "[cell]файл состояния  [/cell][cell]%d байт[/cell]" % bytes_state
+	text += "[cell]файл записи  [/cell][cell]%d байт[/cell]" % bytes_replay
+	text += "[cell]весь опыт  [/cell][cell]%.1f мс[/cell]" % experiment_ms
 	text += "[/table]\n\n"
-	text += "K  save the die's position   %s\n" % _switch(keep_die)
-	text += "L  leak: one draw from the global generator   %s\n" % _switch(leak)
-	text += "V  loaded by a patched build   %s\n" % _switch(patched)
-	_detail.text = text
 
-	var names := ["truth (never saved)", "loaded from STATE", "loaded from REPLAY"]
-	_which.text = "showing: [b]%s[/b]      1 2 3 to switch" % names[show - 1]
+	text += "T прогнать опыт   ПРОБЕЛ новое зерно   ← → зерно −1 +1\n"
+	text += "1 2 3 показать правду, загрузку состояния, загрузку записи\n"
+	text += "K сохранять положение кубика: %s\n" % _switch(keep_die)
+	text += "L течь: один бросок из общего генератора: %s\n" % _switch(leak)
+	text += "V грузит сборка с правкой правила: %s\n\n" % _switch(patched)
+	text += "[color=#66ccff]два вердикта, а не один: прошлое спрашивает, вернулась ли та"
+	text += " минута, будущее — пойдёт ли мир дальше так же[/color]"
+	_hud.text = text
 
 
 func _all_ok() -> bool:
@@ -215,8 +219,9 @@ func _all_ok() -> bool:
 
 
 func _mark(passed: bool) -> String:
-	return "[color=#7fe08a]yes[/color]" if passed else "[color=#ff8a6a]NO[/color]"
+	return "[color=#7fe08a]да[/color]" if passed else "[color=#ff8a6a]НЕТ[/color]"
 
 
 func _switch(on: bool) -> String:
-	return "[color=#7fe08a]on[/color]" if on else "[color=#888888]off[/color]"
+	return "[color=#7fe08a]вкл[/color]" if on else "выкл"
+

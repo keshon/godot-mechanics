@@ -14,7 +14,7 @@ const HP := 600_000.0
 
 var sim := SpecSim.new()
 var autopilot := false
-var list_name := "aimed on cooldown"
+var list_name := "Aimed по откату"
 var report := ""
 ## Damage of the last ability fired by hand, so a press has an answer on screen.
 var last_hit := 0.0
@@ -89,45 +89,50 @@ func _run_report() -> void:
 		if base == 0.0:
 			base = result["dps"]
 		rows.append(
-				"[cell]%s  [/cell][cell]%.0f  [/cell][cell]%.0f s  [/cell]"
+				"[cell]%s  [/cell][cell]%.0f  [/cell][cell]%.0f с  [/cell]"
 				% [key, result["dps"], result["time"]]
 				+ "[cell]%d  [/cell][cell]%+.1f%%[/cell]"
 				% [result["wasted"], 100.0 * (result["dps"] / base - 1.0)])
 	var elapsed_ms := (Time.get_ticks_usec() - started) / 1000.0
-	report = "[table=5][cell][b]priority list[/b]  [/cell][cell][b]dps[/b]  [/cell]"
-	report += "[cell][b]kill time[/b]  [/cell][cell][b]procs wasted[/b]  [/cell]"
-	report += "[cell][b]vs first[/b][/cell]"
+	report = "[table=5][cell][b]список[/b]  [/cell][cell][b]урон в секунду[/b]  [/cell]"
+	report += "[cell][b]до смерти[/b]  [/cell][cell][b]проков впустую[/b]  [/cell]"
+	report += "[cell][b]против первого[/b][/cell]"
 	for row in rows:
 		report += row
-	report += "[/table]\n[color=#888888]four ten-minute fights simulated in %.0f ms" % (
+	report += "[/table]\n[color=#66ccff]четыре десятиминутных боя за %.0f мс" % (
 			elapsed_ms)
 	report += "[/color]"
 
 
 ## One clean hit per ability. This is the table to check the model against a source.
 func _run_check() -> void:
-	report = "[table=2][cell][b]one clean hit[/b]  [/cell][cell][b]damage[/b][/cell]"
+	report = "[table=2][cell][b]один чистый удар[/b]  [/cell][cell][b]урон[/b][/cell]"
 	for i in SpecSim.ABILITIES.size():
 		if float(SpecSim.ABILITIES[i]["coef"]) <= 0.0:
 			continue
 		report += "[cell]%s  [/cell][cell]%.0f[/cell]" % [
 			SpecSim.ABILITIES[i]["name"], sim.plain(i)]
-	report += "[/table]\n[color=#888888]no procs, no execute window, no crit[/color]"
+	report += "[/table]\n[color=#66ccff]без проков, без добивания, без крита[/color]"
 
 
 func _draw_hud() -> void:
-	var text := "[b]Marksmanship, Shadowlands.[/b]  AP %.0f, vers %.0f%%, mastery %.0f%%\n" % [
-		sim.attack_power, sim.versatility * 100.0, sim.mastery * 100.0]
-	text += "target %.0f%%   focus %.0f/100   last hit %.0f\n\n" % [
-		100.0 * sim.target_hp / sim.target_max, sim.focus, last_hit]
+	var text := "[b]Marksmanship, Shadowlands[/b]   сила атаки %.0f\n" % (
+		sim.attack_power)
+	text += "универсальность %.0f%%   мастерство %.0f%%   цель %.0f%%\n" % [
+		sim.versatility * 100.0, sim.mastery * 100.0,
+		100.0 * sim.target_hp / sim.target_max]
+	text += "фокус %.0f/100   последний удар %.0f\n" % [sim.focus, last_hit]
 	var held := ""
 	for buff in sim.buffs:
 		var count: int = sim.stacks(buff)
 		if count > 0:
-			held += "[color=#ffd479]%s x%d[/color]   " % [buff, count]
-	text += "buffs: %s\n\n" % ("none" if held == "" else held)
+			held += "[color=#ffd479]%s ×%d[/color]   " % [buff, count]
+	text += "эффекты: %s\n\n" % ("нет" if held == "" else held)
 	text += report + "\n\n"
-	text += "1..7 fire    A robot plays: %s    T list: [color=#ffd479]%s[/color]\n" % [
-		"ON" if autopilot else "off", list_name]
-	text += "S the four fights    P one clean hit each    R reset the dummy"
+	text += "1…7 бить   S четыре боя   P по одному чистому удару   R сбросить болвана\n"
+	text += "A играет робот: %s\n" % ("[b]вкл[/b]" if autopilot else "выкл")
+	text += "T список приоритетов: [color=#ffd479]%s[/color]\n\n" % list_name
+	text += "[color=#66ccff]ротация существует только потому, что что-то запрещено:"
+	text += " симулятор — инструмент баланса, а не украшение пробы[/color]"
 	_info.text = text
+

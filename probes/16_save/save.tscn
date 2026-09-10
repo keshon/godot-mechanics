@@ -70,78 +70,13 @@ far = 300.0
 
 [node name="Ui" type="CanvasLayer" parent="."]
 
-[node name="Hud" type="Control" parent="Ui"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Info" type="RichTextLabel" parent="Ui"]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 760.0
+offset_bottom = 320.0
 mouse_filter = 2
-
-[node name="Verdict" type="Label" parent="Ui/Hud"]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 30.0
-offset_top = -100.0
-offset_right = 620.0
-offset_bottom = -38.0
-grow_vertical = 0
-theme_override_font_sizes/font_size = 42
-text = "..."
-vertical_alignment = 1
-
-[node name="Detail" type="RichTextLabel" parent="Ui/Hud"]
-layout_mode = 1
-offset_left = 34.0
-offset_top = 28.0
-offset_right = 660.0
-offset_bottom = 420.0
-theme_override_colors/default_color = Color(1, 1, 1, 0.82)
+theme_override_colors/default_color = Color(1, 1, 1, 0.86)
 theme_override_font_sizes/normal_font_size = 15
 bbcode_enabled = true
 scroll_active = false
-
-[node name="Which" type="RichTextLabel" parent="Ui/Hud"]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-grow_vertical = 0
-offset_left = 34.0
-offset_top = -140.0
-offset_right = 660.0
-offset_bottom = -104.0
-theme_override_colors/default_color = Color(1, 0.9, 0.7, 0.85)
-theme_override_font_sizes/normal_font_size = 16
-bbcode_enabled = true
-scroll_active = false
-
-[node name="Hint" type="Label" parent="Ui/Hud"]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -640.0
-offset_top = -212.0
-offset_right = -26.0
-offset_bottom = -26.0
-grow_horizontal = 0
-grow_vertical = 0
-theme_override_colors/font_color = Color(1, 1, 1, 0.55)
-theme_override_font_sizes/font_size = 14
-text = "T runs the whole experiment    SPACE new seed    LEFT RIGHT seed -1 +1
-1 2 3 show the truth / the STATE load / the REPLAY load
-
-K  turn off saving the die's position
-L  leak one draw into the global generator
-V  pretend a later build changed one rule
-
-flip a switch and watch a yes turn into a NO. then press 1 and 3
-and look at the board: the same save, two different worlds."
-horizontal_alignment = 2
-vertical_alignment = 2

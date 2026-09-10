@@ -60,10 +60,10 @@ const TRUESHOT := 6
 ## A priority list IS the rotation. These are data, and swapping them is the
 ## experiment the probe exists for.
 const PRIORITIES := {
-	"spend the proc first": [TRUESHOT, KILL, ARCANE, RAPID, AIMED, STEADY],
-	"aimed on cooldown": [TRUESHOT, KILL, RAPID, AIMED, ARCANE, STEADY],
-	"never spend the proc": [TRUESHOT, KILL, RAPID, AIMED, STEADY],
-	"no cooldowns at all": [KILL, RAPID, AIMED, ARCANE, STEADY],
+	"сначала тратить прок": [TRUESHOT, KILL, ARCANE, RAPID, AIMED, STEADY],
+	"Aimed по откату": [TRUESHOT, KILL, RAPID, AIMED, ARCANE, STEADY],
+	"прок не тратить вовсе": [TRUESHOT, KILL, RAPID, AIMED, STEADY],
+	"без больших откатов": [KILL, RAPID, AIMED, ARCANE, STEADY],
 }
 
 ## Shadowlands season 4, top gear.

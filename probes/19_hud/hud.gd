@@ -138,24 +138,27 @@ func _draw_hud() -> void:
 	for enemy in enemies:
 		if enemy["hp"] > 0.0:
 			alive += 1
-	var text := "[b]%d enemies, %d alive[/b]    %d hits landed\n\n" % [
-		enemies.size(), alive, hits]
-	text += "[b]C  how the cooldown is counted:[/b]  %s\n" % (
-			"[color=#ff8a6a]left -= delta   (stops when the bar stops)[/color]"
-			if _bar.countdown_mode else "[color=#7fe08a]a moment it ends[/color]")
-	text += "[b]H  bar updated:[/b]  %s\n" % (
-			"[color=#7fe08a]yes[/color]" if awake
-			else "[color=#ff8a6a]NO — hold a cooldown, wait, press H again[/color]")
-	text += "[b]U  behind-the-camera guard:[/b]  %s\n" % (
-			"[color=#7fe08a]on[/color]" if _overlay.guard
-			else "[color=#ff8a6a]off — look away from them[/color]")
-	text += "   behind the camera now: %d    arrows on the rim: %d, wrong way %d\n\n" % [
-		_overlay.behind_now, _overlay.arrows_now, _overlay.wrong_arrows]
-	text += "floating numbers alive %d, pool %d    overlay draw %.0f us\n" % [
+	var text := "врагов [b]%d[/b], живых %d   попаданий %d   применено %d, отказано %d\n" % [
+		enemies.size(), alive, hits, _bar.fired, _bar.refused]
+	text += "цифр в полёте %d из %d   отрисовка накладки [b]%.0f[/b] мкс\n" % [
 		_overlay.live_count(), _overlay.floats.size(), _overlay.draw_usec]
-	text += "casts fired %d, refused %d\n\n" % [_bar.fired, _bar.refused]
-	text += "WASD move (breaks a cast)   1..6 abilities   TAB spin the camera\n"
-	text += "SPACE 10 or 120 enemies   R reset"
+	text += "за камерой сейчас %d   стрелок по краю %d, из них не туда %d\n\n" % [
+		_overlay.behind_now, _overlay.arrows_now, _overlay.wrong_arrows]
+
+	text += "WASD ходить (сбивает применение)   1…6 умения   TAB крутить камеру\n"
+	text += "ПРОБЕЛ 10 или 120 врагов   R заново\n"
+	text += "C как считается откат: %s\n" % (
+			"[color=#ff8a6a]left -= delta — встаёт вместе с полоской[/color]"
+			if _bar.countdown_mode else "[color=#7fe08a]мгновение, когда он кончится[/color]")
+	text += "H полоску обновляют: %s\n" % (
+			"[color=#7fe08a]да[/color]" if awake
+			else "[color=#ff8a6a]НЕТ — запусти откат, подожди, нажми H ещё раз[/color]")
+	text += "U защита от того, что за камерой: %s\n\n" % (
+			"[color=#7fe08a]вкл[/color]" if _overlay.guard
+			else "[color=#ff8a6a]выкл — отвернись от них[/color]")
+
+	text += "[color=#66ccff]откат — это момент, когда он кончится, а не сколько осталось:"
+	text += " отсчёт живёт в виджете и умирает вместе с ним[/color]"
 	_info.text = text
 
 
@@ -189,3 +192,4 @@ func _on_bar_cast_done(slot: int) -> void:
 			break
 	if struck == 0:
 		_overlay.add_float(hero + Vector3(0, 1.9, 0), "out of reach", Color(1, 0.5, 0.45))
+

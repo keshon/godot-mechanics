@@ -53,8 +53,7 @@ var _eye := Vector3.ZERO
 @onready var _foe_mesh: MultiMeshInstance3D = $Foes
 @onready var _hero_mesh: MeshInstance3D = $Hero
 @onready var _camera: Camera3D = $Camera
-@onready var _lit_label: Label = $Ui/Hud/Lit
-@onready var _detail: RichTextLabel = $Ui/Hud/Detail
+@onready var _hud: RichTextLabel = $Ui/Info
 
 
 func _ready() -> void:
@@ -276,7 +275,8 @@ func _place_camera(delta: float) -> void:
 
 
 func _draw_hud() -> void:
-	var names := ["no walls at all", "a line to every rim cell", "recursive shadowcasting"]
+	var names := ["стен нет вовсе", "луч в каждую клетку края",
+			"рекурсивная отбрасываемая тень"]
 	var found := 0
 	for foe in _foes:
 		if _fov.is_visible(foe.x, foe.y):
@@ -285,15 +285,22 @@ func _draw_hud() -> void:
 	for cell in _known:
 		known += cell
 
-	_lit_label.text = "%d  cells lit" % lit_now
-	var text := "[b]%d  %s[/b]\n\n[table=2]" % [int(mode) + 1, names[int(mode)]]
-	text += "[cell]radius  [/cell][cell]%d   (Q E)[/cell]" % radius
-	text += "[cell]cost  [/cell][cell]%.0f us[/cell]" % look_usec
-	text += "[cell]monsters in sight  [/cell][cell]%d of %d[/cell]" % [found, _foes.size()]
-	text += "[cell]of those, blind to you  [/cell][cell]%d[/cell]" % one_way
-	text += "[cell]map you have met  [/cell][cell]%d cells, %d steps[/cell]" % [known, steps]
+	var text := "видно [b]%d[/b] клеток   стоит [b]%.0f[/b] мкс   пройдено %d шагов\n\n" % [
+		lit_now, look_usec, steps]
+	text += "[table=2]"
+	text += "[cell]чудовищ в поле зрения  [/cell][cell]%d из %d[/cell]" % [
+			found, _foes.size()]
+	text += "[cell]из них тебя не видят  [/cell][cell]%d[/cell]" % one_way
+	text += "[cell]карты уже встречено  [/cell][cell]%d клеток[/cell]" % known
 	text += "[/table]\n\n"
-	text += "bright = seen now      dim = remembered\n"
-	text += "[color=#ff6a57]red[/color] sees you back    "
-	text += "[color=#66b3ff]blue[/color] cannot — sight is not always mutual"
-	_detail.text = text
+
+	text += "WASD ходить   Q E радиус обзора: %d   M отойти на всю карту\n" % radius
+	text += "ПРОБЕЛ новое подземелье   R то же самое ещё раз\n"
+	text += "1 2 3 как считаем видимость: [b]%s[/b]\n\n" % names[int(mode)]
+	text += "ярко — вижу сейчас, тускло — помню\n"
+	text += "[color=#ff8a6a]красные[/color] видят в ответ, "
+	text += "[color=#66ccff]синие[/color] нет: видимость не всегда взаимна\n\n"
+	text += "[color=#66ccff]память — и есть механика: без неё карта это фонарь в пустоте,"
+	text += " с ней ходьба становится разведкой[/color]"
+	_hud.text = text
+
