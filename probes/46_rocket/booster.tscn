@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://c46rockboost"]
 
-[ext_resource type="Script" path="res://probes/46_rocket/Stage.gd" id="1_stage"]
+[ext_resource type="Script" path="res://probes/46_rocket/stage.gd" id="1_stage"]
 [ext_resource type="PackedScene" path="res://probes/46_rocket/nozzle.tscn" id="2_nozzle"]
 
 [sub_resource type="StandardMaterial3D" id="MatSkin"]

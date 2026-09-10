@@ -1,7 +1,7 @@
 [gd_scene load_steps=16 format=3 uid="uid://c46rockrange"]
 
-[ext_resource type="Script" path="res://probes/46_rocket/Rig.gd" id="1_rig"]
-[ext_resource type="Script" path="res://probes/46_rocket/Planet.gd" id="2_planet"]
+[ext_resource type="Script" path="res://probes/46_rocket/rocket.gd" id="1_rig"]
+[ext_resource type="Script" path="res://probes/46_rocket/planet.gd" id="2_planet"]
 [ext_resource type="PackedScene" path="res://probes/46_rocket/stack.tscn" id="3_stack"]
 [ext_resource type="Shader" path="res://probes/46_rocket/ground.gdshader" id="4_grid"]
 [ext_resource type="PackedScene" path="res://probes/46_rocket/spent.tscn" id="5_spent"]
@@ -56,7 +56,7 @@ rings = 48
 [sub_resource type="SphereShape3D" id="ShapePlanet"]
 radius = 120000.0
 
-[node name="Rig" type="Node3D"]
+[node name="Rocket" type="Node3D"]
 script = ExtResource("1_rig")
 vehicle_length = 50.0
 stack_scene = ExtResource("3_stack")

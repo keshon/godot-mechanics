@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=3 uid="uid://c46rockstack"]
 
-[ext_resource type="Script" path="res://probes/46_rocket/Rocket.gd" id="1_stack"]
+[ext_resource type="Script" path="res://probes/46_rocket/stack.gd" id="1_stack"]
 [ext_resource type="PackedScene" path="res://probes/46_rocket/booster.tscn" id="2_boost"]
 [ext_resource type="PackedScene" path="res://probes/46_rocket/core.tscn" id="3_core"]
 [ext_resource type="PackedScene" path="res://probes/46_rocket/upper.tscn" id="4_upper"]
