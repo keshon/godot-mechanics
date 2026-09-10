@@ -8,7 +8,8 @@
 с нуля и с пониманием, чего хочешь.
 
 Правила проекта — в [PURPOSE.md](PURPOSE.md), стиль кода — в [STYLE.md](STYLE.md),
-формат заметки — в [NOTE.md](NOTE.md), грабли движка — в [GODOT.md](GODOT.md).
+формат заметки — в [NOTE.md](NOTE.md), показания на экране — в [HUD.md](HUD.md),
+грабли движка — в [GODOT.md](GODOT.md).
 Сейчас проб {PROBES}, закрыто {DONE}, мультипроб {MIXES}.
 
 ## Запуск
