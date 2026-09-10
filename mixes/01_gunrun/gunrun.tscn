@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3]
 
-[ext_resource type="Script" path="res://mixes/01_gunrun/Rig.gd" id="1_rig"]
+[ext_resource type="Script" path="res://mixes/01_gunrun/gunrun.gd" id="1_rig"]
 [ext_resource type="PackedScene" path="res://probes/32_move/course.tscn" id="2_course"]
 [ext_resource type="PackedScene" path="res://probes/32_move/player.tscn" id="3_player"]
 [ext_resource type="PackedScene" path="res://probes/30_gun/weapon.tscn" id="4_weapon"]

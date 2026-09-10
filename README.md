@@ -68,5 +68,5 @@
 
 | | |
 |---|---|
-| <img src="img/mixes/01_gunrun.jpg" width="440"><br><b>01_gunrun</b> — акробатика и оружие<br><sub><a href="mixes/01_gunrun/NOTES.md">заметка</a></sub> | <img src="img/mixes/02_drive.jpg" width="440"><br><b>02_drive</b> — стрельба с колёс<br><sub><a href="mixes/02_drive/NOTES.md">заметка</a></sub> |
-| <img src="img/mixes/03_siege.jpg" width="440"><br><b>03_siege</b> — осада: здание, пушка, скол<br><sub><a href="mixes/03_siege/NOTES.md">заметка</a></sub> |  |
+| <img src="img/mixes/01_gunrun.jpg" width="440"><br><b>01_gunrun</b> — акробатика и оружие<br><sub><a href="mixes/01_gunrun/README.md">заметка</a></sub> | <img src="img/mixes/02_drive.jpg" width="440"><br><b>02_drive</b> — стрельба с колёс<br><sub><a href="mixes/02_drive/README.md">заметка</a></sub> |
+| <img src="img/mixes/03_siege.jpg" width="440"><br><b>03_siege</b> — осада: здание, пушка, скол<br><sub><a href="mixes/03_siege/README.md">заметка</a></sub> |  |

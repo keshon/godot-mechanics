@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://c03siege0001"]
 
-[ext_resource type="Script" uid="uid://bhbjjc476vry" path="res://mixes/03_siege/Rig.gd" id="1_rig"]
+[ext_resource type="Script" uid="uid://bhbjjc476vry" path="res://mixes/03_siege/siege.gd" id="1_rig"]
 [ext_resource type="Script" uid="uid://clbmjb4pefrot" path="res://probes/43_stuff/round.gd" id="2_cwhfd"]
-[ext_resource type="Script" uid="uid://cqmgyr1hkih6o" path="res://mixes/03_siege/Frame.gd" id="2_frame"]
+[ext_resource type="Script" uid="uid://cqmgyr1hkih6o" path="res://mixes/03_siege/frame.gd" id="2_frame"]
 [ext_resource type="PackedScene" path="res://probes/30_gun/weapon.tscn" id="3_weapon"]
 [ext_resource type="PackedScene" path="res://probes/30_gun/fx.tscn" id="4_fx"]
 [ext_resource type="Resource" uid="uid://c43stuffconc" path="res://probes/43_stuff/concrete.tres" id="5_concrete"]
@@ -43,7 +43,7 @@ size = Vector3(120, 0.4, 120)
 [sub_resource type="BoxShape3D" id="G_s"]
 size = Vector3(120, 0.4, 120)
 
-[node name="Rig" type="Node3D" unique_id=1726687037]
+[node name="Siege" type="Node3D" unique_id=1726687037]
 script = ExtResource("1_rig")
 rounds = Array[ExtResource("2_cwhfd")]([ExtResource("6_rifle"), ExtResource("7_buck"), ExtResource("8_grenade"), ExtResource("9_rocket"), ExtResource("10_charge"), ExtResource("11_bomb")])
 
