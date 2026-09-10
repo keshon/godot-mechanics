@@ -330,67 +330,13 @@ far = 600.0
 
 [node name="Ui" type="CanvasLayer" parent="."]
 
-[node name="Hud" type="Control" parent="Ui"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Info" type="RichTextLabel" parent="Ui"]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 760.0
+offset_bottom = 320.0
 mouse_filter = 2
-
-[node name="Seed" type="Label" parent="Ui/Hud"]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 30.0
-offset_top = -104.0
-offset_right = 500.0
-offset_bottom = -40.0
-grow_vertical = 0
-theme_override_colors/font_color = Color(1, 1, 1, 0.94)
-theme_override_font_sizes/font_size = 44
-text = "SEED 5"
-vertical_alignment = 1
-
-[node name="Detail" type="RichTextLabel" parent="Ui/Hud"]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-grow_vertical = 0
-offset_left = 34.0
-offset_top = -348.0
-offset_right = 700.0
-offset_bottom = -106.0
-theme_override_colors/default_color = Color(1, 1, 1, 0.8)
+theme_override_colors/default_color = Color(1, 1, 1, 0.86)
 theme_override_font_sizes/normal_font_size = 15
 bbcode_enabled = true
 scroll_active = false
-
-[node name="Hint" type="Label" parent="Ui/Hud"]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -640.0
-offset_top = -200.0
-offset_right = -26.0
-offset_bottom = -26.0
-grow_horizontal = 0
-grow_vertical = 0
-theme_override_colors/font_color = Color(1, 1, 1, 0.55)
-theme_override_font_sizes/font_size = 14
-text = "SPACE new seed    LEFT RIGHT seed -1 +1    UP DOWN more or fewer pieces
-WASD pans    WHEEL zooms    Q E shrink or grow the plot    G hides the rim walls    R rereads
-
-the pieces are real nodes under Library in this scene.
-open one: the Floor mesh size IS its footprint, the Marker3D
-gates point -Z outwards. duplicate one, move its gates, press R.
-
-Vault appears at most once and only takes a wide gate."
-horizontal_alignment = 2
-vertical_alignment = 2

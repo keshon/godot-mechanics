@@ -12,9 +12,9 @@ extends Node3D
 
 const LEVEL_NAME := [
 	"",
-	"1  plain — one box per wall cell, flat floor. this is probe 12.",
-	"2  dressed — the neighbour mask picks a piece and turns it",
-	"3  dressed + hand-drawn rooms stamped into the generated ones",
+	"1  голо — по коробке на клетку стены, плоский пол. это проба 12",
+	"2  одето — маска соседей выбирает кусок и поворачивает его",
+	"3  одето плюс рисованные комнаты, вштампованные в сгенерированные",
 ]
 
 @export var rules: DressGen
@@ -32,8 +32,7 @@ var _last_signature := ""
 
 @onready var _board: Node3D = $Board
 @onready var _camera: Camera3D = $Camera
-@onready var _seed_label: Label = $Ui/Hud/Seed
-@onready var _detail: RichTextLabel = $Ui/Hud/Detail
+@onready var _hud: RichTextLabel = $Ui/Info
 
 
 func _ready() -> void:
@@ -107,8 +106,8 @@ func _place_camera() -> void:
 
 
 func _draw_hud() -> void:
-	_seed_label.text = "SEED %d" % seed_value
-	var text := "[b]%s[/b]\n\n[table=2]" % LEVEL_NAME[level]
+	var text := "зерно [b]%d[/b]   слой: [b]%s[/b]\n\n[table=2]" % [
+		seed_value, LEVEL_NAME[level]]
 	for key in rules.stats:
 		text += "[cell]%s  [/cell][cell]%s[/cell]" % [key, rules.stats[key]]
 	for key in _tiler.stats:
@@ -118,5 +117,13 @@ func _draw_hud() -> void:
 	for mask in 16:
 		if _tiler.masks[mask] > 0:
 			row += "%d:%d  " % [mask, _tiler.masks[mask]]
-	text += "wall cells by neighbour mask\n%s" % row
-	_detail.text = text
+	text += "клеток стены по маске соседей\n%s\n\n" % row
+	text += "1 2 3 снимать слои   ПРОБЕЛ новое зерно   ← → зерно −1 +1\n"
+	text += "WASD камера   КОЛЕСО приближение\n"
+	text += "зерно все три раза одно, меняется только одежда\n"
+	text += "куски лежат в сцене под Board, по MultiMesh на каждый: подмени там меш —"
+	text += " и всё подземелье переоденется\n\n"
+	text += "[color=#66ccff]шестнадцать вариантов стены не рисуют — рисуют два и"
+	text += " поворачивают[/color]"
+	_hud.text = text
+

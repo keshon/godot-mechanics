@@ -32,8 +32,7 @@ var _last_signature := ""
 @onready var _limit: MeshInstance3D = $Limit
 @onready var _wall_mesh: MultiMeshInstance3D = $Walls
 @onready var _camera: Camera3D = $Camera
-@onready var _seed_label: Label = $Ui/Hud/Seed
-@onready var _detail: RichTextLabel = $Ui/Hud/Detail
+@onready var _hud: RichTextLabel = $Ui/Info
 
 
 func _ready() -> void:
@@ -160,19 +159,26 @@ func _place_camera() -> void:
 
 
 func _draw_hud() -> void:
-	_seed_label.text = "SEED %d" % seed_value
-	var text := "[table=2]"
-	text += "[cell]plot  [/cell][cell]%.0f x %.0f[/cell]" % [extent * 2.0, extent * 2.0]
-	text += "[cell]pieces asked for  [/cell][cell]%d[/cell]" % target
-	text += "[cell]pieces placed  [/cell][cell]%d[/cell]" % _layout.placed.size()
-	text += "[cell]backtracks  [/cell][cell]%d of %d%s[/cell]" % [_layout.backtracks, budget,
-		"   RAN OUT" if _layout.spent else ""]
-	text += "[cell]gates walled up  [/cell][cell]%d[/cell]" % _layout.capped
-	text += "[cell]fits tested  [/cell][cell]%d[/cell]" % _layout.tried
-	text += "[cell]solved in  [/cell][cell]%.2f ms[/cell]" % solve_ms
+	var text := "зерно [b]%d[/b]   участок %.0f × %.0f   решено за [b]%.2f[/b] мс\n\n" % [
+		seed_value, extent * 2.0, extent * 2.0, solve_ms]
+	text += "[table=2]"
+	text += "[cell]кусков заказано  [/cell][cell]%d[/cell]" % target
+	text += "[cell]кусков поставлено  [/cell][cell]%d[/cell]" % _layout.placed.size()
+	text += "[cell]откатов  [/cell][cell]%d из %d%s[/cell]" % [_layout.backtracks, budget,
+		"   [color=#ff8a6a]кончились[/color]" if _layout.spent else ""]
+	text += "[cell]ворот заложено  [/cell][cell]%d[/cell]" % _layout.capped
+	text += "[cell]примерок  [/cell][cell]%d[/cell]" % _layout.tried
 	text += "[/table]\n\n"
 	var row := ""
 	for i in _library.size():
 		row += "%s %d   " % [_library[i]["name"], _layout.uses[i]]
-	text += row
-	_detail.text = text
+	text += "куски и сколько раз взяты\n%s\n\n" % row
+	text += "ПРОБЕЛ новое зерно   ← → зерно −1 +1   ↑ ↓ кусков больше или меньше\n"
+	text += "WASD камера   КОЛЕСО приближение   Q E участок уже или шире\n"
+	text += "G спрятать стены по краю   R перечитать библиотеку\n"
+	text += "куски — настоящие узлы под Library в этой сцене: размер меша Floor И ЕСТЬ"
+	text += " их след, Marker3D-ворота смотрят −Z наружу\n\n"
+	text += "[color=#66ccff]клеток нет вообще: атом — кусок с воротами по краям, и"
+	text += " стыковка это две строки[/color]"
+	_hud.text = text
+

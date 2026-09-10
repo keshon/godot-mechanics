@@ -101,68 +101,13 @@ far = 400.0
 
 [node name="Ui" type="CanvasLayer" parent="."]
 
-[node name="Hud" type="Control" parent="Ui"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Info" type="RichTextLabel" parent="Ui"]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 760.0
+offset_bottom = 320.0
 mouse_filter = 2
-
-[node name="Seed" type="Label" parent="Ui/Hud"]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 30.0
-offset_top = -110.0
-offset_right = 500.0
-offset_bottom = -40.0
-grow_vertical = 0
-theme_override_colors/font_color = Color(1, 1, 1, 0.94)
-theme_override_font_sizes/font_size = 46
-text = "SEED 7"
-vertical_alignment = 1
-
-[node name="Detail" type="RichTextLabel" parent="Ui/Hud"]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-grow_vertical = 0
-offset_left = 34.0
-offset_top = -400.0
-offset_right = 640.0
-offset_bottom = -118.0
-theme_override_colors/default_color = Color(1, 1, 1, 0.8)
+theme_override_colors/default_color = Color(1, 1, 1, 0.86)
 theme_override_font_sizes/normal_font_size = 15
 bbcode_enabled = true
 scroll_active = false
-
-[node name="Hint" type="Label" parent="Ui/Hud"]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -640.0
-offset_top = -200.0
-offset_right = -26.0
-offset_bottom = -26.0
-grow_horizontal = 0
-grow_vertical = 0
-theme_override_colors/font_color = Color(1, 1, 1, 0.55)
-theme_override_font_sizes/font_size = 14
-text = "SPACE or CLICK new seed    LEFT RIGHT seed -1 +1    WHEEL zooms
-1..5 stop after that pass    S rooms / cave
-
-L links by nearest neighbour instead of a spanning tree
-K fill the unreachable back in
-
-go back to a seed you liked with the arrows: the same number is
-the same dungeon, always. all the knobs are on DungeonGen
-in the inspector and rebuild while the game runs."
-horizontal_alignment = 2
-vertical_alignment = 2

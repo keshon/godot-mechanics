@@ -53,13 +53,13 @@ func dress(grid: DressGen, plain: bool) -> void:
 	for m in masks:
 		if m > 0:
 			used += 1
-	stats["masks seen"] = "%d of 16" % used
-	stats["pieces drawn"] = "2 shapes, rotated" if not plain else "1 shape, a box"
+	stats["масок встретилось"] = "%d из 16" % used
+	stats["чем рисуем"] = "2 формы с поворотом" if not plain else "1 форма, коробка"
 	var total := 0
 	for k in pieces:
 		total += (pieces[k] as Array).size()
-	stats["instances"] = str(total)
-	stats["doorways"] = str((pieces["Beam"] as Array).size())
+	stats["экземпляров"] = str(total)
+	stats["проёмов"] = str((pieces["Beam"] as Array).size())
 
 
 func _rock(grid: DressGen, x: int, y: int, plain: bool) -> void:

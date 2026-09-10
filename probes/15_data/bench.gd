@@ -28,10 +28,10 @@ var _stage: Array[Node3D] = []
 @onready var _gear_root: Node3D = $Gear
 @onready var _proto: MeshInstance3D = $Proto/Bit
 @onready var _foe_mesh: MeshInstance3D = $Foe
-@onready var _damage: Label = $Ui/Hud/Damage
-@onready var _items_label: RichTextLabel = $Ui/Hud/Items
-@onready var _foes_label: RichTextLabel = $Ui/Hud/Foes
-@onready var _trace_label: RichTextLabel = $Ui/Hud/Trace
+@onready var _hud: RichTextLabel = $Ui/Info
+@onready var _items_label: RichTextLabel = $Ui/Items
+@onready var _foes_label: RichTextLabel = $Ui/Foes
+@onready var _trace_label: RichTextLabel = $Ui/Trace
 
 
 func _ready() -> void:
@@ -104,7 +104,7 @@ func resolve(held: Array[DataDef], target: DataDef) -> Dictionary:
 	var trace: Array[String] = []
 	var power := base_power
 	var tags := {}
-	trace.append("base power                        %6.1f" % power)
+	trace.append("своя сила                         %6.1f" % power)
 
 	for definition in held:
 		for effect in definition.effects:
@@ -113,7 +113,7 @@ func resolve(held: Array[DataDef], target: DataDef) -> Dictionary:
 				trace.append("%-22s %+6.1f  %6.1f" % [definition.title, effect.amount, power])
 			elif effect.verb == DataEffect.Verb.TAG:
 				tags[effect.tag] = true
-				trace.append("%-22s  carries [%s]" % [definition.title, effect.tag])
+				trace.append("%-22s  несёт метку [%s]" % [definition.title, effect.tag])
 
 	# Every multiplier lands after every addition. An RPG rule, not a coding one:
 	# interleave them and the same gear gives different numbers depending on the
@@ -129,11 +129,11 @@ func resolve(held: Array[DataDef], target: DataDef) -> Dictionary:
 		if effect.verb != DataEffect.Verb.VULN or not tags.has(effect.tag):
 			continue
 		damage *= effect.amount
-		var word := "resists"
+		var word := "стойкий к"
 		if effect.amount > 1.0:
-			word = "weak to"
+			word = "уязвим к"
 		elif effect.amount <= 0.0:
-			word = "immune to"
+			word = "неуязвим к"
 		trace.append("%-13s %-8s [%s]  x%-5.2f %6.1f" % [
 			target.title, word, effect.tag, effect.amount, damage])
 
@@ -141,9 +141,9 @@ func resolve(held: Array[DataDef], target: DataDef) -> Dictionary:
 	# nothing. Immunity wins, or an immune monster quietly becomes killable.
 	if target.armour > 0.0 and damage > 0.0:
 		damage = maxf(damage - target.armour, 1.0)
-		trace.append("%-22s armour %-2.0f %6.1f" % [target.title, target.armour, damage])
+		trace.append("%-22s броня %-2.0f  %6.1f" % [target.title, target.armour, damage])
 	if damage <= 0.0:
-		trace.append("%-22s takes nothing at all" % target.title)
+		trace.append("%-22s не берёт вообще ничего" % target.title)
 
 	return {
 		"damage": damage,
@@ -179,29 +179,43 @@ func _build_stage() -> void:
 
 func _draw_hud() -> void:
 	if items.is_empty() or foes.is_empty():
-		_damage.text = "content/ is empty"
+		_hud.text = "[color=#ff8a6a]папка content/ пуста[/color]"
 		return
 
 	var result := resolve(gear, foes[foe])
 	var swings: int = result["swings"]
-	_damage.text = "%.1f  dmg      %s" % [
-		result["damage"], "never dies" if swings < 0 else "%d swings" % swings]
+	_hud.text = "\n".join(PackedStringArray([
+		"урон [b]%.1f[/b]   %s   надето %d из %d предметов   врагов %d" % [
+			result["damage"],
+			"[color=#ff8a6a]не умирает никогда[/color]" if swings < 0
+				else "ударов до смерти [b]%d[/b]" % swings,
+			gear.size(), items.size(), foes.size()],
+		"",
+		"← → выбрать предмет   ПРОБЕЛ надеть или снять   C раздеться догола",
+		"↑ ↓ выбрать врага   R перечитать папку",
+		"каждый предмет и каждый враг — один .tres в content/: заголовок, цвет и список"
+			+ " эффектов",
+		"",
+		"[color=#66ccff]закрытый набор из четырёх глаголов вместо if type ==:"
+			+ " bench.gd не слышал слова «меч»[/color]",
+	]))
 
-	var left := "[b]items[/b]  %d files\n" % items.size()
+	var left := "[b]предметы[/b]\n"
 	for i in items.size():
 		var mark := "x" if gear.has(items[i]) else " "
 		var cursor := "[color=#ffd479]>[/color]" if i == pick else " "
 		left += "%s [%s] %s\n" % [cursor, mark, items[i].title]
 	_items_label.text = left
 
-	var right := "[b]foes[/b]  %d files\n" % foes.size()
+	var right := "[b]враги[/b]\n"
 	for i in foes.size():
 		var cursor := "[color=#ffd479]>[/color]" if i == foe else " "
-		right += "%s %-15s hp %-4.0f arm %.0f\n" % [
+		right += "%s %-15s жизни %-4.0f броня %.0f\n" % [
 			cursor, foes[i].title, foes[i].hp, foes[i].armour]
 	_foes_label.text = right
 
-	var middle := "[b]how that number was reached[/b]\n"
+	var middle := "[b]как получилось это число[/b]\n"
 	for line in result["trace"]:
 		middle += line + "\n"
 	_trace_label.text = middle
+

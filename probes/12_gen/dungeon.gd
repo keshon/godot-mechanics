@@ -10,11 +10,11 @@ extends Node3D
 
 const PASS_NAME := [
 	"",
-	"1  rooms thrown at the grid",
-	"2  links chosen (amber line = a corridor that will be dug)",
-	"3  corridors carved",
-	"4  flood fill: red is floor you cannot walk to",
-	"5  stairs at the two ends of the longest walk",
+	"1  комнаты набросаны на сетку",
+	"2  выбраны связи (жёлтая линия — будущий коридор)",
+	"3  коридоры прорыты",
+	"4  заливка: красное — пол, до которого не дойти",
+	"5  лестницы на концах самого длинного пути",
 ]
 
 @export var rules: DungeonGen
@@ -36,8 +36,7 @@ var _last_signature := ""
 @onready var _entrance: MeshInstance3D = $Entrance
 @onready var _stairs: MeshInstance3D = $Stairs
 @onready var _camera: Camera3D = $Camera
-@onready var _seed_label: Label = $Ui/Hud/Seed
-@onready var _detail: RichTextLabel = $Ui/Hud/Detail
+@onready var _hud: RichTextLabel = $Ui/Info
 
 
 func _ready() -> void:
@@ -211,19 +210,23 @@ func _frame_camera() -> void:
 
 
 func _draw_hud() -> void:
-	_seed_label.text = "SEED %d" % seed_value
-	var text := "[b]%s[/b]\n\n[table=2]" % PASS_NAME[shown]
+	var text := "зерно [b]%d[/b]   проход: [b]%s[/b]\n\n[table=2]" % [
+		seed_value, PASS_NAME[shown]]
 	for key in rules.stats:
 		text += "[cell]%s  [/cell][cell]%s[/cell]" % [key, rules.stats[key]]
 	text += "[/table]\n\n"
-	text += "style: %s\n" % (
-			"cave" if rules.style == DungeonGen.Style.CAVE else "rooms + corridors")
+	text += "ПРОБЕЛ или ЛКМ новое зерно   ← → зерно −1 +1   КОЛЕСО приближение\n"
+	text += "1…5 остановиться после прохода   S комнаты или пещера\n"
+	text += "вид: %s\n" % (
+			"пещера" if rules.style == DungeonGen.Style.CAVE else "комнаты и коридоры")
 	if rules.style == DungeonGen.Style.ROOMS:
-		if rules.naive_links:
-			text += "[color=#ff8a6a]links: nearest neighbour[/color]"
-			text += " — no promise the map is one piece\n"
-		else:
-			text += "links: spanning tree + %d loops — one piece by construction\n" % rules.loops
-	text += "fill the unreachable back in: %s" % (
-			"ON" if rules.keep_largest else "[color=#ff8a6a]OFF[/color]")
-	_detail.text = text
+		text += "L связи: %s\n" % (
+				"[color=#ff8a6a]по ближайшему соседу — цельность карты не обещана[/color]"
+				if rules.naive_links
+				else "остовное дерево, петель %d — цельная по построению" % rules.loops)
+	text += "K заливать недоступное обратно: %s\n\n" % (
+			"вкл" if rules.keep_largest else "[color=#ff8a6a]выкл[/color]")
+	text += "[color=#66ccff]генератор — это конвейер тупых проходов, а не одна умная"
+	text += " функция: пропускают обычно четвёртый[/color]"
+	_hud.text = text
+

@@ -81,62 +81,53 @@ far = 200.0
 
 [node name="Ui" type="CanvasLayer" parent="."]
 
-[node name="Hud" type="Control" parent="Ui"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Info" type="RichTextLabel" parent="Ui"]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 900.0
+offset_bottom = 160.0
 mouse_filter = 2
+theme_override_colors/default_color = Color(1, 1, 1, 0.86)
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+scroll_active = false
 
-[node name="Damage" type="Label" parent="Ui/Hud"]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 30.0
-offset_top = -102.0
-offset_right = 700.0
-offset_bottom = -38.0
-grow_vertical = 0
-theme_override_colors/font_color = Color(1, 0.93, 0.78, 0.96)
-theme_override_font_sizes/font_size = 44
-text = "0.0  dmg"
-vertical_alignment = 1
 
-[node name="Items" type="RichTextLabel" parent="Ui/Hud"]
+[node name="Items" type="RichTextLabel" parent="Ui"]
 layout_mode = 1
 offset_left = 32.0
-offset_top = 26.0
+offset_top = 170.0
 offset_right = 330.0
-offset_bottom = 640.0
+offset_bottom = 700.0
+mouse_filter = 2
 theme_override_colors/default_color = Color(1, 1, 1, 0.82)
 theme_override_font_sizes/normal_font_size = 15
 bbcode_enabled = true
 scroll_active = false
 
-[node name="Foes" type="RichTextLabel" parent="Ui/Hud"]
+[node name="Foes" type="RichTextLabel" parent="Ui"]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -430.0
-offset_top = 26.0
+offset_top = 170.0
 offset_right = -30.0
-offset_bottom = 320.0
+offset_bottom = 470.0
 grow_horizontal = 0
+mouse_filter = 2
 theme_override_colors/default_color = Color(1, 1, 1, 0.82)
 theme_override_font_sizes/normal_font_size = 15
 bbcode_enabled = true
 scroll_active = false
 
-[node name="Trace" type="RichTextLabel" parent="Ui/Hud"]
+[node name="Trace" type="RichTextLabel" parent="Ui"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 grow_vertical = 0
+mouse_filter = 2
 offset_left = 350.0
 offset_top = -360.0
 offset_right = 900.0
@@ -145,28 +136,3 @@ theme_override_colors/default_color = Color(1, 1, 1, 0.78)
 theme_override_font_sizes/normal_font_size = 14
 bbcode_enabled = true
 scroll_active = false
-
-[node name="Hint" type="Label" parent="Ui/Hud"]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -600.0
-offset_top = -196.0
-offset_right = -30.0
-offset_bottom = -26.0
-grow_horizontal = 0
-grow_vertical = 0
-theme_override_colors/font_color = Color(1, 1, 1, 0.55)
-theme_override_font_sizes/font_size = 14
-text = "LEFT RIGHT pick an item    SPACE equip or drop it    C strips you bare
-UP DOWN pick a foe    R rereads the folder
-
-every item and every foe is one .tres file in content/.
-open one in the editor: it is a title, a colour and a list of effects.
-
-bench.gd knows four verbs and has never heard of a sword."
-horizontal_alignment = 2
-vertical_alignment = 2

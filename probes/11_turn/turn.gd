@@ -39,10 +39,10 @@ const MAP := [
 ]
 
 const KINDS := {
-	"@": {"name": "you", "speed": 100, "color": Color(0.93, 0.96, 1.0)},
-	"f": {"name": "fast", "speed": 200, "color": Color(0.95, 0.34, 0.28)},
-	"m": {"name": "normal", "speed": 100, "color": Color(0.95, 0.66, 0.24)},
-	"s": {"name": "slow", "speed": 50, "color": Color(0.42, 0.56, 0.78)},
+	"@": {"name": "ты", "speed": 100, "color": Color(0.93, 0.96, 1.0)},
+	"f": {"name": "быстрый", "speed": 200, "color": Color(0.95, 0.34, 0.28)},
+	"m": {"name": "обычный", "speed": 100, "color": Color(0.95, 0.66, 0.24)},
+	"s": {"name": "медленный", "speed": 50, "color": Color(0.42, 0.56, 0.78)},
 }
 
 @export var actor_scene: PackedScene
@@ -76,8 +76,7 @@ var _repeat := 0.0
 @onready var _wall_mesh: MultiMeshInstance3D = $Walls
 @onready var _actors_root: Node3D = $Actors
 @onready var _camera: Camera3D = $Camera
-@onready var _tally: Label = $Ui/Hud/Tally
-@onready var _detail: RichTextLabel = $Ui/Hud/Detail
+@onready var _hud: RichTextLabel = $Ui/Info
 
 
 func _ready() -> void:
@@ -312,16 +311,22 @@ func _frame_camera() -> void:
 
 
 func _draw_hud() -> void:
-	_tally.text = "TURN %d    HIT %d" % [turns, _player.hits]
-	var rows := "[table=4][cell][b]  [/b][/cell][cell][b]speed  [/b][/cell]"
-	rows += "[cell][b]turns  [/b][/cell][cell][b]energy[/b][/cell]"
+	var rows := "ход [b]%d[/b]   попаданий %d   тиков %d   ожидание анимации: %s\n\n" % [
+		turns, _player.hits, ticks,
+		"[color=#ff8a6a]вкл[/color]" if wait_for_anim else "выкл"]
+	rows += "[table=4][cell][b]кто  [/b][/cell][cell][b]скорость  [/b][/cell]"
+	rows += "[cell][b]ходов  [/b][/cell][cell][b]энергия[/b][/cell]"
 	for actor in _actors:
 		rows += "[cell]%s  [/cell][cell]%d  [/cell][cell]%d  [/cell][cell]%d[/cell]" % [
 			actor.kind, actor.speed, actor.acted, actor.energy]
-	rows += "[/table]\n\nticks %d\n\n" % ticks
-	if wait_for_anim:
-		rows += "[color=#ff8a6a]input waits for the animation[/color]"
-		rows += "  hold a key and feel it drag"
-	else:
-		rows += "input is instant  the picture catches up on its own"
-	_detail.text = rows
+	rows += "[/table]\n\n"
+	rows += "WASD шаг на клетку (две сразу — по диагонали)   ПРОБЕЛ ждать\n"
+	rows += "войти в кого-нибудь — оттолкнуть   КОЛЕСО приближение   R заново\n"
+	rows += "T ожидание анимации: %s\n" % (
+			"[color=#ff8a6a]ввод ждёт картинку — зажми клавишу и почувствуй[/color]"
+			if wait_for_anim else "ввод мгновенный, картинка догоняет сама")
+	rows += "карта — блок текста в начале turn.gd: правь и жми R\n\n"
+	rows += "[color=#66ccff]энергия — единственное правило очерёдности, и из неё растёт"
+	rows += " всё, что жанр зовёт инициативой и ускорениями[/color]"
+	_hud.text = rows
+

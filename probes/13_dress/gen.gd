@@ -121,7 +121,7 @@ func _place_rooms() -> void:
 		for y in range(r.position.y, r.end.y):
 			for x in range(r.position.x, r.end.x):
 				cells[y * width + x] = Cell.ROOM
-	stats["rooms"] = str(rooms.size())
+	stats["комнат"] = str(rooms.size())
 
 
 func _choose_links() -> Array[Vector2i]:
@@ -211,7 +211,8 @@ func _stamp() -> void:
 					continue
 				cells[cy * width + cx] = Cell.PROP if glyph == "O" else Cell.WATER
 				props += 1
-	stats["hand-placed"] = "%d rooms, %d props (%d skipped by a doorway)" % [used, props, skipped]
+	stats["рисованных"] = "комнат %d, реквизита %d (пропущено из-за проёма %d)" % [
+			used, props, skipped]
 
 
 func _near_hall(x: int, y: int) -> bool:
@@ -256,5 +257,5 @@ func _find_region() -> void:
 		parts += 1
 	for i in width * height:
 		region[i] = 1 if mark[i] == best_id else 0
-	stats["reach"] = "%d%% in %d piece(s)" % [
+	stats["доступно"] = "%d%%, кусков: %d" % [
 		0 if total == 0 else roundi(100.0 * best_n / total), parts]

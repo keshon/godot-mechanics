@@ -115,7 +115,7 @@ func _place_rooms() -> void:
 		for y in range(r.position.y, r.end.y):
 			for x in range(r.position.x, r.end.x):
 				cells[y * width + x] = Cell.ROOM
-	stats["rooms"] = "%d kept of %d thrown" % [rooms.size(), room_tries]
+	stats["комнат"] = "%d оставлено из %d брошенных" % [rooms.size(), room_tries]
 
 
 func _centre(i: int) -> Vector2i:
@@ -174,7 +174,7 @@ func _choose_links() -> void:
 			_link(
 				_random.randi_range(0, rooms.size() - 1),
 				_random.randi_range(0, rooms.size() - 1))
-	stats["links"] = str(links.size())
+	stats["связей"] = str(links.size())
 
 
 func _carve() -> void:
@@ -219,7 +219,7 @@ func _grow_cave() -> void:
 							solid += 1
 				next[y * width + x] = Cell.ROCK if solid >= 5 else Cell.ROOM
 		cells = next
-	stats["rooms"] = "no rooms: a cave is one shape"
+	stats["комнат"] = "нет: пещера это одна форма"
 
 
 func _find_region() -> void:
@@ -252,16 +252,16 @@ func _find_region() -> void:
 	for i in width * height:
 		region[i] = 1 if mark[i] == best_id else 0
 
-	stats["floor"] = "%d cells in %d piece(s)" % [floor_cells, parts]
+	stats["пол"] = "клеток %d, кусков: %d" % [floor_cells, parts]
 	var reach := 0 if floor_cells == 0 else roundi(100.0 * best_n / floor_cells)
-	stats["reach"] = "%d%% of the floor" % reach
+	stats["доступно"] = "%d%% пола" % reach
 	if keep_largest:
 		var cut := 0
 		for i in width * height:
 			if cells[i] != Cell.ROCK and region[i] == 0:
 				cells[i] = Cell.ROCK
 				cut += 1
-		stats["reach"] = "100%% (filled %d cells back in)" % cut
+		stats["доступно"] = "100%% (залито обратно %d клеток)" % cut
 
 
 func _place_ends() -> void:
@@ -279,7 +279,7 @@ func _place_ends() -> void:
 	_walk_from(a)
 	entrance = Vector2i(a % width, a / width)
 	stairs = Vector2i(_far % width, _far / width)
-	stats["walk"] = "%d steps end to end" % _far_dist
+	stats["проход"] = "%d шагов из конца в конец" % _far_dist
 
 
 func _walk_from(start: int) -> void:
