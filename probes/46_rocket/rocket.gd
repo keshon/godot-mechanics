@@ -380,7 +380,7 @@ func _state() -> String:
 	if not _stack.flying:
 		return "выведено" if _done else "на столе"
 	if _stack.clamped:
-		return "[color=#ffcc66]удержание, тяга к весу %.2f[/color]" % _stack.lift_ratio
+		return "[color=#ffd479]удержание, тяга к весу %.2f[/color]" % _stack.lift_ratio
 	return "полёт"
 
 
@@ -414,7 +414,7 @@ func _readout() -> void:
 			height * 0.001, _stack.speed, _planet.orbital_speed(height),
 			_planet.orbital_speed(height) * sqrt(2.0)],
 		"вверх %.0f   вбок [b]%.0f[/b] м/с   к горизонту [b]%.0f[/b]°   %s" % [
-			climb, across, slope, "[color=#9fb4c8]в орбиту идёт только «вбок»[/color]"],
+			climb, across, slope, "[color=#66ccff]в орбиту идёт только «вбок»[/color]"],
 		"апоцентр [b]%.1f[/b] км   перицентр %s   масса %.1f т   тяга %.0f кН = [b]%.2f[/b] веса"
 			% [ellipse["apo"] * 0.001, _peri(ellipse["peri"]), _stack.mass * 0.001,
 				_stack.push * 0.001, _stack.lift_ratio],
@@ -451,7 +451,7 @@ func _append_table(lines: PackedStringArray) -> void:
 	for row in _table:
 		lines.append("[cell]%.0f°[/cell][cell]%.1f км[/cell][cell]%s[/cell]"
 			% [row["kick"], row["apo"] * 0.001,
-				_peri(row["peri"]) if row["ok"] else "[color=#ff8866]не вышла[/color]"]
+				_peri(row["peri"]) if row["ok"] else "[color=#ff8a6a]не вышла[/color]"]
 			+ "[cell]%.0f м/с[/cell][cell]%.1f кПа[/cell][cell]%.0f с[/cell]" % [
 				row["speed"], row["q"] * 0.001, row["time"]])
 	lines.append("[/table]")
@@ -480,4 +480,4 @@ func _on_stack_staged_out() -> void:
 
 
 func _on_stack_struck(_where: Vector3, at_speed: float) -> void:
-	_wreck = "[color=#ff8866]разбилась на %.0f м/с[/color]" % at_speed
+	_wreck = "[color=#ff8a6a]разбилась на %.0f м/с[/color]" % at_speed

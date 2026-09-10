@@ -47,42 +47,13 @@ far = 400.0
 
 [node name="Ui" type="CanvasLayer" parent="."]
 
-[node name="Hud" type="RichTextLabel" parent="Ui"]
+[node name="Info" type="RichTextLabel" parent="Ui"]
 offset_left = 24.0
 offset_top = 20.0
-offset_right = 560.0
-offset_bottom = 200.0
+offset_right = 760.0
+offset_bottom = 320.0
 mouse_filter = 2
+theme_override_colors/default_color = Color(1, 1, 1, 0.86)
+theme_override_font_sizes/normal_font_size = 15
 bbcode_enabled = true
-theme_override_colors/default_color = Color(0.9, 0.93, 0.96, 1)
-
-[node name="Keys" type="Label" parent="Ui"]
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -420.0
-offset_top = -230.0
-offset_right = -24.0
-offset_bottom = -20.0
-grow_horizontal = 0
-grow_vertical = 0
-mouse_filter = 2
-horizontal_alignment = 2
-vertical_alignment = 2
-theme_override_colors/font_color = Color(0.82, 0.85, 0.88, 1)
-
-[node name="Title" type="Label" parent="Ui"]
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 24.0
-offset_top = -64.0
-offset_right = 620.0
-offset_bottom = -20.0
-grow_vertical = 0
-mouse_filter = 2
-text = "перенос веса, крен и клевок здесь НЕ НАПИСАНЫ — они последствия четырёх пружин.
-колесо на пределе сцепления краснеет: срыв всегда начинается с одного."
-theme_override_colors/font_color = Color(0.62, 0.68, 0.74, 1)
+scroll_active = false

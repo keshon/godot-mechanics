@@ -374,8 +374,8 @@ func _readout() -> void:
 	var lines := PackedStringArray([
 		"[b]ПУСК С ПЛЕЧА[/b]   ракета: [b]%s[/b]   в трубе %d   %s" % [
 			kind, _tube.left,
-			"[color=#ff8866]%s[/color]" % _tube.last if _tube.last != "" else
-			("[color=#ffcc66]перезарядка %.1f с[/color]" % _tube.ready_in
+			"[color=#ff8a6a]%s[/color]" % _tube.last if _tube.last != "" else
+			("[color=#ffd479]перезарядка %.1f с[/color]" % _tube.ready_in
 				if _tube.ready_in > 0.0 else "готова")],
 		"до цели [b]%.0f[/b] м   прицел набран на [b]%.0f[/b] м (+%.1f°)   цель идёт %.0f м/с" % [
 			to_mark, _tube.sight_range, rad_to_deg(_lift()), _mark.velocity.length()],
@@ -392,7 +392,7 @@ func _readout() -> void:
 		"4 дальность (двигает и прицел, и цель): %.0f м" % _tube.sight_range,
 		"G прогнать четыре пуска: %s м" % " / ".join(PackedStringArray(
 			_ranges().map(func(dist: float) -> String: return "%.0f" % dist))),
-		"[color=#9fb4c8]за спиной у трубы струя: у стены выстрел не пройдёт[/color]",
+		"[color=#66ccff]за спиной у трубы струя: у стены выстрел не пройдёт[/color]",
 	])
 	if _row >= 0:
 		lines.append("")

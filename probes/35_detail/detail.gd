@@ -252,11 +252,11 @@ func _draw_hud() -> void:
 	text += "отрисовка [b]%.2f мс[/b] GPU + %.2f CPU   треугольников %d   мелочи %d\n" % [
 		gpu_ms, cpu_ms, _ground.tris, _scatter.visible_now]
 	if shimmer >= 0.0:
-		text += "мерцание вдали: с затуханием [color=#88ff99]%.2f[/color]   " % shimmer
-		text += "без [color=#ff8866]%.2f[/color]   хуже в %.1f раза\n" % [
+		text += "мерцание вдали: с затуханием [color=#7fe08a]%.2f[/color]   " % shimmer
+		text += "без [color=#ff8a6a]%.2f[/color]   хуже в %.1f раза\n" % [
 			shimmer_off, shimmer_off / maxf(shimmer, 0.001)]
 	else:
-		text += "мерцание: [color=#ffdd66]M[/color] — замерить\n"
+		text += "мерцание: [color=#ffd479]M[/color] — замерить\n"
 	text += "\n"
 	text += _row(detail, "1", "детальная нормаль (тайл 1.0 м)")
 	text += _row(fade, "2", "затухание детали с расстоянием (18…70 м)")

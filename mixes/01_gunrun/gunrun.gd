@@ -182,11 +182,11 @@ func _surface_of(body: Object) -> Dictionary:
 
 func _readout() -> void:
 	_hud.text = "\n".join(PackedStringArray([
-		"[b]%.1f[/b] м/с   [color=#aaaaaa]%s[/color]   выстрелов %d" % [
+		"[b]%.1f[/b] м/с   %s   выстрелов %d" % [
 			_player.speed, _player.state, shots],
 		"",
 		"WASD бег   ПРОБЕЛ прыжок   SHIFT рывок   CTRL скольжение   ЛКМ огонь",
 		"",
 		"[color=#66ccff]мультипроба: трасса и игрок из 32-й, оружие и эффекты из 30-й.[/color]",
-		"[color=#888888]ни строки механики не написано заново — только риг.[/color]",
+		"ни строки механики не написано заново — только риг.",
 	]))

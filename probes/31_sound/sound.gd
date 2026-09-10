@@ -401,9 +401,9 @@ func _draw_hud() -> void:
 	text += _row(reverb, "6", "реверб комнаты")
 	text += _row(variation, "7", "вариативность: 4 варианта + разброс высоты")
 	text += _row(layered, "8", "три слоя: щелчок / тело / хвост")
-	text += "\n[color=#ffdd66]TAB — закрыть глаза и найти бота на слух[/color]"
+	text += "\n[color=#ffd479]TAB — закрыть глаза и найти бота на слух[/color]"
 	if blind:
-		text += "   [color=#ff8866]ГЛАЗА ЗАКРЫТЫ[/color]"
+		text += "   [color=#ff8a6a]ГЛАЗА ЗАКРЫТЫ[/color]"
 	elif error_degrees >= 0.0:
 		text += "   ошибка: [b]%.0f°[/b]" % error_degrees
 	text += "\n\nЛКМ — свой выстрел   WASD — ходить   мышь — смотреть\n"

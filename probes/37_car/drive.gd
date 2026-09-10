@@ -29,8 +29,7 @@ var _wet := false
 
 @onready var _car: CarBody = $Car
 @onready var _camera: Camera3D = $Camera
-@onready var _hud: RichTextLabel = $Ui/Hud
-@onready var _keys: Label = $Ui/Keys
+@onready var _hud: RichTextLabel = $Ui/Info
 
 
 func _ready() -> void:
@@ -144,24 +143,16 @@ func _readout() -> void:
 	# прямо в мире. Цифры остаются для того, чего глазом не увидеть, — сколько именно
 	# ньютонов ушло с передней оси на заднюю.
 	_hud.text = "\n".join(PackedStringArray([
-		"[b]%d[/b] км/ч     передача %d     %d об/мин" % [
-			roundi(speed), _car.gear, roundi(_car.rpm)],
-		"",
-		"нагрузка на колёса, Н   (в покое по %d на каждое)" % roundi(
-				_car.body_mass * 9.81 * 0.25),
-		"перед  %d  |  %d" % [
-			roundi(_car.wheels[0].wheel_load), roundi(_car.wheels[1].wheel_load)],
-		"зад    %d  |  %d" % [
+		"[b]%d[/b] км/ч   передача %d   %d об/мин   крен %+.2f   клевок %+.2f" % [
+			roundi(speed), _car.gear, roundi(_car.rpm), basis.x.y, -basis.z.y],
+		"увод передних %+.2f   нагрузка на колёса, Н (в покое по %d на каждое):" % [
+			(_car.wheels[0].slip + _car.wheels[1].slip) * 0.5,
+			roundi(_car.body_mass * 9.81 * 0.25)],
+		"   перед %d | %d      зад %d | %d" % [
+			roundi(_car.wheels[0].wheel_load), roundi(_car.wheels[1].wheel_load),
 			roundi(_car.wheels[2].wheel_load), roundi(_car.wheels[3].wheel_load)],
 		"",
-		"крен %+.2f   клевок %+.2f   увод передних %+.2f" % [
-			basis.x.y,
-			-basis.z.y,
-			(_car.wheels[0].slip + _car.wheels[1].slip) * 0.5],
-	]))
-	_keys.text = "\n".join(PackedStringArray([
-		"WASD руль и газ     SPACE ручник     TAB на старт",
-		"",
+		"WASD руль и газ   ПРОБЕЛ ручник   TAB на старт",
 		"1 привод: %s" % ["передний", "задний", "полный"][_car.layout],
 		"2 круг трения: %s" % _on_off(_car.friction_circle),
 		"3 перенос веса: %s" % _on_off(_car.weight_transfer),
@@ -169,4 +160,8 @@ func _readout() -> void:
 		"5 покрытие: %s" % ("мокрое" if _wet else "сухое"),
 		"6 стабилизатор: %s" % _on_off(_car.anti_roll > 0.0),
 		"7 камера: %s" % ("с бампера" if _bumper else "погоня"),
+		"",
+		"[color=#66ccff]перенос веса, крен и клевок здесь НЕ НАПИСАНЫ — они последствия"
+			+ " четырёх пружин; колесо на пределе сцепления краснеет[/color]",
 	]))
+

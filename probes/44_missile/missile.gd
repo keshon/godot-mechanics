@@ -281,7 +281,7 @@ func _readout() -> void:
 			rad_to_deg(_missile.angular_velocity.dot(_missile.global_basis.y))],
 		"высота %.0f м   пройдено %.0f м   время %.1f с%s" % [
 			_missile.global_position.y, _missile.global_position.length(), _flight,
-			"   [color=#ffaa66]ограничитель срезал %.0f%%[/color]"
+			"   [color=#ffd479]ограничитель срезал %.0f%%[/color]"
 				% (_missile.throttled * 100.0) if _missile.throttled > 0.01 else ""],
 		"",
 		"ЛКМ пуск   [b]WASD — РУЛИ, а не ракета[/b]   Q E крен   TAB заново",
@@ -289,7 +289,7 @@ func _readout() -> void:
 		"руль высоты [b]%+.2f[/b]   руль направления [b]%+.2f[/b]   элероны %+.2f" % [
 			_pitch, _yaw, _roll],
 		"1 ограничитель перегрузки: %s (%.0f g)" % [
-			"вкл" if _missile.limiter else "[color=#ff8866]выкл[/color]",
+			"вкл" if _missile.limiter else "[color=#ff8a6a]выкл[/color]",
 			_missile.structural_g],
 		"2 маршевый двигатель: %s" % ("есть" if _missile.sustain_thrust > 0.0 else "нет"),
 		"3 камера: %s" % ("погоня" if _chase else "со стороны"),

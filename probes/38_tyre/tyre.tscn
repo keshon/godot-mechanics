@@ -45,30 +45,16 @@ far = 400.0
 
 [node name="Ui" type="CanvasLayer" parent="."]
 
-[node name="Hud" type="RichTextLabel" parent="Ui"]
+[node name="Info" type="RichTextLabel" parent="Ui"]
 offset_left = 24.0
-offset_top = 18.0
-offset_right = 540.0
-offset_bottom = 240.0
+offset_top = 20.0
+offset_right = 760.0
+offset_bottom = 400.0
 mouse_filter = 2
+theme_override_colors/default_color = Color(1, 1, 1, 0.86)
+theme_override_font_sizes/normal_font_size = 15
 bbcode_enabled = true
-theme_override_colors/default_color = Color(0.9, 0.93, 0.96, 1)
-
-[node name="Keys" type="Label" parent="Ui"]
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -430.0
-offset_top = -250.0
-offset_right = -24.0
-offset_bottom = -20.0
-grow_horizontal = 0
-grow_vertical = 0
-mouse_filter = 2
-horizontal_alignment = 2
-vertical_alignment = 2
-theme_override_colors/font_color = Color(0.82, 0.85, 0.88, 1)
+scroll_active = false
 
 [node name="Plot" type="Control" parent="Ui"]
 mouse_filter = 2
@@ -121,16 +107,3 @@ offset_bottom = 476.0
 mouse_filter = 2
 text = "сила шины / предел   ↑     скольжение →   (точки: колёса)"
 theme_override_colors/font_color = Color(0.68, 0.74, 0.8, 1)
-
-[node name="Title" type="Label" parent="Ui"]
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 24.0
-offset_top = -58.0
-offset_right = 750.0
-offset_bottom = -14.0
-grow_vertical = 0
-mouse_filter = 2
-text = "у колеса есть своя угловая скорость — отсюда пробуксовка, блокировка и смысл у дифференциала.
-обе силы приходят из одного закона: круг трения не наведён, а выпадает сам."
-theme_override_colors/font_color = Color(0.6, 0.66, 0.72, 1)

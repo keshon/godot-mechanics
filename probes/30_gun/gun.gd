@@ -331,8 +331,9 @@ func _aim() -> void:
 
 
 func _row(on: bool, key: String, label: String) -> String:
-	return "[cell]%s  [/cell][cell]%s%s[/color][/cell]" % [
-		key, "[color=#7fe08a]" if on else "[color=#555a63]", label]
+	if not on:
+		return "[cell]%s  [/cell][cell]%s[/cell]" % [key, label]
+	return "[cell]%s  [/cell][cell][color=#7fe08a]%s[/color][/cell]" % [key, label]
 
 
 func _draw_hud() -> void:

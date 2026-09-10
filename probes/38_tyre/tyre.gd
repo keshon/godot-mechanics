@@ -36,8 +36,7 @@ var _bars_step := 0
 @onready var _car: TyreChassis = $Chassis
 @onready var _camera: Camera3D = $Camera
 @onready var _asphalt: MeshInstance3D = $Pad/Asphalt
-@onready var _hud: RichTextLabel = $Ui/Hud
-@onready var _keys: Label = $Ui/Keys
+@onready var _hud: RichTextLabel = $Ui/Info
 @onready var _plot: Control = $Ui/Plot
 @onready var _curve: Line2D = $Ui/Plot/Curve
 @onready var _peak: Line2D = $Ui/Plot/Peak
@@ -206,31 +205,30 @@ func _readout() -> void:
 	if absf(_car.train.clutch_torque) >= _car.train.clutch_capacity - 1.0:
 		slipping = "     СЦЕПЛЕНИЕ БУКСУЕТ"
 	_hud.text = "\n".join(PackedStringArray([
-		"[b]%d[/b] км/ч     передача %d     %d об/мин%s" % [
+		"[b]%d[/b] км/ч   передача %d   %d об/мин%s" % [
 			roundi(speed), _car.train.gear, roundi(_car.train.rpm()), slipping],
-		"",
-		"продольное скольжение κ   (+ буксует, −1 заблокировано)",
-		"   %+.2f  %+.2f" % [wheels[0].kappa, wheels[1].kappa],
-		"   %+.2f  %+.2f" % [wheels[2].kappa, wheels[3].kappa],
-		"",
-		"угол увода α, град        нагрузка, Н",
-		"   %+.1f  %+.1f            %d  %d" % [
+		"скольжение κ (+ буксует, −1 блок),   увод α в градусах,   нагрузка в Н:",
+		"   %+.2f %+.2f      %+.1f %+.1f      %d %d" % [
+			wheels[0].kappa, wheels[1].kappa,
 			rad_to_deg(wheels[0].alpha), rad_to_deg(wheels[1].alpha),
 			roundi(wheels[0].wheel_load), roundi(wheels[1].wheel_load)],
-		"   %+.1f  %+.1f            %d  %d" % [
+		"   %+.2f %+.2f      %+.1f %+.1f      %d %d" % [
+			wheels[2].kappa, wheels[3].kappa,
 			rad_to_deg(wheels[2].alpha), rad_to_deg(wheels[3].alpha),
 			roundi(wheels[2].wheel_load), roundi(wheels[3].wheel_load)],
-	]))
-	_keys.text = "\n".join(PackedStringArray([
-		"WASD руль и газ    SPACE ручник    TAB на старт",
 		"",
+		"WASD руль и газ   ПРОБЕЛ ручник   TAB на старт",
 		"1 модель шины: %s" % ["обрезка (как в 37)", "щёточная", "Пацейка"][_car.model],
 		"2 падение μ с нагрузкой: %s" % _on_off(_car.load_sensitivity > 0.0),
 		"3 дифференциал: %s" % ["открытый", "самоблок", "заваренный"][_diff_step],
-		"4 ABS: %s" % _on_off(_car.abs_on),
-		"5 контроль тяги: %s" % _on_off(_car.traction_control),
+		"4 ABS: %s   5 контроль тяги: %s" % [
+			_on_off(_car.abs_on), _on_off(_car.traction_control)],
 		"6 привод: %s" % ["передний", "задний", "полный"][_car.layout],
 		"7 стабилизаторы: %s" % ["поровну", "жёстче перед", "жёстче зад"][_bars_step],
-		"8 покрытие: %s" % ("мокрое" if _wet else "сухое"),
-		"9 релаксация: %s" % _on_off(_car.relaxation > 0.0),
+		"8 покрытие: %s   9 релаксация: %s" % [
+			"мокрое" if _wet else "сухое", _on_off(_car.relaxation > 0.0)],
+		"",
+		"[color=#66ccff]у колеса есть своя угловая скорость — отсюда пробуксовка,"
+			+ " блокировка и смысл у дифференциала[/color]",
 	]))
+

@@ -390,7 +390,7 @@ func _draw_hud() -> void:
 		at.y, rad_to_deg(acos(clampf(normal.y, -1.0, 1.0)))]
 	var energy := _skier.energy
 	text += "%s   энергия [color=#%s]%s[/color] %.0f\n" % [
-		"[color=#88ddff]НА ЛЫЖАХ[/color]" if _skier.skiing else "пешком",
+		"[color=#66ccff]НА ЛЫЖАХ[/color]" if _skier.skiing else "пешком",
 		"ffcc55" if _skier.jetting else "667788",
 		"".rpad(int(energy / 5.0), "|").rpad(20, "."), energy]
 	text += "чанков %d   треугольников %d   с коллизией %d   сборка %.0f мс   " % [

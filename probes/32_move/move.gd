@@ -106,13 +106,13 @@ func _row(on: bool, key: String, text: String) -> String:
 
 
 func _draw_hud() -> void:
-	var text := "[font_size=34][b]%.1f[/b][/font_size] м/с   [color=#aaaaaa]%s[/color]\n" % [
+	var text := "[font_size=34][b]%.1f[/b][/font_size] м/с   %s\n" % [
 		_player.speed, _player.state]
 	text += "время [b]%.2f[/b]" % time
 	if best >= 0.0:
-		text += "   лучшее [color=#ffdd66]%.2f[/color]" % best
+		text += "   лучшее [color=#ffd479]%.2f[/color]" % best
 	if done:
-		text += "   [color=#88ff99]ФИНИШ[/color]"
+		text += "   [color=#7fe08a]ФИНИШ[/color]"
 	text += "\n\n"
 	text += _row(
 			_player.air_control, "1",
@@ -134,7 +134,7 @@ func _draw_hud() -> void:
 	text += "\nWASD — бег   ПРОБЕЛ — прыжок   SHIFT — рывок   CTRL — скольжение\n"
 	text += "1…9 — слои по одному   0 — включить всё   R — заново   ESC — мышь\n"
 	if checkpoint >= 5:
-		text += "[color=#ffdd66]арена: рывок с зажатым боком и доворотом мыши — дуга"
+		text += "[color=#ffd479]арена: рывок с зажатым боком и доворотом мыши — дуга"
 		text += "[/color]\n"
 	text += "[color=#66ccff]три верхних слоя невидимы — "
 	text += "их замечаешь только когда их нет[/color]"

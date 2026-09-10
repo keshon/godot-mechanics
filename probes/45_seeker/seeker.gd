@@ -255,7 +255,7 @@ func _readout() -> void:
 		"[b]ГОЛОВКА НАВЕДЕНИЯ[/b]   закон: [b]%s[/b]   N = %.0f   предел ракеты %.0f g" % [
 			law, head.gain, _dart.limit],
 		"захват: %s   от оси %s   вид крутится %s   сближение %s" % [
-			("[color=#7fe08a]есть[/color]" if head.locked else "[color=#ff8866]нет[/color]")
+			("[color=#7fe08a]есть[/color]" if head.locked else "[color=#ff8a6a]нет[/color]")
 				if _dart.flying else "—",
 			_live("%.0f°", rad_to_deg(head.off_bore)),
 			_live("%.1f °/с", rad_to_deg(head.turn_rate)),
@@ -272,7 +272,7 @@ func _readout() -> void:
 		"1 закон: %s" % law,
 		"2 N: %.0f" % head.gain,
 		"3 камера: %s" % ("широкая" if _wide else "за целью"),
-		"[color=#9fb4c8]круг внизу справа — где ракета относительно вашего носа;"
+		"[color=#66ccff]круг внизу справа — где ракета относительно вашего носа;"
 			+ " окно вверху — её собственный взгляд по курсу[/color]",
 		"4 предел ракеты: %.0f g" % _dart.limit,
 		"G прогнать четыре пуска по цели с перегрузкой 0 / 3 / 6 / 9",
