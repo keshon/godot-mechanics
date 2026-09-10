@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/34_scale/Scale.gd" id="1_s"]
+[ext_resource type="Script" path="res://probes/34_scale/scale.gd" id="1_s"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 sky_top_color = Color(0.22, 0.36, 0.6, 1)
@@ -23,7 +23,7 @@ fog_light_color = Color(0.7, 0.75, 0.82, 1)
 fog_density = 0.0004
 fog_sky_affect = 0.0
 
-[node name="ScaleScene" type="Node3D"]
+[node name="Scale" type="Node3D"]
 script = ExtResource("1_s")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -38,10 +38,10 @@ directional_shadow_max_distance = 300.0
 
 [node name="Chunks" type="Node3D" parent="."]
 
-[node name="Clip" type="Node3D" parent="."]
+[node name="Clipmap" type="Node3D" parent="."]
 visible = false
 
-[node name="Cam" type="Camera3D" parent="."]
+[node name="Camera" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 60, 0)
 fov = 74.0
 near = 0.2

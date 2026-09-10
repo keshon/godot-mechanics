@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/32_move/Course.gd" id="1_c"]
+[ext_resource type="Script" path="res://probes/32_move/move.gd" id="1_c"]
 [ext_resource type="PackedScene" path="res://probes/32_move/player.tscn" id="2_m"]
 [ext_resource type="PackedScene" path="res://probes/32_move/course.tscn" id="3_course"]
 
@@ -29,7 +29,7 @@ glow_hdr_threshold = 1.0
 radius = 0.38
 height = 1.8
 
-[node name="MoveScene" type="Node3D"]
+[node name="Move" type="Node3D"]
 script = ExtResource("1_c")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
