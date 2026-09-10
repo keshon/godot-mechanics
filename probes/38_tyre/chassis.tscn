@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3]
 
-[ext_resource type="Script" path="res://probes/38_tyre/Chassis.gd" id="1_chassis"]
-[ext_resource type="Script" path="res://probes/38_tyre/Wheel.gd" id="2_wheel"]
+[ext_resource type="Script" path="res://probes/38_tyre/chassis.gd" id="1_chassis"]
+[ext_resource type="Script" path="res://probes/38_tyre/wheel.gd" id="2_wheel"]
 
 [sub_resource type="BoxShape3D" id="Hull"]
 size = Vector3(1.82, 1, 4.5)

@@ -1,6 +1,5 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=6 format=3]
 
-[ext_resource type="Script" path="res://probes/38_tyre/Pad.gd" id="1_pad"]
 
 [sub_resource type="PlaneMesh" id="GroundMesh"]
 size = Vector2(400, 400)
@@ -23,7 +22,6 @@ material = SubResource("MarkSmallMat")
 size = Vector3(3, 0.02, 0.3)
 
 [node name="Pad" type="Node3D"]
-script = ExtResource("1_pad")
 
 [node name="Asphalt" type="MeshInstance3D" parent="."]
 mesh = SubResource("GroundMesh")

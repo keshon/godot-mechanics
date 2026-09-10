@@ -1,11 +1,11 @@
-extends RefCounted
 class_name HitImpact
+extends RefCounted
 ## ПОПАДАНИЕ КАК ВОЗДЕЙСТВИЕ.
 ##
-## Тридцатая проба научилась стрелять: луч, искры, дырка, гильза. Но попадание там ничего не
+## 30-я проба научилась стрелять: луч, искры, дырка, гильза. Но попадание там ничего не
 ## ДЕЛАЛО с тем, во что попало — и обе мультипробы упёрлись в это носом: сорок пять конусов
 ## на площадке, и ни один не шелохнётся. Латать это в риге было нельзя, «пуля толкает то, во
-## что попала» — механика, а не соединительная ткань. Значит своя проба.
+## что попала» — механика, а не соединительная ткань.
 ##
 ## Здесь три слоя, и каждый гасится отдельно:
 ##
@@ -20,26 +20,32 @@ class_name HitImpact
 
 ## Импульс пули в кг·м/с при массе 4 г и скорости 900 м/с.
 const BULLET := 3.6
-## За этим углом от нормали (в градусах) пуля уходит вскользь, а не застревает.
+## За этим углом от нормали, градусы, пуля уходит вскользь, а не застревает.
 const RICOCHET_DEG := 68.0
 
 
 ## Импульс, который пуля передаёт телу. `gain` — честное преувеличение: единица это правда,
 ## а играбельно примерно двадцать.
-static func impulse(dir: Vector3, gain: float) -> Vector3:
-	return dir.normalized() * BULLET * gain
+static func impulse(direction: Vector3, gain: float) -> Vector3:
+	return direction.normalized() * BULLET * gain
 
 
 ## УХОДИТ ЛИ ПУЛЯ ВСКОЛЬЗЬ. Считается по углу между направлением полёта и нормалью
 ## поверхности: чем острее встреча, тем меньше шансов застрять. Отражение — обычное
 ## зеркальное, с потерей части энергии на удар.
-static func ricochet(dir: Vector3, normal: Vector3, limit_deg: float) -> Dictionary:
-	var incidence := rad_to_deg(acos(clampf(-dir.normalized().dot(normal), -1.0, 1.0)))
-	if incidence < limit_deg:
-		return {"bounced": false, "dir": dir, "energy": 1.0}
+static func ricochet(
+		direction: Vector3, normal: Vector3, limit_degrees: float) -> Dictionary:
+	var incidence := rad_to_deg(
+			acos(clampf(-direction.normalized().dot(normal), -1.0, 1.0)))
+	if incidence < limit_degrees:
+		return {"bounced": false, "dir": direction, "energy": 1.0}
 	# Скользящий удар: чем острее, тем больше энергии уносит рикошет.
-	var keep := clampf((incidence - limit_deg) / (90.0 - limit_deg), 0.0, 1.0)
-	return {"bounced": true, "dir": dir.bounce(normal).normalized(), "energy": keep * 0.7}
+	var keep := clampf((incidence - limit_degrees) / (90.0 - limit_degrees), 0.0, 1.0)
+	return {
+		"bounced": true,
+		"dir": direction.bounce(normal).normalized(),
+		"energy": keep * 0.7,
+	}
 
 
 ## Сколько прочности снимает попадание. Зависит от энергии — рикошет почти не вредит.

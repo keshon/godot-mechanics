@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3]
 
-[ext_resource type="Script" path="res://probes/41_ruin/Rig.gd" id="1_rig"]
-[ext_resource type="Script" path="res://probes/41_ruin/Frame.gd" id="2_frame"]
+[ext_resource type="Script" path="res://probes/41_ruin/ruin.gd" id="1_rig"]
+[ext_resource type="Script" path="res://probes/41_ruin/frame.gd" id="2_frame"]
 
 [sub_resource type="PlaneMesh" id="GroundMesh"]
 size = Vector2(120, 120)
@@ -27,7 +27,7 @@ ambient_light_source = 3
 ambient_light_energy = 0.6
 tonemap_mode = 2
 
-[node name="RuinScene" type="Node3D"]
+[node name="Ruin" type="Node3D"]
 script = ExtResource("1_rig")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]

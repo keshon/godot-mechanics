@@ -1,7 +1,7 @@
 [gd_scene load_steps=21 format=3]
 
-[ext_resource type="Script" path="res://probes/40_hit/Rig.gd" id="1_rig"]
-[ext_resource type="Script" path="res://probes/40_hit/Target.gd" id="2_target"]
+[ext_resource type="Script" path="res://probes/40_hit/hit.gd" id="1_rig"]
+[ext_resource type="Script" path="res://probes/40_hit/target.gd" id="2_target"]
 
 [sub_resource type="StandardMaterial3D" id="RoomMat"]
 albedo_color = Color(0.36, 0.37, 0.39, 1)
@@ -63,7 +63,7 @@ ambient_light_source = 3
 ambient_light_energy = 0.6
 tonemap_mode = 2
 
-[node name="HitScene" type="Node3D"]
+[node name="Hit" type="Node3D"]
 script = ExtResource("1_rig")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3]
 
-[ext_resource type="Script" path="res://probes/38_tyre/Rig.gd" id="1_rig"]
+[ext_resource type="Script" path="res://probes/38_tyre/tyre.gd" id="1_rig"]
 [ext_resource type="PackedScene" path="res://probes/38_tyre/chassis.tscn" id="2_chassis"]
 [ext_resource type="PackedScene" path="res://probes/38_tyre/pad.tscn" id="3_pad"]
 
@@ -20,7 +20,7 @@ ambient_light_source = 3
 ambient_light_energy = 0.6
 tonemap_mode = 2
 
-[node name="TyreScene" type="Node3D"]
+[node name="Tyre" type="Node3D"]
 script = ExtResource("1_rig")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
