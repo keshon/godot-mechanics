@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/30_gun/Gun.gd" id="1_g"]
-[ext_resource type="Script" path="res://probes/30_gun/Fx.gd" id="2_f"]
+[ext_resource type="Script" path="res://probes/30_gun/gun.gd" id="1_g"]
+[ext_resource type="Script" path="res://probes/30_gun/fx.gd" id="2_f"]
 [ext_resource type="Shader" path="res://probes/30_gun/fx.gdshader" id="3_s"]
 [ext_resource type="PackedScene" path="res://probes/30_gun/weapon.tscn" id="4_weapon"]
 [ext_resource type="PackedScene" path="res://probes/30_gun/fx.tscn" id="5_fx"]
@@ -146,7 +146,7 @@ shader = ExtResource("3_s")
 shader_parameter/mode = 0
 shader_parameter/gain = 4.2
 
-[node name="GunScene" type="Node3D"]
+[node name="Gun" type="Node3D"]
 script = ExtResource("1_g")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -171,7 +171,7 @@ light_color = Color(1, 0.82, 0.5, 1)
 omni_range = 8.0
 visible = false
 
-[node name="Cam" type="Camera3D" parent="."]
+[node name="Camera" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
 fov = 78.0
 far = 200.0

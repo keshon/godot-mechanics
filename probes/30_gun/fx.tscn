@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/30_gun/Fx.gd" id="1_syrcx"]
+[ext_resource type="Script" path="res://probes/30_gun/fx.gd" id="1_syrcx"]
 
 [node name="Fx" type="Node3D" unique_id=1108564184]
 script = ExtResource("1_syrcx")

@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://probes/28_phys/Pit.gd" id="1_p"]
+[ext_resource type="Script" path="res://probes/28_phys/pit.gd" id="1_p"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 sky_top_color = Color(0.14, 0.17, 0.24, 1)
@@ -44,7 +44,7 @@ rotation_degrees = Vector3(-54, -36, 0)
 light_energy = 1.15
 shadow_enabled = true
 
-[node name="Cam" type="Camera3D" parent="."]
+[node name="Camera" type="Camera3D" parent="."]
 fov = 55.0
 far = 300.0
 
