@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://launcher/Launcher.gd" id="1_l"]
+[ext_resource type="Script" path="res://launcher/launcher.gd" id="1_l"]
 
 [node name="Launcher" type="Control"]
 anchors_preset = 15
@@ -8,14 +8,14 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1_l")
 
-[node name="BG" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color(0.09, 0.1, 0.12, 1)
 mouse_filter = 2
 
-[node name="V" type="VBoxContainer" parent="."]
+[node name="Column" type="VBoxContainer" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -24,21 +24,21 @@ offset_top = 22.0
 offset_right = -28.0
 offset_bottom = -22.0
 
-[node name="Head" type="RichTextLabel" parent="V"]
+[node name="Head" type="RichTextLabel" parent="Column"]
 custom_minimum_size = Vector2(0, 34)
 bbcode_enabled = true
 scroll_active = false
 
-[node name="Filter" type="LineEdit" parent="V"]
+[node name="Filter" type="LineEdit" parent="Column"]
 custom_minimum_size = Vector2(0, 38)
 placeholder_text = "фильтр: имя, механика или эталон"
 
-[node name="Hint" type="Label" parent="V"]
+[node name="Hint" type="Label" parent="Column"]
 text = "клик — запустить    F1 в любой пробе — вернуться сюда    ESC — выход"
 
-[node name="Scroll" type="ScrollContainer" parent="V"]
+[node name="Scroll" type="ScrollContainer" parent="Column"]
 size_flags_vertical = 3
 
-[node name="Grid" type="GridContainer" parent="V/Scroll"]
+[node name="Grid" type="GridContainer" parent="Column/Scroll"]
 size_flags_horizontal = 3
 columns = 3

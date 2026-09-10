@@ -1,5 +1,4 @@
 extends Node
-
 ## ВОЗВРАТ В СЕТКУ. Автозагрузка, о которой ни одна проба не знает и знать не должна:
 ## устав запрещает пробам брать код друг у друга, и добавлять в каждую из тридцати трёх
 ## по кнопке «назад» значило бы завести общий код через чёрный ход.
@@ -17,7 +16,8 @@ func _input(event: InputEvent) -> void:
 	if (event as InputEventKey).keycode != KEY_F1:
 		return
 	get_viewport().set_input_as_handled()
-	if get_tree().current_scene != null and get_tree().current_scene.scene_file_path == LAUNCHER:
+	var current := get_tree().current_scene
+	if current != null and current.scene_file_path == LAUNCHER:
 		return
 	# Пробы захватывают курсор; вернуть его — часть возврата, иначе в сетке нечем кликать.
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE

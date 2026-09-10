@@ -16,8 +16,8 @@ config/features=PackedStringArray("4.7")
 
 [autoload]
 
-Back="*res://launcher/Back.gd"
-Shutter="*res://launcher/Shutter.gd"
+Back="*res://launcher/back.gd"
+Shutter="*res://launcher/shutter.gd"
 
 [display]
 

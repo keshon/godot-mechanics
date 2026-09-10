@@ -1,5 +1,4 @@
 extends Node
-
 ## ЗАТВОР. Вторая автозагрузка, по той же причине, что и `Back.gd`: снимок нужен в каждой
 ## пробе, а класть в каждую по кнопке значило бы завести общий код через чёрный ход.
 ##
@@ -12,7 +11,10 @@ extends Node
 
 const OUT := "res://img"
 const SIZE := Vector2i(1280, 720)
+## Качество JPEG, 0..1.
 const QUALITY := 0.86
+## Сколько секунд висит подтверждение на экране.
+const FLASH_TIME := 1.5
 
 
 func _input(event: InputEvent) -> void:
@@ -25,12 +27,12 @@ func _input(event: InputEvent) -> void:
 	if out == "":
 		return
 	await RenderingServer.frame_post_draw
-	var img := get_viewport().get_texture().get_image()
-	img.resize(SIZE.x, SIZE.y, Image.INTERPOLATE_LANCZOS)
+	var shot := get_viewport().get_texture().get_image()
+	shot.resize(SIZE.x, SIZE.y, Image.INTERPOLATE_LANCZOS)
 	DirAccess.make_dir_recursive_absolute(out.get_base_dir())
-	var err := img.save_jpg(out, QUALITY)
-	print("[shot] %s %s" % ["ok" if err == OK else "FAIL", out])
-	_flash(out if err == OK else "не сохранилось")
+	var failed := shot.save_jpg(out, QUALITY) != OK
+	print("снимок %s: %s" % ["не сохранился" if failed else "сохранён", out])
+	_flash("не сохранилось" if failed else out)
 
 
 func _path_for(scene: Node) -> String:
@@ -54,5 +56,5 @@ func _flash(text: String) -> void:
 	label.add_theme_constant_override("outline_size", 6)
 	layer.add_child(label)
 	add_child(layer)
-	await get_tree().create_timer(1.5).timeout
+	await get_tree().create_timer(FLASH_TIME).timeout
 	layer.queue_free()
