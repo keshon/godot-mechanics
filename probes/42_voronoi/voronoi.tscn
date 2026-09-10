@@ -1,7 +1,7 @@
 [gd_scene load_steps=25 format=3 uid="uid://c42vor0n0i001"]
 
-[ext_resource type="Script" path="res://probes/42_voronoi/Rig.gd" id="1_rig"]
-[ext_resource type="Script" path="res://probes/42_voronoi/Solid.gd" id="2_solid"]
+[ext_resource type="Script" path="res://probes/42_voronoi/voronoi.gd" id="1_rig"]
+[ext_resource type="Script" path="res://probes/42_voronoi/solid.gd" id="2_solid"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_1"]
 sky_top_color = Color(0.29, 0.38, 0.52, 1)
@@ -90,7 +90,7 @@ roughness = 0.85
 albedo_color = Color(0.659, 0.619, 0.579, 1)
 roughness = 0.95
 
-[node name="Rig" type="Node3D"]
+[node name="Voronoi" type="Node3D"]
 script = ExtResource("1_rig")
 
 [node name="Sun" type="DirectionalLight3D" parent="."]
