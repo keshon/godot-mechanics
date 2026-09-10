@@ -91,69 +91,16 @@ fov = 70.0
 far = 500.0
 script = ExtResource("2_cam")
 
-[node name="Ui" type="CanvasLayer" parent="." unique_id=278612739]
+[node name="Ui" type="CanvasLayer" parent="."]
 
-[node name="Hud" type="Control" parent="Ui" unique_id=211076278]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Info" type="RichTextLabel" parent="Ui"]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 760.0
+offset_bottom = 320.0
 mouse_filter = 2
-script = ExtResource("3_hud")
-
-[node name="Fps" type="Label" parent="Ui/Hud" unique_id=366239040]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 30.0
-offset_top = -126.0
-offset_right = 320.0
-offset_bottom = -36.0
-grow_vertical = 0
-theme_override_colors/font_color = Color(1, 1, 1, 0.94)
-theme_override_font_sizes/font_size = 64
-text = "0"
-vertical_alignment = 1
-
-[node name="Detail" type="RichTextLabel" parent="Ui/Hud" unique_id=533827568]
-layout_mode = 1
-offset_left = 34.0
-offset_top = 28.0
-offset_right = 470.0
-offset_bottom = 180.0
-theme_override_colors/default_color = Color(1, 1, 1, 0.72)
+theme_override_colors/default_color = Color(1, 1, 1, 0.86)
 theme_override_font_sizes/normal_font_size = 15
 bbcode_enabled = true
 scroll_active = false
-
-[node name="Hint" type="Label" parent="Ui/Hud" unique_id=1924912000]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -540.0
-offset_top = -168.0
-offset_right = -26.0
-offset_bottom = -26.0
-grow_horizontal = 0
-grow_vertical = 0
-theme_override_colors/font_color = Color(1, 1, 1, 0.55)
-theme_override_font_sizes/font_size = 14
-text = "WASD fly    SPACE up    SHIFT hurry    WHEEL speed    ESC free the mouse
-
-F freezes the flock without deleting anything.
-V turns vsync off - do that before believing any fps.
-
-Flock node, Remote tab: set Count to 10000 in NODES mode
-and watch it crawl. Now press F. Same ten thousand nodes,
-still drawn, still there — and the frame time collapses.
-
-it is not how many things exist. it is how many you write
-to every single frame."
-horizontal_alignment = 2
-vertical_alignment = 2
+script = ExtResource("3_hud")

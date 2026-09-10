@@ -38,6 +38,16 @@ enum SteerLayout {
 ## The three axles, by name. Everything that walks the wheels goes through here.
 const AXLES := ["front", "middle", "rear"]
 
+## Как раскладка привода называется НА ЭКРАНЕ. Имена в перечислении английские, как и всё
+## остальное в коде; показания читает человек, и они по-русски (`HUD.md`).
+const DRIVE_NAMES := {
+	DriveLayout.ALL_SIX: "все три",
+	DriveLayout.FRONT: "передняя",
+	DriveLayout.MIDDLE: "средняя",
+	DriveLayout.REAR: "задняя",
+	DriveLayout.FRONT_AND_REAR: "передняя и задняя",
+}
+
 @export_group("Layout")
 @export var drive: DriveLayout = DriveLayout.ALL_SIX:
 	set(value):
@@ -231,8 +241,7 @@ func wheels() -> Array[VehicleWheel3D]:
 
 
 func driving_axles() -> String:
-	var layout: String = DriveLayout.keys()[drive]
-	return layout.to_lower().replace("_", " ")
+	return DRIVE_NAMES.get(drive, "?")
 
 
 func _driven_count() -> int:

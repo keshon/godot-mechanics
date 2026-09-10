@@ -1,62 +1,65 @@
-extends Control
-## Six wheels, six bars. Each bar is one suspension, read straight off the
-## wheel node's position: empty means the spring is hanging free, full means it
-## is stuffed all the way into its travel.
+extends RichTextLabel
+## ШЕСТЬ КОЛЁС, ШЕСТЬ ПОЛОСОК. Каждая полоска — одна подвеска, считанная прямо с положения
+## узла колеса: пусто — пружина висит свободно, полно — вжата до упора хода.
 ##
-## Drive over the washboard in SIDE view and watch the three axles ripple in
-## order. That ripple is the thing this probe exists to show.
+## Проехать гребёнку в виде сбоку и посмотреть, как три оси проходят её по очереди. Эта
+## волна и есть то, ради чего проба существует.
 
-## Wheel node name -> what to call it on screen, padded so the bars line up.
+## Имя узла колеса → как звать его на экране, с выравниванием, чтобы полоски встали в столбец.
 const WHEEL_NAMES := {
-	"FL": "front L",
-	"FR": "front R",
-	"ML": "mid   L",
-	"MR": "mid   R",
-	"RL": "rear  L",
-	"RR": "rear  R",
+	"FL": "перед Л",
+	"FR": "перед П",
+	"ML": "сред  Л",
+	"MR": "сред  П",
+	"RL": "зад   Л",
+	"RR": "зад   П",
 }
-## How many characters wide a compression bar is drawn.
+## Ширина полоски сжатия в знаках.
 const BAR_WIDTH := 16
+## Выше этой доли хода пружина считается вжатой в упор.
+const BAR_HOT := 0.85
 
 @export var truck_path: NodePath = ^"../../Truck"
 
 @onready var truck: TruckBody = get_node(truck_path)
 
-@onready var _speed: Label = $Speed
-@onready var _detail: RichTextLabel = $Detail
-
 
 func _process(_delta: float) -> void:
-	var speed_kph := truck.linear_velocity.length() * 3.6
-	_speed.text = "%.0f" % speed_kph
-
-	var lines := [
-		"km/h",
-		"drive    [b]%s[/b]    %s torque" % [
+	var lines := PackedStringArray([
+		"[b]%d[/b] км/ч   привод [b]%s[/b]   оси %s   крен [b]%+.2f°[/b]" % [
+			roundi(truck.linear_velocity.length() * 3.6),
 			truck.driving_axles(),
-			"split" if truck.use_split_torque
-			else "[color=#ffcf7a]full to each wheel[/color]"],
-		"axles    %s" % (
-			"[b]6x6[/b]" if truck.middle_axle_enabled
-			else "[color=#ffcf7a]4x4 (middle lifted)[/color]"),
-		"roll     [b]%+.2f deg[/b]    bars  %.0f / %.0f / %.0f" % [
-			truck.roll_degrees(), truck.bar_front, truck.bar_middle, truck.bar_rear],
+			"[b]6×6[/b]" if truck.middle_axle_enabled
+				else "[color=#ffd479]4×4, средняя поднята[/color]",
+			truck.roll_degrees()],
+		"стабилизаторы %.0f / %.0f / %.0f   момент: %s" % [
+			truck.bar_front, truck.bar_middle, truck.bar_rear,
+			"делится по колёсам" if truck.use_split_torque
+				else "[color=#ffd479]полный на каждое[/color]"],
 		"",
-	]
+	])
 	for wheel in truck.wheels():
-		lines.append("%s  %s %s%s" % [
+		lines.append("%s  %s%s%s" % [
 			WHEEL_NAMES.get(wheel.name, wheel.name),
 			_compression_bar(truck.compression(wheel)),
-			"" if wheel.is_in_contact() else "[color=#ff8f7a]  airborne[/color]",
-			"  [color=#7ee081]drive[/color]" if wheel.use_as_traction else "",
-		])
-	_detail.text = "\n".join(lines)
+			"   [color=#ff8a6a]в воздухе[/color]" if not wheel.is_in_contact() else "",
+			"   [color=#7fe08a]ведущее[/color]" if wheel.use_as_traction else ""])
+	lines.append_array(PackedStringArray([
+		"",
+		"W/S газ и тормоз двигателем   A/D руль   ПРОБЕЛ тормоз   C вид сбоку",
+		"привод, средняя ось и деление момента живут на Truck — их крутят во вкладке"
+			+ " Remote на живой игре",
+		"",
+		"[color=#66ccff]раскладка привода не значит ничего, пока шина держит: значит"
+			+ " стабилизатор поперечной устойчивости[/color]",
+	]))
+	text = "\n".join(lines)
 
 
-## Compression drawn as a bar, because a column of numbers hides a rhythm and
-## a column of bars shows it.
+## Сжатие рисуется полоской, потому что столбец чисел прячет ритм, а столбец полосок его
+## показывает.
 func _compression_bar(value: float) -> String:
 	var filled := int(round(value * BAR_WIDTH))
-	var colour := "#7ee081" if value < 0.85 else "#ff8f7a"
+	var tint := "#7fe08a" if value < BAR_HOT else "#ff8a6a"
 	return "[color=%s]%s[/color][color=#4a4f58]%s[/color]" % [
-		colour, "|".repeat(filled), "-".repeat(BAR_WIDTH - filled)]
+		tint, "|".repeat(filled), "-".repeat(BAR_WIDTH - filled)]

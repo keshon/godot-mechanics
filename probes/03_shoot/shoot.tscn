@@ -248,44 +248,19 @@ one_shot = true
 
 [node name="Ui" type="CanvasLayer" parent="."]
 
-[node name="Hud" type="Control" parent="Ui"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Info" type="RichTextLabel" parent="Ui"]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 760.0
+offset_bottom = 320.0
 mouse_filter = 2
-script = ExtResource("3_hud")
-
-[node name="AliveCount" type="Label" parent="Ui/Hud"]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 30.0
-offset_top = -126.0
-offset_right = 320.0
-offset_bottom = -36.0
-grow_vertical = 0
-theme_override_colors/font_color = Color(1, 1, 1, 0.94)
-theme_override_font_sizes/font_size = 64
-text = "0"
-vertical_alignment = 1
-
-[node name="Detail" type="RichTextLabel" parent="Ui/Hud"]
-layout_mode = 1
-anchors_preset = 0
-offset_left = 34.0
-offset_top = 28.0
-offset_right = 430.0
-offset_bottom = 190.0
-theme_override_colors/default_color = Color(1, 1, 1, 0.72)
+theme_override_colors/default_color = Color(1, 1, 1, 0.86)
 theme_override_font_sizes/normal_font_size = 15
 bbcode_enabled = true
 scroll_active = false
+script = ExtResource("3_hud")
 
-[node name="Crosshair" type="Label" parent="Ui/Hud"]
+[node name="Crosshair" type="Label" parent="Ui"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -303,30 +278,3 @@ theme_override_font_sizes/font_size = 22
 text = "+"
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="Hint" type="Label" parent="Ui/Hud"]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -520.0
-offset_top = -160.0
-offset_right = -26.0
-offset_bottom = -26.0
-grow_horizontal = 0
-grow_vertical = 0
-theme_override_colors/font_color = Color(1, 1, 1, 0.55)
-theme_override_font_sizes/font_size = 14
-text = "WASD move    SPACE jump    LEFT MOUSE fire    R respawn    ESC free the mouse
-
-every number lives on the Player, under Gun — so you can
-drag them in the Remote tab while the game is running.
-Bullet.tscn holds only what a bullet IS.
-
-set Bullet Speed to 150 and turn Sweep Detection off:
-ALIVE climbs and never falls — the bullets are passing
-through the panel, the boxes and the wall behind them."
-horizontal_alignment = 2
-vertical_alignment = 2

@@ -1,39 +1,48 @@
-extends Control
-## Numbers for the orbit probe.
+extends RichTextLabel
+## ПОКАЗАНИЯ ПРОБЫ ПРО ТРЕТЬЕ ЛИЦО.
 ##
-## FACING is the one to watch. It is the angle between where the body points
-## and where the camera points. Run around in free mode and it swings through
-## the whole circle; hold the aim button and it collapses to zero and stays
-## there. Those are the two modes of every third-person game, in one number.
+## Главное здесь — ДОВОРОТ: угол между тем, куда смотрит тело, и тем, куда смотрит камера.
+## В свободном режиме он ходит по всему кругу; зажми прицел — схлопывается в ноль и там
+## остаётся. Это два режима любой игры от третьего лица, одним числом.
+
+## Насколько камера должна отстать, метры, чтобы про это стоило писать.
+const LAG_SHOWN := 0.15
+## На сколько камера должна вжаться, метры, чтобы про это стоило писать.
+const SQUEEZE_SHOWN := 0.05
+## Доворот меньше этого, градусы, считается сведённым.
+const ON_TARGET := 5.0
 
 @export var player_path: NodePath = ^"../../Player"
 
 @onready var player: OrbitPlayer = get_node(player_path)
 @onready var rig: OrbitRig = player.get_node(^"CameraRig")
 
-@onready var _speed: Label = $Speed
-@onready var _detail: RichTextLabel = $Detail
-
 
 func _process(_delta: float) -> void:
-	_speed.text = "%.1f" % player.speed()
-
 	var want := rig.wanted_length()
 	var got := rig.actual_length()
-	var squeezed := got < want - 0.05
-	_detail.text = "\n".join([
-		"mode    %s" % ("[color=#ffcf7a][b]AIM[/b][/color]" if player.is_aiming()
-			else "[color=#7a7f88]free[/color]"),
-		"facing    %s" % _facing_text(),
-		"camera    %.2f m %s" % [got,
-			"[color=#8ecbff](pushed in from %.2f)[/color]" % want if squeezed else ""],
-		"lag    %.2f m %s" % [rig.lag(),
-			"[color=#8ecbff](camera trailing)[/color]" if rig.lag() > 0.15 else ""],
-		"fps    %d" % Engine.get_frames_per_second(),
-	])
+	var lag := rig.lag()
+	text = "\n".join(PackedStringArray([
+		"режим: %s   скорость [b]%.1f[/b] м/с   доворот %s" % [
+			"[color=#ffd479][b]ПРИЦЕЛ[/b][/color]" if player.is_aiming()
+				else "свободный",
+			player.speed(), _facing_text()],
+		"камера %.2f м%s   отставание %.2f м%s" % [
+			got,
+			"   [color=#ffd479](вжата с %.2f)[/color]" % want
+				if got < want - SQUEEZE_SHOWN else "",
+			lag,
+			"   [color=#66ccff](тянется следом)[/color]" if lag > LAG_SHOWN else ""],
+		"",
+		"WASD бег   ПРОБЕЛ прыжок   ПКМ прицел   R заново   ESC отпустить мышь",
+		"колонны и узкий коридор поджимают камеру, а зажатый прицел сводит доворот в ноль",
+		"",
+		"[color=#66ccff]расцепление тела и камеры — это и есть третье лицо: тело"
+			+ " поворачивается к своему движению и опаздывает, камера ходит сама[/color]",
+	]))
 
 
 func _facing_text() -> String:
 	var error := player.facing_error()
-	var color := "#7ee081" if absf(error) < 5.0 else "#ffffff"
-	return "[color=%s][b]%+.0f°[/b][/color]" % [color, error]
+	var tint := "#7fe08a" if absf(error) < ON_TARGET else "#ffffff"
+	return "[color=%s][b]%+.0f°[/b][/color]" % [tint, error]

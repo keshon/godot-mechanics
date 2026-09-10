@@ -1,30 +1,32 @@
-extends Control
-## ALIVE is the line to watch. It is the number of bullet nodes that exist in
-## the scene tree right now, and it goes up while you hold the trigger and back
-## down to zero on its own. Nothing else in this project has ever appeared and
-## disappeared like that — every node in probes 01 and 02 was there from the
-## moment the level loaded until you quit.
+extends RichTextLabel
+## ПОКАЗАНИЯ ПРОБЫ ПРО ВЫСТРЕЛ.
+##
+## Главное здесь — В ВОЗДУХЕ: сколько узлов-пуль существует в дереве сцены прямо сейчас.
+## Число растёт, пока держишь спуск, и само возвращается к нулю. Ничто в проекте до этого
+## не появлялось и не исчезало так: каждый узел в первой и второй пробах стоял в сцене с
+## загрузки уровня и до выхода.
 
 @export var player_path: NodePath = ^"../../Player"
 
 @onready var player: ShootPlayer = get_node(player_path)
 
-@onready var _alive_count: Label = $AliveCount
-@onready var _detail: RichTextLabel = $Detail
-
 
 func _process(_delta: float) -> void:
-	_alive_count.text = "%d" % player.alive_bullets()
-	# Read straight off the gun. Reading it off a living bullet, as this used
-	# to, meant the readout went blank whenever nothing was in the air.
-	var mode := ("[color=#7ee081]sweep[/color]" if player.use_sweep_detection
-		else "[color=#ffcf7a]area only[/color]")
-	_detail.text = "\n".join([
-		"alive bullets",
-		"shots    %d" % player.shots,
-		"hits     %d   ([b]%.0f%%[/b])" % [player.hits, player.accuracy()],
-		"last hit at    %.1f m" % player.last_hit_distance,
-		"bullet speed    %.0f m/s" % player.bullet_speed,
-		"hit detection    %s" % mode,
-		"fps    %d" % Engine.get_frames_per_second(),
-	])
+	# Читается прямо с оружия. Читать с живой пули значит гасить показания всякий раз,
+	# когда в воздухе ничего нет.
+	text = "\n".join(PackedStringArray([
+		"в воздухе [b]%d[/b] пуль   выстрелов %d   попаданий %d ([b]%.0f%%[/b])" % [
+			player.alive_bullets(), player.shots, player.hits, player.accuracy()],
+		"последнее попадание на %.1f м   скорость пули %.0f м/с" % [
+			player.last_hit_distance, player.bullet_speed],
+		"",
+		"WASD бег   ПРОБЕЛ прыжок   ЛКМ огонь   R заново   ESC отпустить мышь",
+		"поиск попадания: %s" % (
+			"[color=#7fe08a]проверкой отрезка[/color]" if player.use_sweep_detection
+				else "[color=#ff8a6a]только областью[/color]"),
+		"скорость пули и поиск попадания живут на Player под Gun — их крутят во вкладке"
+			+ " Remote на живой игре",
+		"",
+		"[color=#66ccff]заготовка отвечает, ЧТО это такое; оружие — какое оно сегодня."
+			+ " числа живут на том, что не умирает[/color]",
+	]))
