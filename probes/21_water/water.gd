@@ -64,6 +64,23 @@ const LAYERS := [
 	"use_foam",
 ]
 const LAYER_KEYS := ["4", "5", "6", "7", "8", "9"]
+## Как слой называется НА ЭКРАНЕ: имена uniform-ов английские, показания
+## читает человек (`HUD.md`).
+const LAYER_NAMES := [
+	"волны",
+	"рябь",
+	"глубина",
+	"френель",
+	"преломление",
+	"пена",
+]
+## Как называется пресет на экране.
+const PRESET_NAMES := {
+	"ocean": "океан",
+	"river": "река",
+	"pool": "бассейн",
+	"room": "затопленная комната",
+}
 
 @export var fly_speed := 9.0
 
@@ -220,22 +237,27 @@ func _fly(delta: float) -> void:
 
 
 func _draw_hud() -> void:
-	var text := "[b]%s[/b]    1 ocean   2 river   3 pool   F flooded room\n" % preset.to_upper()
-	text += "absorb %.1f m — how far light gets before the water gives up\n\n" % float(
-			PRESETS[preset]["absorb"])
-	for i in LAYERS.size():
-		var layer := str(LAYERS[i]).replace("use_", "")
-		text += "%s  %-9s %s\n" % [
-			LAYER_KEYS[i],
-			layer,
-			"[color=#7fe08a]on[/color]" if layers_on[i] else "[color=#666666]off[/color]"]
-	text += "\n0 all on or off    U show the water column%s\n" % (
-			"   [color=#ffd479](on)[/color]" if show_depth else "")
-	text += "camera y %+.1f   %s\n" % [
+	var text := "вода: [b]%s[/b]   поглощение [b]%.1f[/b] м   камера y %+.1f   %s\n" % [
+		PRESET_NAMES.get(preset, preset), float(PRESETS[preset]["absorb"]),
 		_camera.global_position.y,
-		"[color=#66ccff]under water[/color]" if under else "above"]
+		"[color=#66ccff]под водой[/color]" if under else "над водой"]
+	text += "поглощение — сколько метров воды свет проходит, прежде чем сдаться\n"
 	if lens_wet > 0.0:
-		text += "[color=#ffd479]drops on the lens %.0f%%[/color]\n" % (lens_wet * 100.0)
-	text += "\nWASD fly   SPACE up   SHIFT down   RIGHT MOUSE look\n"
-	text += "swim down past y=0 and look up"
+		text += "[color=#ffd479]капли на объективе %.0f%%[/color]\n" % (
+				lens_wet * 100.0)
+	text += "\n"
+
+	text += "WASD лететь   ПРОБЕЛ вверх   SHIFT вниз   ПКМ осмотреться\n"
+	text += "нырни ниже нуля и посмотри вверх\n"
+	text += "1 океан   2 река   3 бассейн   F затопленная комната\n"
+	for i in LAYERS.size():
+		text += "%s %-12s %s\n" % [
+			LAYER_KEYS[i], LAYER_NAMES[i],
+			"[color=#7fe08a]вкл[/color]" if layers_on[i] else "выкл"]
+	text += "0 все слои разом   U показать толщу воды: %s\n\n" % (
+			"[color=#ffd479]вкл[/color]" if show_depth else "выкл")
+
+	text += "[color=#66ccff]вода читается контекстом, и поверхность — примерно"
+	text += " треть[/color]"
 	_info.text = text
+
