@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://c47shoulround"]
 
-[ext_resource type="Script" path="res://probes/47_shoulder/Round.gd" id="1_round"]
+[ext_resource type="Script" path="res://probes/47_shoulder/round.gd" id="1_round"]
 
 [sub_resource type="StandardMaterial3D" id="MatBody"]
 albedo_color = Color(0.28, 0.3, 0.26, 1)

@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://c47shoultarget"]
 
-[ext_resource type="Script" path="res://probes/47_shoulder/Target.gd" id="1_target"]
+[ext_resource type="Script" path="res://probes/47_shoulder/target.gd" id="1_target"]
 
 [sub_resource type="StandardMaterial3D" id="MatHull"]
 albedo_color = Color(0.24, 0.27, 0.22, 1)

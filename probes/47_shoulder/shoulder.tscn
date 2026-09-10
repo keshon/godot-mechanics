@@ -1,6 +1,6 @@
 [gd_scene load_steps=20 format=3 uid="uid://c47shoulrange"]
 
-[ext_resource type="Script" path="res://probes/47_shoulder/Rig.gd" id="1_rig"]
+[ext_resource type="Script" path="res://probes/47_shoulder/shoulder.gd" id="1_rig"]
 [ext_resource type="PackedScene" path="res://probes/47_shoulder/launcher.tscn" id="2_tube"]
 [ext_resource type="PackedScene" path="res://probes/47_shoulder/target.tscn" id="3_target"]
 [ext_resource type="Shader" path="res://probes/47_shoulder/ground.gdshader" id="4_grid"]
@@ -73,7 +73,7 @@ vertex_color_use_as_albedo = true
 radius = 0.35
 height = 1.8
 
-[node name="Rig" type="Node3D"]
+[node name="Shoulder" type="Node3D"]
 script = ExtResource("1_rig")
 
 [node name="World" type="WorldEnvironment" parent="."]
@@ -142,7 +142,7 @@ fov = 70.0
 near = 0.05
 far = 3000.0
 
-[node name="Tube" parent="Body/Eye" instance=ExtResource("2_tube")]
+[node name="Launcher" parent="Body/Eye" instance=ExtResource("2_tube")]
 transform = Transform3D(0.62, 0, 0, 0, 0.62, 0, 0, 0, 0.62, 0.34, -0.16, -0.55)
 
 [node name="Target" parent="." instance=ExtResource("3_target")]

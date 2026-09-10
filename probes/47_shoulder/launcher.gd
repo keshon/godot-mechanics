@@ -1,6 +1,5 @@
-extends Node3D
 class_name ShoulderLauncher
-
+extends Node3D
 ## THE TUBE ON A SHOULDER.
 ##
 ## Three things the forty-fourth and forty-fifth probes had no room for, because neither of
@@ -22,31 +21,34 @@ signal fired(shot: ShoulderRound)
 signal refused(why: String)
 
 @export var round_scene: PackedScene
+## Seconds between shots.
 @export_range(0.5, 20.0, 0.1) var reload := 6.0
 @export_range(1, 12, 1) var rounds := 6
-## How far back the jet is still dangerous, and how wide. The distance lives on the raycast
-## node in the scene, so it is dragged rather than typed.
+## How long the backblast flash is shown, seconds. How far back the jet is dangerous, and how
+## wide, lives on the raycast node in the scene — dragged rather than typed.
 @export_range(0.0, 4.0, 0.05) var flash_time := 0.35
 ## THE SIGHT IS A RANGE SCALE, not a crosshair. An unguided round drops nearly ten metres over
 ## a hundred and sixty, so the tube is held ABOVE the line of sight by an angle the shooter
 ## dials in. Dial it wrong and the round lands short or long — that is the whole cost of an
 ## unguided launcher, and it is paid before the trigger rather than after it.
 @export_range(20.0, 1600.0, 10.0) var sight_range := 600.0
-## How high the tube is held above the line of sight for the dialled range, in radians. Cut by
-## FIRING — `cut()` below — and cut once, when the range is dialled, because a range scale is a
-## thing you set and then hold, not a thing that recomputes itself while you are trying to aim.
-var lift := 0.0
 
+## How high the tube is held above the line of sight for the dialled range, in radians. Cut by
+## `cut()` below, and cut once, when the range is dialled: a range scale is a thing you set and
+## then hold, not a thing that recomputes itself while you are trying to aim.
+var lift := 0.0
 var left := 0
 var ready_in := 0.0
-var blocked := false      ## something is standing in the backblast right now
+## Something is standing in the backblast right now.
+var blocked := false
+## Why the last trigger pull was refused, empty when it was not.
 var last := ""
+
+var _flash_left := 0.0
 
 @onready var _muzzle: Node3D = $Muzzle
 @onready var _blast: RayCast3D = $Blast
 @onready var _flash: Node3D = $Blast/Flash
-
-var _flash_left := 0.0
 
 
 func _ready() -> void:
@@ -65,10 +67,10 @@ func _physics_process(delta: float) -> void:
 
 
 ## Where the tube points. The hand writes this; the tube has no opinion.
-func aim(dir: Vector3, up: Vector3) -> void:
-	if dir.length_squared() < 1e-6:
+func aim(direction: Vector3, up: Vector3) -> void:
+	if direction.length_squared() < 1e-6:
 		return
-	look_at(global_position + dir, up)
+	look_at(global_position + direction, up)
 
 
 ## The trigger. Refusing is a result, not an error: a launcher that fires into a wall behind
@@ -125,7 +127,7 @@ func cut(sample: ShoulderRound, drop: float) -> void:
 func muzzle() -> Transform3D:
 	# ORTHONORMALIZED. The tube is scaled down in the scene so the model sits right in the view,
 	# and that scale is a fact about the MODEL — but a raw global basis carries it, and the round
-	# starts with `-basis.z * speed`. So every shot left at sixty-two per cent of the number on
-	# the export and the unguided one fell a quarter of the range short. A transform handed
-	# across a seam has to be the transform it claims to be.
+	# starts with `-basis.z * speed`. Without this every shot leaves at sixty-two per cent of the
+	# number on the export and the unguided one falls a quarter of the range short. A transform
+	# handed across a seam has to be the transform it claims to be.
 	return _muzzle.global_transform.orthonormalized()

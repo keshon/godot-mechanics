@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://c47shoultube"]
 
-[ext_resource type="Script" path="res://probes/47_shoulder/Launcher.gd" id="1_tube"]
+[ext_resource type="Script" path="res://probes/47_shoulder/launcher.gd" id="1_tube"]
 [ext_resource type="PackedScene" path="res://probes/47_shoulder/round.tscn" id="2_round"]
 
 [sub_resource type="StandardMaterial3D" id="MatTube"]
@@ -27,7 +27,7 @@ height = 3.2
 radial_segments = 10
 rings = 1
 
-[node name="Tube" type="Node3D"]
+[node name="Launcher" type="Node3D"]
 script = ExtResource("1_tube")
 round_scene = ExtResource("2_round")
 
