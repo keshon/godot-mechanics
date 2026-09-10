@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://c45seekdart"]
 
-[ext_resource type="Script" path="res://probes/45_seeker/Dart.gd" id="1_dart"]
-[ext_resource type="Script" path="res://probes/45_seeker/Head.gd" id="2_head"]
+[ext_resource type="Script" path="res://probes/45_seeker/dart.gd" id="1_dart"]
+[ext_resource type="Script" path="res://probes/45_seeker/head.gd" id="2_head"]
 
 [sub_resource type="StandardMaterial3D" id="MatDart"]
 albedo_color = Color(0.92, 0.35, 0.2, 1)

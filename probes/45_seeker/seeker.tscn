@@ -1,10 +1,10 @@
 [gd_scene load_steps=11 format=3 uid="uid://c45seekrange"]
 
-[ext_resource type="Script" path="res://probes/45_seeker/Rig.gd" id="1_rig"]
+[ext_resource type="Script" path="res://probes/45_seeker/seeker.gd" id="1_rig"]
 [ext_resource type="PackedScene" path="res://probes/45_seeker/prey.tscn" id="2_prey"]
 [ext_resource type="PackedScene" path="res://probes/45_seeker/dart.tscn" id="3_dart"]
 [ext_resource type="Shader" path="res://probes/45_seeker/ground.gdshader" id="4_grid"]
-[ext_resource type="Script" path="res://probes/45_seeker/Threat.gd" id="5_threat"]
+[ext_resource type="Script" path="res://probes/45_seeker/threat.gd" id="5_threat"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 sky_top_color = Color(0.19, 0.33, 0.56, 1)
@@ -37,7 +37,7 @@ shader_parameter/major = 1000.0
 [sub_resource type="PlaneMesh" id="MeshGround"]
 size = Vector2(24000, 24000)
 
-[node name="Rig" type="Node3D"]
+[node name="Seeker" type="Node3D"]
 script = ExtResource("1_rig")
 
 [node name="World" type="WorldEnvironment" parent="."]
