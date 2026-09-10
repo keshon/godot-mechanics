@@ -1,6 +1,6 @@
 [gd_scene load_steps=13 format=3 uid="uid://c44missrange"]
 
-[ext_resource type="Script" path="res://probes/44_missile/Rig.gd" id="1_rig"]
+[ext_resource type="Script" path="res://probes/44_missile/missile.gd" id="1_rig"]
 [ext_resource type="PackedScene" path="res://probes/44_missile/body.tscn" id="2_body"]
 [ext_resource type="Shader" path="res://probes/44_missile/ground.gdshader" id="3_grid"]
 
@@ -49,7 +49,7 @@ outer_radius = 20.0
 height = 1.0
 radius = 18.0
 
-[node name="Rig" type="Node3D"]
+[node name="Missile" type="Node3D"]
 script = ExtResource("1_rig")
 
 [node name="World" type="WorldEnvironment" parent="."]
@@ -78,7 +78,7 @@ shape = SubResource("ShapeGround")
 [node name="Rail" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 250, 0)
 
-[node name="Missile" parent="." instance=ExtResource("2_body")]
+[node name="Body" parent="." instance=ExtResource("2_body")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 250, 0)
 
 [node name="Gate1" type="Area3D" parent="." groups=["gate"]]

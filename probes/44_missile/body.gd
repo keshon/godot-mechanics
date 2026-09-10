@@ -1,6 +1,5 @@
-extends RigidBody3D
 class_name MissileBody
-
+extends RigidBody3D
 ## THE AIRFRAME.
 ##
 ## Four things and no fifth: thrust that ends, drag that never does, fins that are the only
@@ -16,23 +15,27 @@ class_name MissileBody
 ## missile; the fins sit behind it and win. Static margin is the distance between two nodes
 ## in the scene, so dragging either one in the editor changes the airframe's character and
 ## no code knows about it.
+##
+## Godot's own damping is switched off in the scene, and it has to be said out loud because
+## the default is not zero: `linear_damp` and `angular_damp` fall back to the project default
+## of 0.1 per second. That is a second, invisible drag proportional to SPEED, and at six
+## hundred metres per second it removes sixty metres per second squared — six g the model
+## never asked for. Replace mode with zero is what makes the numbers in this file the whole
+## story.
 
-signal spent            ## propellant ran out
+## Propellant ran out.
+signal spent
+## Hit something, at this point and this speed.
 signal struck(where: Vector3, speed: float)
 
-## Godot's own damping is switched OFF, and it has to be said out loud because the default is
-## not zero: `linear_damp` and `angular_damp` on a `RigidBody3D` fall back to the project
-## default of 0.1 per second. That is a second, invisible drag proportional to SPEED, and at
-## six hundred metres per second it removes sixty metres per second squared — six g the model
-## never asked for, on top of every coefficient written above. Replace mode with zero is what
-## makes the numbers in this file the whole story.
-
-## Standard sea-level air. Constant on purpose: this probe flies low, and altitude would
-## be a fifth quantity for a 25% effect.
+## Standard sea-level air, kg/m3. Constant on purpose: this probe flies low, and altitude
+## would be a fifth quantity for a 25% effect.
 const DENSITY := 1.225
+## Below this airspeed, in metres per second, air forces are not worth computing.
+const MIN_AIRSPEED := 1.0
 
 @export_group("Thrust")
-## Short, violent, and over before you can aim: that is what a booster is.
+## Short, violent, and over before you can aim: that is what a booster is. Newtons.
 @export_range(0.0, 40000.0, 100.0) var boost_thrust := 9000.0
 @export_range(0.0, 10.0, 0.1) var boost_time := 1.6
 ## The sustainer only fights drag. Whether it exists at all is the difference between a
@@ -84,34 +87,69 @@ var yaw_input := 0.0
 var roll_input := 0.0
 
 var flying := false
-var burn := 0.0             ## seconds since launch
-var fuel := 1.0             ## 1 down to 0
+## Seconds since launch.
+var burn := 0.0
+## Propellant left, 1 down to 0.
+var fuel := 1.0
 var speed := 0.0
-var alpha := 0.0            ## angle between nose and travel, radians
+## Angle between nose and travel, radians.
+var alpha := 0.0
 ## Measured from how fast the VELOCITY turns, not from the forces put in. A tail-controlled
 ## missile pushes its tail the wrong way to make the nose go the right way, so adding up fin
 ## forces answers a different question than "is it turning".
 var lateral_g := 0.0
-var throttled := 0.0        ## how much the limiter took away, 0 to 1
+## How much the limiter took away, 0 to 1.
+var throttled := 0.0
 
 var _fins: Array[MissileFin] = []
 var _burn_rate := 0.0
-var _was := Vector3.ZERO
+var _last_heading := Vector3.ZERO
 
 ## Where the hull's own lift acts. A node, so the static margin is visible and draggable.
 @onready var _cop: Node3D = $Cop
 
 
 func _ready() -> void:
-	for c in get_children():
-		var f := c as MissileFin
-		if f != null:
-			_fins.append(f)
+	for child in get_children():
+		var fin := child as MissileFin
+		if fin != null:
+			_fins.append(fin)
 	# Propellant is spent in proportion to thrust, so the boost eats most of it fast.
 	var total := boost_thrust * boost_time + sustain_thrust * sustain_time
 	_burn_rate = 1.0 / maxf(total, 0.001)
 	mass = dry_mass + propellant_mass
 	freeze = true
+
+
+func _physics_process(delta: float) -> void:
+	if not flying:
+		return
+	burn += delta
+	mass = dry_mass + propellant_mass * fuel
+
+	var velocity := linear_velocity
+	speed = velocity.length()
+	var nose := -global_basis.z
+	alpha = (0.0 if speed < MIN_AIRSPEED
+			else acos(clampf(nose.dot(velocity / speed), -1.0, 1.0)))
+
+	var push := _thrust()
+	if push > 0.0:
+		var used := push * delta * _burn_rate
+		if fuel > 0.0 and fuel - used <= 0.0:
+			spent.emit()
+		fuel = maxf(0.0, fuel - used)
+		apply_central_force(nose * push)
+
+	var pressure := 0.5 * DENSITY * speed * speed
+	if speed > MIN_AIRSPEED:
+		var drag := body_drag + induced_drag * sin(alpha) * sin(alpha)
+		apply_central_force(-(velocity / speed) * pressure * frontal_area * drag)
+		_apply_hull(velocity, pressure, nose)
+
+	_steer()
+	_apply_fins(velocity, pressure)
+	_measure_turn(velocity, delta)
 
 
 ## Cut loose. Until this is called the missile hangs on the rail and costs nothing.
@@ -125,55 +163,8 @@ func launch(from: Transform3D, carry: Vector3) -> void:
 	flying = true
 	# Otherwise the very first tick compares the new heading against the previous flight
 	# and reads hundreds of g.
-	_was = Vector3.ZERO
+	_last_heading = Vector3.ZERO
 	lateral_g = 0.0
-
-
-func _physics_process(delta: float) -> void:
-	if not flying:
-		return
-	burn += delta
-	mass = dry_mass + propellant_mass * fuel
-
-	var v := linear_velocity
-	speed = v.length()
-	var nose := -global_basis.z
-	alpha = 0.0 if speed < 1.0 else acos(clampf(nose.dot(v / speed), -1.0, 1.0))
-
-	var push := _thrust()
-	if push > 0.0:
-		var used := push * delta * _burn_rate
-		if fuel > 0.0 and fuel - used <= 0.0:
-			spent.emit()
-		fuel = maxf(0.0, fuel - used)
-		apply_central_force(nose * push)
-
-	var q := 0.5 * DENSITY * speed * speed
-	if speed > 1.0:
-		var cd := body_drag + induced_drag * sin(alpha) * sin(alpha)
-		apply_central_force(-(v / speed) * q * frontal_area * cd)
-		_apply_hull(v, q, nose)
-
-	_steer()
-	_apply_fins(v, q)
-	_measure_turn(v, delta)
-
-
-## THE HULL IS A WING, and a bad one that pulls in the wrong place. Its force is
-## perpendicular to the airflow, in the plane the angle of attack lies in, and it is applied
-## at `Cop` — ahead of the centre of mass, so on its own it makes the missile swap ends.
-func _apply_hull(v: Vector3, q: float, nose: Vector3) -> void:
-	if alpha < 0.001:
-		return
-	var along := v / speed
-	# Perpendicular to travel, on the side the nose is pointing: that is where lift goes.
-	var side := (nose - along * nose.dot(along))
-	if side.length_squared() < 1e-9:
-		return
-	side = side.normalized()
-	var sa := sin(alpha)
-	var cn := body_lift * sa * cos(alpha) + crossflow * sa * sa
-	apply_force(side * q * frontal_area * cn, _cop.global_position - global_position)
 
 
 ## Boost, then sustain, then nothing. Running dry is not a failure state — most of a
@@ -188,39 +179,56 @@ func _thrust() -> float:
 	return 0.0
 
 
+## THE HULL IS A WING, and a bad one that pulls in the wrong place. Its force is
+## perpendicular to the airflow, in the plane the angle of attack lies in, and it is applied
+## at `Cop` — ahead of the centre of mass, so on its own it makes the missile swap ends.
+func _apply_hull(velocity: Vector3, pressure: float, nose: Vector3) -> void:
+	if alpha < 0.001:
+		return
+	var along := velocity / speed
+	# Perpendicular to travel, on the side the nose is pointing: that is where lift goes.
+	var side := nose - along * nose.dot(along)
+	if side.length_squared() < 1e-9:
+		return
+	side = side.normalized()
+	var sine := sin(alpha)
+	var normal_force := body_lift * sine * cos(alpha) + crossflow * sine * sine
+	apply_force(
+			side * pressure * frontal_area * normal_force,
+			_cop.global_position - global_position)
+
+
 ## Turn the command into fin angles. Pitch and yaw come from projecting the wanted TAIL
 ## force onto each fin's own lift axis, which is why a fin rolled 90 degrees quietly becomes
 ## a yaw control without a single branch. Roll is a uniform bias on top: every fin the same
 ## way makes a couple about the body axis.
 ##
-## That last sentence only holds if the four mounts go round the body THE SAME WAY, and for a
-## long time two of them did not: the top and bottom fins were rolled -90 and +90 instead of
-## +90 and +270, so their lift axes pointed against the other two. Pitch and yaw did not care
-## — a mirrored mount comes with a mirrored command and the force lands the same — but the
-## roll couple cancelled to exactly zero. The ailerons moved and nothing rolled, and nothing
-## said so until the blades themselves started turning on screen.
+## That last sentence only holds if the four mounts go round the body THE SAME WAY. Rolled
+## -90 and +90 instead of +90 and +270, two of them point their lift axes against the other
+## two: pitch and yaw do not care — a mirrored mount comes with a mirrored command and the
+## force lands the same — but the roll couple cancels to exactly zero. The ailerons move and
+## nothing rolls, and nothing says so until the blades themselves turn on screen.
 ##
 ## Both signs are negated because the tail goes where the nose does not: to raise the nose
 ## the tail must go down, to swing the nose right the tail must go left.
 func _steer() -> void:
 	var want := Vector3(-yaw_input, -pitch_input, 0.0)
-	for f in _fins:
-		var d := want.dot(f.axis()) - roll_input * 0.5
-		f.deflect = clampf(d, -1.0, 1.0) * f.max_deflect
+	for fin in _fins:
+		var deflect := want.dot(fin.axis()) - roll_input * 0.5
+		fin.deflect = clampf(deflect, -1.0, 1.0) * fin.max_deflect
 
 
 ## Fin forces are applied AT the fins. Everything the airframe does — turning, damping,
 ## weathercocking, rolling — is a consequence of where those four points are.
-func _apply_fins(v: Vector3, q: float) -> void:
-	var arm := Vector3.ZERO
+func _apply_fins(velocity: Vector3, pressure: float) -> void:
 	var lift := Vector3.ZERO
 	var at: Array[Vector3] = []
-	var force: Array[Vector3] = []
-	for f in _fins:
-		var w := f.force(-v, q)
-		at.append(f.global_position - global_position)
-		force.append(w)
-		lift += w
+	var forces: Array[Vector3] = []
+	for fin in _fins:
+		var force := fin.force(-velocity, pressure)
+		at.append(fin.global_position - global_position)
+		forces.append(force)
+		lift += force
 
 	# The limiter scales the whole set, not each fin, so the missile keeps flying straight
 	# while it refuses to turn harder. Scaling fins one by one would make it roll instead.
@@ -232,32 +240,33 @@ func _apply_fins(v: Vector3, q: float) -> void:
 		scale = structural_g / asked
 	throttled = 1.0 - scale
 
-	for i in at.size():
-		apply_force(force[i] * scale, at[i])
-	_damp(q)
+	for index in at.size():
+		apply_force(forces[index] * scale, at[index])
+	_damp(pressure)
 
 
 ## Air resists rotation, and it resists it differently about each axis. Splitting the spin
 ## into roll and swing before damping it is the whole fix.
-func _damp(q: float) -> void:
-	var w := angular_velocity
-	if w.is_zero_approx():
+func _damp(pressure: float) -> void:
+	var spin := angular_velocity
+	if spin.is_zero_approx():
 		return
 	var calibre := 2.0 * sqrt(frontal_area / PI)
-	var base := q * frontal_area * calibre * calibre / (2.0 * maxf(speed, 1.0))
+	var base := (pressure * frontal_area * calibre * calibre
+			/ (2.0 * maxf(speed, MIN_AIRSPEED)))
 	var axis := global_basis.z
-	var roll := axis * w.dot(axis)
-	apply_torque(-((w - roll) * damping + roll * roll_damping) * base)
+	var roll := axis * spin.dot(axis)
+	apply_torque(-((spin - roll) * damping + roll * roll_damping) * base)
 
 
 ## True lateral acceleration: turn rate times speed. Nothing in the model gets a vote.
-func _measure_turn(v: Vector3, delta: float) -> void:
-	if speed > 1.0 and _was.length_squared() > 0.0:
-		lateral_g = _was.angle_to(v / speed) / delta * speed / 9.81
-	_was = Vector3.ZERO if speed < 1.0 else v / speed
+func _measure_turn(velocity: Vector3, delta: float) -> void:
+	if speed > MIN_AIRSPEED and _last_heading.length_squared() > 0.0:
+		lateral_g = _last_heading.angle_to(velocity / speed) / delta * speed / 9.81
+	_last_heading = Vector3.ZERO if speed < MIN_AIRSPEED else velocity / speed
 
 
-func _on_body_entered(_b: Node) -> void:
+func _on_body_entered(_body: Node) -> void:
 	if flying:
 		flying = false
 		struck.emit(global_position, speed)

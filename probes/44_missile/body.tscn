@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://c44missbody"]
 
-[ext_resource type="Script" path="res://probes/44_missile/Body.gd" id="1_body"]
-[ext_resource type="Script" path="res://probes/44_missile/Fin.gd" id="2_fin"]
+[ext_resource type="Script" path="res://probes/44_missile/body.gd" id="1_body"]
+[ext_resource type="Script" path="res://probes/44_missile/fin.gd" id="2_fin"]
 
 [sub_resource type="StandardMaterial3D" id="MatHull"]
 albedo_color = Color(0.72, 0.73, 0.75, 1)
@@ -29,7 +29,7 @@ size = Vector3(0.5, 0.02, 0.45)
 radius = 0.1
 height = 2.8
 
-[node name="Missile" type="RigidBody3D" groups=["missile"]]
+[node name="Body" type="RigidBody3D" groups=["missile"]]
 collision_layer = 2
 linear_damp_mode = 1
 angular_damp_mode = 1
