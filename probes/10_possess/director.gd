@@ -34,8 +34,7 @@ const PICK_RANGE := 400.0
 ## and two more like it: three ways for the node to stop working the moment
 ## anything around it moves, none of them visible in the inspector.
 @export var units_parent: NodePath = ^"../World/Units"
-@export var viewpoint_label_path: NodePath = ^"../Ui/Hud/Viewpoint"
-@export var detail_label_path: NodePath = ^"../Ui/Hud/Detail"
+@export var hud_path: NodePath = ^"../Ui/Info"
 
 @export_group("Command view")
 ## How fast the map pans, m/s.
@@ -72,8 +71,7 @@ var _from := Transform3D.IDENTITY
 
 @onready var _camera: Camera3D = $Camera
 @onready var _units_root: Node3D = get_node(units_parent)
-@onready var _viewpoint: Label = get_node(viewpoint_label_path)
-@onready var _detail: RichTextLabel = get_node(detail_label_path)
+@onready var _hud: RichTextLabel = get_node(hud_path)
 
 
 func _ready() -> void:
@@ -197,19 +195,24 @@ func _toggle() -> void:
 
 func _draw_hud() -> void:
 	var possessed := mode == Mode.POSSESSED
-	_viewpoint.text = "INSIDE" if possessed else "ABOVE"
-	_detail.text = "\n".join([
-		"point of view    [color=#8ecbff]%s[/color]" % (
-			"blending %.0f%%" % (_blend * 100.0) if _blend < 1.0 else "settled"),
+	_hud.text = "\n".join(PackedStringArray([
+		"взгляд: [b]%s[/b]   %s   юнитов %d   выполняют приказ [b]%d[/b]" % [
+			"ИЗНУТРИ" if possessed else "СВЕРХУ",
+			"переход %.0f%%" % (_blend * 100.0) if _blend < 1.0 else "устоялся",
+			units().size(), carrying_orders()],
+		"выделен: %s" % ("да" if selected else "никто"),
 		"",
-		"WASD    %s" % ("[b]drives this unit[/b]" if possessed else "[b]pans the map[/b]"),
-		"mouse   %s" % ("looks around" if possessed else "selects and orders"),
-		"E       %s" % ("step back out" if possessed else "get inside the selected one"),
+		"WASD %s   мышь %s" % [
+			"[b]ведёт этот юнит[/b]" if possessed else "[b]двигает карту[/b]",
+			"смотрит по сторонам" if possessed else "выделяет и приказывает"],
+		"E %s   ПКМ приказ" % (
+			"выйти наружу" if possessed else "войти в выделенного"),
+		"пошли нескольких далеко, влезь в одного и иди в другую сторону — остальные"
+			+ " продолжат марш",
 		"",
-		"units    %d" % units().size(),
-		"still carrying out orders    [b]%d[/b]" % carrying_orders(),
-		"selected    %s" % ("yes" if selected else "[color=#7a7f88]none[/color]"),
-	])
+		"[color=#66ccff]масштаб — это переключатель, а не жанр: одна карта, два"
+			+ " расстояния до неё, и это уже две разные игры[/color]",
+	]))
 
 
 ## Where the camera belongs right now, for whichever mode is running.

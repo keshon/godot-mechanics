@@ -137,42 +137,19 @@ far = 300.0
 
 [node name="Ui" type="CanvasLayer" parent="."]
 
-[node name="Hud" type="Control" parent="Ui"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Info" type="RichTextLabel" parent="Ui"]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 760.0
+offset_bottom = 320.0
 mouse_filter = 2
-
-[node name="Counts" type="Label" parent="Ui/Hud"]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 30.0
-offset_top = -118.0
-offset_right = 420.0
-offset_bottom = -40.0
-grow_vertical = 0
-theme_override_colors/font_color = Color(1, 1, 1, 0.94)
-theme_override_font_sizes/font_size = 52
-text = "0 / 0"
-vertical_alignment = 1
-
-[node name="Detail" type="RichTextLabel" parent="Ui/Hud"]
-layout_mode = 1
-offset_left = 34.0
-offset_top = 28.0
-offset_right = 560.0
-offset_bottom = 250.0
-theme_override_colors/default_color = Color(1, 1, 1, 0.78)
+theme_override_colors/default_color = Color(1, 1, 1, 0.86)
 theme_override_font_sizes/normal_font_size = 15
 bbcode_enabled = true
 scroll_active = false
 
-[node name="Crosshair" type="Label" parent="Ui/Hud"]
+
+[node name="Crosshair" type="Label" parent="Ui"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -190,29 +167,3 @@ theme_override_font_sizes/font_size = 20
 text = "+"
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="Hint" type="Label" parent="Ui/Hud"]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -580.0
-offset_top = -172.0
-offset_right = -26.0
-offset_bottom = -26.0
-grow_horizontal = 0
-grow_vertical = 0
-theme_override_colors/font_color = Color(1, 1, 1, 0.55)
-theme_override_font_sizes/font_size = 14
-text = "HOLD LEFT MOUSE or SPACE to fire    WASD fly    SHIFT up
-1-9 pick an effect    R rescan the folder
-
-no effect in this probe has a script. open one in the editor:
-particles in the inspector, timing on the AnimationPlayer.
-
-sparks now come off whatever you hit, along its normal.
-try the two tilted panels and the ground."
-horizontal_alignment = 2
-vertical_alignment = 2

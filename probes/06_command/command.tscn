@@ -111,54 +111,14 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("3_hud")
 
-[node name="SelectedCount" type="Label" parent="Ui/Hud" unique_id=917605671]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 30.0
-offset_top = -126.0
-offset_right = 320.0
-offset_bottom = -36.0
-grow_vertical = 0
-theme_override_colors/font_color = Color(1, 1, 1, 0.94)
-theme_override_font_sizes/font_size = 64
-text = "0"
-vertical_alignment = 1
-
-[node name="Detail" type="RichTextLabel" parent="Ui/Hud" unique_id=1217533446]
-layout_mode = 1
-offset_left = 34.0
-offset_top = 28.0
-offset_right = 500.0
-offset_bottom = 190.0
-theme_override_colors/default_color = Color(1, 1, 1, 0.75)
+[node name="Info" type="RichTextLabel" parent="Ui/Hud"]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 760.0
+offset_bottom = 320.0
+mouse_filter = 2
+theme_override_colors/default_color = Color(1, 1, 1, 0.86)
 theme_override_font_sizes/normal_font_size = 15
 bbcode_enabled = true
 scroll_active = false
 
-[node name="Hint" type="Label" parent="Ui/Hud" unique_id=1672865594]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -560.0
-offset_top = -176.0
-offset_right = -26.0
-offset_bottom = -26.0
-grow_horizontal = 0
-grow_vertical = 0
-theme_override_colors/font_color = Color(1, 1, 1, 0.55)
-theme_override_font_sizes/font_size = 14
-text = "WASD pan    WHEEL zoom    LEFT click or drag to select
-RIGHT click to order    SHIFT+RIGHT to add a waypoint
-SHIFT+LEFT to add to the selection
-
-SPACE pauses the world.    1 / 2 / 3 set time to x1 x2 x4
-
-while paused: select, drag a box, lay out a whole route.
-then unpause and watch it run."
-horizontal_alignment = 2
-vertical_alignment = 2

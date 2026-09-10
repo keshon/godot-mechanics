@@ -32,8 +32,7 @@ var _cooldown := 0.0
 
 @onready var _fx: FxPool = $Fx
 @onready var _camera: Camera3D = $Camera
-@onready var _counts: Label = $Ui/Hud/Counts
-@onready var _detail: RichTextLabel = $Ui/Hud/Detail
+@onready var _hud: RichTextLabel = $Ui/Info
 
 
 func _ready() -> void:
@@ -123,19 +122,24 @@ func _aim() -> Dictionary:
 
 
 func _draw_hud() -> void:
-	_counts.text = "%d / %d" % [_fx.built, _fx.reused]
-	var lines := [
-		"nodes ever built  /  times one was reused",
+	var lines := PackedStringArray([
+		"на экране [b]%d[/b]   собрано узлов %d   переиспользований %d" % [
+			_fx.live, _fx.built, _fx.reused],
 		"",
-		"[color=#8ecbff]found in effects/ at startup — press R to rescan[/color]",
-	]
+		"ЛКМ или ПРОБЕЛ выстрелить   WASD лететь   SHIFT вверх   R перечитать папку",
+		"эффекты найдены в effects/ при запуске, 1…9 выбирают:",
+	])
 	var available := _fx.names()
 	for i in available.size():
-		lines.append("%s %d  %-10s   pooled %d" % [
-			"[color=#7ee081]>[/color]" if i == _picked else " ",
-			i + 1,
-			available[i],
-			_fx.pooled(available[i])])
-	lines.append("")
-	lines.append("on screen now    [b]%d[/b]" % _fx.live)
-	_detail.text = "\n".join(lines)
+		lines.append("%s %d  %-10s   в запасе %d" % [
+			"[color=#7fe08a]>[/color]" if i == _picked else " ",
+			i + 1, available[i], _fx.pooled(available[i])])
+	lines.append_array(PackedStringArray([
+		"искры отлетают от того, во что попал, по его нормали — попробуй две наклонные",
+		"панели и землю",
+		"",
+		"[color=#66ccff]эффект — это сцена, реестр — папка, таймлайн — AnimationPlayer:"
+			+ " ни у одного эффекта здесь нет скрипта[/color]",
+	]))
+	_hud.text = "\n".join(lines)
+

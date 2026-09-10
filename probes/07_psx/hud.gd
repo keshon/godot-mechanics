@@ -1,43 +1,45 @@
-extends Control
-## Which constraints are currently switched on, and what each one is doing.
+extends RichTextLabel
+## КАКИЕ ОГРАНИЧЕНИЯ СЕЙЧАС ВКЛЮЧЕНЫ и что каждое из них делает.
 ##
-## Read it as a checklist and turn them off one by one. The interesting question
-## is not "does this look like a PlayStation game" but "which single line was I
-## reacting to" — and the answer is usually the first one.
+## Читать как список и выключать по одному. Интересный вопрос не «похоже ли это на игру с
+## PlayStation», а «на какую именно строку я реагировал» — и ответом обычно оказывается
+## первая.
 
 @export var look_path: NodePath = ^"../.."
 
 @onready var look: PsxLook = get_node(look_path)
 
-@onready var _resolution: Label = $Resolution
-@onready var _detail: RichTextLabel = $Detail
-
 
 func _process(_delta: float) -> void:
 	var size := look.viewport().size
-	_resolution.text = "%dx%d" % [size.x, size.y]
-	_detail.text = "\n".join([
-		"rendered at, then blown up with no smoothing",
+	text = "\n".join(PackedStringArray([
+		"рисуется в [b]%d×%d[/b], дальше растягивается без сглаживания" % [size.x, size.y],
 		"",
-		"1  vertex snap     %s   %.2f rendered pixels" % [
+		"WASD лететь   ПРОБЕЛ вверх   SHIFT быстрее   ESC отпустить мышь",
+		"1 привязка вершин: %s   шаг %.2f отрисованного пикселя" % [
 			_on_off(look.snap_vertices), look.snap_coarseness],
-		"2  affine UV       %s   (perspective correction off)" % _on_off(look.affine_uv),
-		"3  colour crush    %s   %d levels per channel" % [
+		"2 аффинные развёртки: %s   (перспективная поправка выключена)" % _on_off(
+			look.affine_uv),
+		"3 огрубление цвета: %s   %d уровня на канал" % [
 			_on_off(look.post_enabled), look.levels],
-		"4  dither          %s" % _on_off(look.dither and look.post_enabled),
-		"5  resolution      %s   shrink x%d" % [
-			"[b]low[/b]" if look.shrink > 1 else "full", look.shrink],
-		"6  smooth textures %s   (what a PS2 did to a PS1 disc)" % _on_off(look.smooth_textures),
-		"7  scanlines       %s   (a separate pass, after the upscale)" % _on_off(look.scanlines),
-		"8  floor cut into  %s" % (
-			"[b]%d x %d[/b] pieces" % [look.floor_subdivide + 1, look.floor_subdivide + 1]
+		"4 растр: %s" % _on_off(look.dither and look.post_enabled),
+		"5 разрешение: %s   уменьшение ×%d" % [
+			"[b]низкое[/b]" if look.shrink > 1 else "полное", look.shrink],
+		"6 сглаживание текстур: %s   (что PS2 делала с диском от PS1)" % _on_off(
+			look.smooth_textures),
+		"7 строки развёртки: %s   (отдельный проход, уже после растягивания)" % _on_off(
+			look.scanlines),
+		"8 нарезка пола: %s" % (
+			"[b]%d × %d[/b]" % [look.floor_subdivide + 1, look.floor_subdivide + 1]
 			if look.floor_subdivide > 0
-			else "[color=#ff8f7a]2 triangles — the swim goes wild[/color]"),
+			else "[color=#ff8a6a]2 треугольника — плывёт во всю силу[/color]"),
+		"9 кинескоп: %s   (виньетка, изгиб, растекание цвета)" % _on_off(look.crt),
 		"",
-		"[color=#8ecbff]turn them off one at a time —[/color]",
-		"[color=#8ecbff]the one you miss most is the one doing the work[/color]",
-	])
+		"[color=#66ccff]стиль — это набор ограничений, а не набор ассетов: выключай по"
+			+ " одному, и то, чего не хватит сильнее всего, и делает работу[/color]",
+	]))
 
 
 func _on_off(value: bool) -> String:
-	return "[color=#7ee081]ON [/color]" if value else "[color=#7a7f88]off[/color]"
+	return "[color=#7fe08a]вкл[/color]" if value else "выкл"
+

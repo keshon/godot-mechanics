@@ -1,11 +1,11 @@
 extends Control
-## Numbers, plus the two things that have to be drawn rather than written: the
-## selection rectangle and the orders standing in each unit's queue.
+## Показания плюс две вещи, которые надо рисовать, а не писать: рамка выделения и приказы,
+## стоящие в очереди у каждого юнита.
 ##
-## Both are drawn in _draw(), in plain screen pixels, over the 3D. Getting the
-## orders there means asking the camera where a world point lands on screen —
-## `unproject_position`, the same call the box selection uses. Once you have
-## that one function, anything in the world can have a label on it.
+## И то и другое рисуется в `_draw()`, в экранных точках, поверх трёхмерного мира. Чтобы
+## приказы туда попали, у камеры спрашивают, куда мировая точка легла на экран, —
+## `unproject_position`, тот же вызов, которым пользуется выделение рамкой. С этой одной
+## функцией подпись можно повесить на что угодно в мире.
 
 enum DotStyle {
 	CIRCLES,
@@ -97,8 +97,7 @@ var _groups := {}
 
 @onready var field: CommandField = get_node(field_path)
 
-@onready var _selected_count: Label = $SelectedCount
-@onready var _detail: RichTextLabel = $Detail
+@onready var _info: RichTextLabel = $Info
 
 
 func _process(_delta: float) -> void:
@@ -108,22 +107,25 @@ func _process(_delta: float) -> void:
 	for unit in all_units:
 		if unit.is_busy():
 			moving += 1
-	_selected_count.text = "%d" % field.selected.size()
-	_detail.text = "\n".join([
-		"selected",
-		"units    %d    moving    %d    routes    [b]%d[/b]" % [
-			all_units.size(), moving, group_count],
-		"time     %s" % (
-			"[color=#ffcf7a][b]PAUSED[/b][/color]" if get_tree().paused
-			else "[b]x%.0f[/b]" % Engine.time_scale),
-		"draw     [b]%.2f ms[/b]   lines %s, dots %s" % [
-			draw_usec / 1000.0,
-			"batched" if use_batched_lines else "[color=#ffcf7a]one by one[/color]",
-			["[color=#ff8f7a]circles[/color]", "crosses", "off"][dot_style]],
+	_info.text = "\n".join(PackedStringArray([
+		"выделено [b]%d[/b] из %d   идут %d   ниток приказов [b]%d[/b]" % [
+			field.selected.size(), all_units.size(), moving, group_count],
+		"время: %s   отрисовка [b]%.2f[/b] мс" % [
+			"[color=#ffd479][b]ПАУЗА[/b][/color]" if get_tree().paused
+				else "[b]×%.0f[/b]" % Engine.time_scale,
+			draw_usec / 1000.0],
 		"",
-		"[color=#8ecbff]orders still register while paused —[/color]",
-		"[color=#8ecbff]that is the whole point of a tactical pause[/color]",
-	])
+		"WASD камера   КОЛЕСО приближение   ЛКМ выделить, рамкой или SHIFT добавить",
+		"ПКМ приказ   SHIFT+ПКМ точка маршрута   ПРОБЕЛ пауза   1/2/3 время ×1 ×2 ×4",
+		"нитки приказов: %s   точки: %s   линии: %s" % [
+			"[b]по приказу[/b]" if path_style == PathStyle.PER_ORDER
+				else "[color=#ff8a6a]по юниту[/color]",
+			["[color=#ff8a6a]кружками[/color]", "крестами", "выключены"][dot_style],
+			"пачкой" if use_batched_lines else "[color=#ffd479]по одной[/color]"],
+		"",
+		"[color=#66ccff]приказы принимаются и на паузе — в этом весь смысл"
+			+ " тактической паузы[/color]",
+	]))
 
 
 func _draw() -> void:
@@ -201,3 +203,4 @@ func _draw_thread(camera: Camera3D, from: Vector3, path: Array[Vector3]) -> void
 				_dot_segments.append(at + Vector2(0.0, -DOT_REACH))
 				_dot_segments.append(at + Vector2(0.0, DOT_REACH))
 		previous = at
+

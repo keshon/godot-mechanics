@@ -46,8 +46,7 @@ var _last_blast: BoomBlast
 
 @onready var _camera: Camera3D = $Camera
 @onready var _blasts: Node3D = $Booms
-@onready var _clock: Label = $Ui/Hud/Clock
-@onready var _detail: RichTextLabel = $Ui/Hud/Detail
+@onready var _hud: RichTextLabel = $Ui/Info
 
 
 func _ready() -> void:
@@ -149,30 +148,31 @@ func _aim_point() -> Vector3:
 
 
 func _draw_hud() -> void:
-	_clock.text = "x%.2f" % Engine.time_scale
-	var live := "[color=#7a7f88]—[/color]"
+	var live := "—"
 	var age := 0.0
 	if is_instance_valid(_last_blast):
 		age = _last_blast.age
 		var running := _last_blast.alive()
-		live = "[color=#7a7f88]finished[/color]" if running.is_empty() else "  ".join(running)
-	_detail.text = "\n".join([
-		"time",
-		"style    [b]%s[/b]" % (
-			"STYLISED" if style == BoomBlast.Style.STYLISED else "PHOTO"),
+		live = "погас" if running.is_empty() else "  ".join(running)
+	_hud.text = "
+".join(PackedStringArray([
+		"время [b]×%.2f[/b]   вид: [b]%s[/b]   взрывов в мире %d" % [
+			Engine.time_scale,
+			"условный" if style == BoomBlast.Style.STYLISED else "фотографический",
+			_blasts.get_child_count()],
+		"последнему [b]%.2f[/b] с   ещё горят: %s" % [age, live],
 		"",
-		"1 flash %s   2 fire %s   3 smoke %s   4 sparks %s   5 ring %s" % [
-			_on_off(flash_enabled),
-			_on_off(fireball_enabled),
-			_on_off(smoke_enabled),
-			_on_off(sparks_enabled),
-			_on_off(ring_enabled)],
+		"ЛКМ или ПРОБЕЛ подорвать   WASD лететь   SHIFT вверх   ESC отпустить мышь",
+		"1 вспышка %s   2 огонь %s   3 дым %s   4 искры %s   5 кольцо %s" % [
+			_on_off(flash_enabled), _on_off(fireball_enabled), _on_off(smoke_enabled),
+			_on_off(sparks_enabled), _on_off(ring_enabled)],
+		"TAB сменить вид   Z X C время ×1 ×0.25 ×0.1",
 		"",
-		"last blast    [b]%.2f s[/b] old" % age,
-		"still running    %s" % live,
-		"live explosions    %d" % _blasts.get_child_count(),
-	])
+		"[color=#66ccff]взрыв — стопка эффектов на разных часах: замедли до предела, и"
+			+ " слои расходятся[/color]",
+	]))
 
 
 func _on_off(value: bool) -> String:
-	return "[color=#7ee081]on[/color]" if value else "[color=#7a7f88]off[/color]"
+	return "[color=#7fe08a]вкл[/color]" if value else "выкл"
+
