@@ -1,7 +1,7 @@
 [gd_scene load_steps=39 format=3 uid="uid://c43stuff0001"]
 
-[ext_resource type="Script" path="res://probes/43_stuff/Rig.gd" id="1_rig"]
-[ext_resource type="Script" path="res://probes/43_stuff/Solid.gd" id="1_solid"]
+[ext_resource type="Script" path="res://probes/43_stuff/stuff.gd" id="1_rig"]
+[ext_resource type="Script" path="res://probes/43_stuff/solid.gd" id="1_solid"]
 [ext_resource type="Resource" path="res://probes/43_stuff/rifle.tres" id="r_rifle"]
 [ext_resource type="Resource" path="res://probes/43_stuff/buck.tres" id="r_buck"]
 [ext_resource type="Resource" path="res://probes/43_stuff/grenade.tres" id="r_grenade"]
@@ -101,7 +101,7 @@ size = Vector3(1.0, 1.0, 1.0)
 [sub_resource type="BoxShape3D" id="BoxReal_s"]
 size = Vector3(1.0, 1.0, 1.0)
 
-[node name="Rig" type="Node3D"]
+[node name="Stuff" type="Node3D"]
 script = ExtResource("1_rig")
 rounds = [ExtResource("r_rifle"), ExtResource("r_buck"), ExtResource("r_grenade"), ExtResource("r_rocket"), ExtResource("r_rifle2"), ExtResource("r_heavy2"), ExtResource("r_gren2"), ExtResource("r_rpg2")]
 

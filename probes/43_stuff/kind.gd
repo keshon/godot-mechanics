@@ -1,5 +1,5 @@
-extends Resource
 class_name StuffKind
+extends Resource
 ## ИЗ ЧЕГО СДЕЛАНО.
 ##
 ## Материал — это `Resource`, а не набор чисел на теле: его кладут в `.tres`, крутят в
@@ -62,10 +62,10 @@ func pieces(energy: float, volume: float, cap: int) -> int:
 	if volume < grit * 2.0:
 		return 0
 	var area := SURFACE * pow(maxf(volume, 1e-6), 2.0 / 3.0)
-	var n := energy / maxf(toughness * area, 1e-6)
+	var count := energy / maxf(toughness * area, 1e-6)
 	# Потолок двойной: наш бюджет тел и собственная зернистость материала. Без второго
 	# мелкий осколок «раскалывался» на ячейки ниже порога отсечки и ИСЧЕЗАЛ вместе с массой.
-	return clampi(int(pow(n, 3.0)), 2, mini(cap, int(volume / grit)))
+	return clampi(int(pow(count, 3.0)), 2, mini(cap, int(volume / grit)))
 
 
 ## СКОЛЬКО ЭНЕРГИИ ПРЕДМЕТ РЕАЛЬНО ПОГЛОТИТ. Пуля, попавшая в мелкий осколок, пробивает его
@@ -86,5 +86,5 @@ func soak(energy: float, volume: float, bite := 0.0) -> float:
 ## дефекта. По той же причине стеклянное волокно прочнее стеклянного стержня — и по этой же
 ## причине дробление затухает само, а не уходит в бесконечность.
 func threshold(volume: float) -> float:
-	var v := maxf(volume, 1e-6)
-	return strength * pow(v, 2.0 / 3.0) * pow(REFERENCE / v, flaw)
+	var sized := maxf(volume, 1e-6)
+	return strength * pow(sized, 2.0 / 3.0) * pow(REFERENCE / sized, flaw)

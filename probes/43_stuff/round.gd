@@ -1,5 +1,5 @@
-extends Resource
 class_name StuffRound
+extends Resource
 ## ЧЕМ БЬЮТ.
 ##
 ## У снаряда две независимые величины, и путать их так же дорого, как прочность с вязкостью:
@@ -15,6 +15,9 @@ class_name StuffRound
 ##
 ## Третья величина — КАЛИБР. Он не про силу вовсе, а про РАЗМЕР ВОРОНКИ: где материал сядет
 ## мелко, а где отвалится крупными кусками.
+
+## Объём шара единичного радиуса, 4π/3.
+const SPHERE := 4.18879
 
 @export var title := "винтовочный"
 ## Диаметр, м.
@@ -38,5 +41,5 @@ func crater() -> float:
 
 ## Объём воронки — сколько материала снаряд вообще задевает.
 func bite() -> float:
-	var r := crater()
-	return 4.18879 * r * r * r
+	var radius := crater()
+	return SPHERE * radius * radius * radius

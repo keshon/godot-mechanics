@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c03siege0001"]
 
 [ext_resource type="Script" uid="uid://bhbjjc476vry" path="res://mixes/03_siege/Rig.gd" id="1_rig"]
-[ext_resource type="Script" uid="uid://clbmjb4pefrot" path="res://probes/43_stuff/Round.gd" id="2_cwhfd"]
+[ext_resource type="Script" uid="uid://clbmjb4pefrot" path="res://probes/43_stuff/round.gd" id="2_cwhfd"]
 [ext_resource type="Script" uid="uid://cqmgyr1hkih6o" path="res://mixes/03_siege/Frame.gd" id="2_frame"]
 [ext_resource type="PackedScene" path="res://probes/30_gun/weapon.tscn" id="3_weapon"]
 [ext_resource type="PackedScene" path="res://probes/30_gun/fx.tscn" id="4_fx"]

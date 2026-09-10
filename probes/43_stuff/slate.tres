@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="StuffKind" format=3 uid="uid://c43stuffslat"]
 
-[ext_resource type="Script" uid="uid://8apnsw1eqxke" path="res://probes/43_stuff/Stuff.gd" id="1_s"]
+[ext_resource type="Script" uid="uid://8apnsw1eqxke" path="res://probes/43_stuff/kind.gd" id="1_s"]
 
 [sub_resource type="StandardMaterial3D" id="Body"]
 albedo_color = Color(0.3, 0.31, 0.34, 1)

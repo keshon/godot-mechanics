@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://c43stuff0002"]
 
-[ext_resource type="Script" path="res://probes/43_stuff/Solid.gd" id="1_solid"]
+[ext_resource type="Script" path="res://probes/43_stuff/solid.gd" id="1_solid"]
 
 [node name="Shard" type="RigidBody3D" groups=["solid"]]
 script = ExtResource("1_solid")
