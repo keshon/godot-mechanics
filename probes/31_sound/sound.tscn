@@ -175,10 +175,13 @@ visible = false
 layer = 2
 
 [node name="Label" type="RichTextLabel" parent="Ui"]
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
 mouse_filter = 2
 offset_left = 24.0
 offset_top = 18.0
 offset_right = 900.0
-offset_bottom = 560.0
+offset_bottom = -22.0
 bbcode_enabled = true
 scroll_active = false

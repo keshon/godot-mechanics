@@ -129,10 +129,13 @@ span = 1
 [node name="Ui" type="CanvasLayer" parent="." unique_id=2023350601]
 
 [node name="Info" type="RichTextLabel" parent="Ui" unique_id=1871579440]
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
 offset_left = 24.0
 offset_top = 20.0
 offset_right = 1200.0
-offset_bottom = 320.0
+offset_bottom = -22.0
 mouse_filter = 2
 theme_override_colors/default_color = Color(0.92, 0.94, 0.96, 1)
 bbcode_enabled = true

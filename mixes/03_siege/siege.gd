@@ -238,7 +238,7 @@ func _eject_shell() -> void:
 		return
 	_shell_at = -1.0
 	var eye := _camera.global_basis
-	_fx.shell(
+	_fx.add_shell(
 			_camera.global_position + eye * Vector3(0.22, -0.12, -0.5), eye.x, eye.y)
 
 
@@ -282,7 +282,7 @@ func _shoot() -> void:
 	if not hit.is_empty():
 		to = hit["position"]
 	if shots % TRACER_EVERY == 0:
-		_fx.tracer(muzzle, to)
+		_fx.add_tracer(muzzle, to)
 	if hit.is_empty():
 		return
 
@@ -291,8 +291,8 @@ func _shoot() -> void:
 	if solid != null and solid.stuff != null and SURFACES.has(solid.stuff.title):
 		surface = SURFACES[solid.stuff.title]
 	_last_at = to
-	_fx.hole(to, hit["normal"], direction, surface["hole"])
-	_fx.sparks(to, hit["normal"], direction, surface)
+	_fx.add_hole(to, hit["normal"], direction, surface["hole"])
+	_fx.add_sparks(to, hit["normal"], direction, surface)
 	if solid == null:
 		return
 	if shot.blast > 0.0:

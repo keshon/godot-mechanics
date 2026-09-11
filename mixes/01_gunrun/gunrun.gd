@@ -114,7 +114,7 @@ func _eject_shell() -> void:
 		return
 	_shell_at = -1.0
 	var world: Vector3 = _camera.global_transform * _port.position
-	_fx.shell(world, _camera.global_basis.x, _camera.global_basis.y)
+	_fx.add_shell(world, _camera.global_basis.x, _camera.global_basis.y)
 
 
 ## Оружие висит в своём подвьюпорте, и держать его надо руками рига — покачивание при
@@ -158,13 +158,13 @@ func _shoot() -> void:
 	material.set_shader_parameter("age", 0.0)
 
 	if tracers and shots % TRACER_EVERY == 0:
-		_fx.tracer(muzzle_world, hit_at)
+		_fx.add_tracer(muzzle_world, hit_at)
 	if not hit.is_empty():
 		var surface: Dictionary = _surface_of(hit["collider"])
 		if decals:
-			_fx.hole(hit_at, normal, direction, surface["hole"])
+			_fx.add_hole(hit_at, normal, direction, surface["hole"])
 		if sparks:
-			_fx.sparks(hit_at, normal, direction, surface)
+			_fx.add_sparks(hit_at, normal, direction, surface)
 	_shell_at = _clock + SHELL_DELAY
 	_kick_speed = minf(_kick_speed + 4.6, 9.0)
 	_kick = minf(_kick, 1.3)

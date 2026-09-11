@@ -262,10 +262,13 @@ script = ExtResource("2_cam")
 [node name="Ui" type="CanvasLayer" parent="."]
 
 [node name="Info" type="RichTextLabel" parent="Ui"]
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
 offset_left = 24.0
 offset_top = 20.0
 offset_right = 760.0
-offset_bottom = 320.0
+offset_bottom = -22.0
 mouse_filter = 2
 theme_override_colors/default_color = Color(1, 1, 1, 0.86)
 theme_override_font_sizes/normal_font_size = 15

@@ -164,10 +164,13 @@ mesh = SubResource("MeshTrace")
 [node name="Ui" type="CanvasLayer" parent="."]
 
 [node name="Info" type="RichTextLabel" parent="Ui"]
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
 offset_left = 24.0
 offset_top = 20.0
 offset_right = 1150.0
-offset_bottom = 560.0
+offset_bottom = -22.0
 mouse_filter = 2
 theme_override_colors/default_color = Color(0.93, 0.95, 0.97, 1)
 bbcode_enabled = true

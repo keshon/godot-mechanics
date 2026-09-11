@@ -93,11 +93,14 @@ draw_pass_1 = SubResource("Leaf")
 layer = 2
 
 [node name="Label" type="RichTextLabel" parent="Ui"]
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
 mouse_filter = 2
 offset_left = 26.0
 offset_top = 18.0
 offset_right = 900.0
-offset_bottom = 560.0
+offset_bottom = -22.0
 bbcode_enabled = true
 scroll_active = false
 theme_override_colors/default_color = Color(1, 1, 1, 0.95)

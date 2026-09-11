@@ -166,7 +166,7 @@ func _eject_shell() -> void:
 		return
 	_shell_at = -1.0
 	var aim := Basis.from_euler(Vector3(_pitch, _yaw, 0.0))
-	_fx.shell(
+	_fx.add_shell(
 			_turret_muzzle(aim) - aim * Vector3(0.0, 0.0, -0.45),
 			aim.x,
 			aim.y)
@@ -250,11 +250,11 @@ func _shoot() -> void:
 	material.set_shader_parameter("age", 0.0)
 
 	if shots % TRACER_EVERY == 0:
-		_fx.tracer(muzzle_world, hit_at)
+		_fx.add_tracer(muzzle_world, hit_at)
 	if not hit.is_empty():
 		var surface: Dictionary = _surface_of(hit["collider"])
-		_fx.hole(hit_at, normal, direction, surface["hole"])
-		_fx.sparks(hit_at, normal, direction, surface)
+		_fx.add_hole(hit_at, normal, direction, surface["hole"])
+		_fx.add_sparks(hit_at, normal, direction, surface)
 	_shell_at = _clock + SHELL_DELAY
 	_kick_speed = minf(_kick_speed + 4.6, 9.0)
 	_kick = minf(_kick, 1.3)
