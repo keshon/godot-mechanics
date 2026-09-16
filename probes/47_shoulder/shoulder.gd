@@ -11,18 +11,17 @@ extends Node3D
 ## kind of round. Two tables side by side are what the probe is for: one says how far a thrown
 ## thing drifts, the other says what a steady hand buys.
 
-## TWO ROUNDS, TWO ENVELOPES, AND THEY BARELY OVERLAP. This is a finding and not a setting. A
-## thrown round is a three-hundred-metre weapon because that is how far it stays flat enough to
-## aim; a ridden one is not worth its wire until past the range where the thrown one has already
-## stopped working. Measuring both over one set of ranges hides that behind a column of misses.
-const THROWN := [80.0, 160.0, 240.0, 320.0]
+## THE RIDDEN ROUND IS MEASURED WHERE THE THROWN ONES HAVE STOPPED. The envelopes barely overlap,
+## and that is a finding rather than a setting: a thrown round is a three-hundred-metre weapon
+## because that is how far it stays flat enough to aim, and a ridden one is not worth its wire
+## until past that. One set of ranges for both hides it behind a column of misses.
 const RIDDEN := [300.0, 600.0, 900.0, 1200.0]
 ## THREE UNGUIDED ROUNDS, AND IT IS ONE QUESTION RATHER THAN THREE SETTINGS: a flat flight is
 ## bought with speed, and these three are the price tags. The Mukha has no sustainer at all and
 ## arcs like a mortar; the RPG-7 burns for eight tenths of a second; the S-8 burns for most of a
 ## second up to six hundred metres per second and flies very nearly straight. Nobody fires an S-8
 ## off a shoulder, and that is the point: at shoulder speeds a straight unguided flight does not
-## exist, which is the whole reason the beam in the other mode is worth its wire.
+## exist, which is the whole reason the last position on the dial is worth its wire.
 const SHELLS: Array[String] = ["«Муха» (РПГ-18)", "РПГ-7 (ПГ-7В)", "НУРС С-8"]
 const SHELL_SPEED: Array[float] = [114.0, 117.0, 40.0]
 const SHELL_TOP: Array[float] = [114.0, 294.0, 610.0]
@@ -60,8 +59,8 @@ const TRACE_STEP := 1.5
 @export_range(40.0, 100.0, 1.0) var open_fov := 70.0
 
 var _kind := ShoulderRound.Kind.BEAM
-## Which of the three unguided rounds is in the tube. Means nothing to the beam rider.
-var _shell := 1
+## What is in the tube: an index into SHELLS, and one past the end is the beam rider.
+var _shell := SHELLS.size()
 var _yaw := 0.0
 var _pitch := 0.0
 var _zoom := false
@@ -148,7 +147,7 @@ func _apply_key(keycode: Key) -> void:
 	match keycode:
 		KEY_1:
 			if _tube.round_scene != null:
-				_flip_kind()
+				_load_round((_shell + 1) % (SHELLS.size() + 1))
 		KEY_2:
 			_mark.speed = 0.0 if _mark.speed > 0.0 else 11.0
 		KEY_3:
@@ -157,11 +156,6 @@ func _apply_key(keycode: Key) -> void:
 			var marks := _ranges()
 			var step: int = marks.find(_tube.sight_range)
 			_set_range(marks[(step + 1) % marks.size()])
-		KEY_5:
-			_shell = (_shell + 1) % SHELLS.size()
-			_table.clear()
-			if _kind == ShoulderRound.Kind.DUMB:
-				_set_range(_ranges()[1])
 		KEY_G:
 			_table.clear()
 			_row = 0
@@ -181,12 +175,14 @@ func _ranges() -> Array:
 	return marks
 
 
-## The round kind lives on the ROUND, not on the tube, so switching it means switching what
-## comes out — and the tube neither knows nor cares which one it just handed over. What the tube
-## DOES have to be told is the range, because a sight is cut for one round and one speed.
-func _flip_kind() -> void:
-	_kind = (ShoulderRound.Kind.DUMB if _kind == ShoulderRound.Kind.BEAM
-			else ShoulderRound.Kind.BEAM)
+## WHAT IS IN THE TUBE IS ONE CHOICE, SO IT IS ONE DIAL. A separate key for the unguided round
+## would sit in beam mode showing a position and changing nothing, and that reads as a broken
+## knob. The kind lives on the ROUND, not on the tube: the tube neither knows nor cares what it
+## hands over. What it DOES have to be told is the range, because a sight is cut for one round.
+func _load_round(index: int) -> void:
+	_shell = index
+	_kind = (ShoulderRound.Kind.BEAM if _shell == SHELLS.size()
+			else ShoulderRound.Kind.DUMB)
 	_table.clear()
 	_set_range(_ranges()[1])
 
@@ -236,9 +232,15 @@ func _dress(shot: ShoulderRound) -> void:
 	shot.weathercock = SHELL_VANE[_shell]
 
 
+func _round_name() -> String:
+	return "«Конкурс» (9М113)" if _kind == ShoulderRound.Kind.BEAM else SHELLS[_shell]
+
+
 ## A round without a sustainer and a round with one are not described the same way, and
 ## "114 -> 114" is a format artefact rather than a description.
-func _shell_line() -> String:
+func _round_line() -> String:
+	if _kind == ShoulderRound.Kind.BEAM:
+		return "%s   по лучу: летит туда, куда смотрит прицел" % _round_name()
 	var from: float = SHELL_SPEED[_shell]
 	var top: float = SHELL_TOP[_shell]
 	var burn: float = SHELL_BOOST[_shell]
@@ -425,7 +427,7 @@ func _live(pattern: String, value: float) -> String:
 
 
 func _readout() -> void:
-	var kind := "по лучу" if _kind == ShoulderRound.Kind.BEAM else "неуправляемая"
+	var kind := _round_name()
 	var to_mark := _mark.centre().distance_to(_eye.global_position)
 	var lines := PackedStringArray([
 		"[b]ПУСК С ПЛЕЧА[/b]   ракета: [b]%s[/b]   в трубе %d   %s" % [
@@ -442,11 +444,10 @@ func _readout() -> void:
 		"последний пуск: %s" % (_last_shot if _last_shot != "" else "—"),
 		"",
 		"[b]ЛКМ пуск[/b]   ПКМ прицел   WASD ходить   ESC отпустить мышь",
-		"1 ракета: %s" % kind,
+		"1 ракета: %s" % _round_line(),
 		"2 цель: %s" % ("идёт" if _mark.speed > 0.0 else "стоит"),
 		"3 взгляд: %s" % ("со стороны — видно траекторию и луч" if _side else "с плеча"),
 		"4 дальность (двигает и прицел, и цель): %.0f м" % _tube.sight_range,
-		"5 снаряд неуправляемой: %s" % _shell_line(),
 		"G прогнать четыре пуска: %s м" % " / ".join(PackedStringArray(
 			_ranges().map(func(dist: float) -> String: return "%.0f" % dist))),
 		"[color=#66ccff]за спиной у трубы струя: у стены выстрел не пройдёт[/color]",
