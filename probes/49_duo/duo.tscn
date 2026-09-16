@@ -1,0 +1,209 @@
+[gd_scene format=3]
+
+
+
+[ext_resource type="Script" path="res://probes/49_duo/duo.gd" id="1_rig"]
+
+[ext_resource type="PackedScene" path="res://probes/49_duo/runner.tscn" id="2_runner"]
+
+[ext_resource type="PackedScene" path="res://probes/49_duo/platform.tscn" id="3_platform"]
+
+[ext_resource type="PackedScene" path="res://probes/49_duo/spark.tscn" id="4_spark"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.12, 0.1, 0.24, 1)
+sky_horizon_color = Color(0.62, 0.36, 0.3, 1)
+ground_bottom_color = Color(0.05, 0.05, 0.07, 1)
+ground_horizon_color = Color(0.3, 0.2, 0.2, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+ambient_light_source = 3
+ambient_light_energy = 0.35
+tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 0.4
+
+[sub_resource type="StandardMaterial3D" id="Ground"]
+albedo_color = Color(0.36, 0.34, 0.33, 1)
+metallic = 0
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="Ledge"]
+albedo_color = Color(0.44, 0.4, 0.36, 1)
+metallic = 0
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Top"]
+albedo_color = Color(0.5, 0.45, 0.4, 1)
+metallic = 0
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Pole"]
+albedo_color = Color(0.3, 0.28, 0.26, 1)
+metallic = 0.2
+roughness = 0.6
+
+[sub_resource type="StandardMaterial3D" id="Flag"]
+albedo_color = Color(1, 0.8, 0.4, 1)
+emission_enabled = true
+emission = Color(1, 0.75, 0.3, 1)
+emission_energy_multiplier = 2
+
+[sub_resource type="StandardMaterial3D" id="Ghost"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.5, 0.88, 0.54, 0.35)
+
+[sub_resource type="BoxShape3D" id="GroundShape"]
+size = Vector3(18, 1, 14)
+
+[sub_resource type="BoxShape3D" id="LedgeShape"]
+size = Vector3(8, 2.4, 4)
+
+[sub_resource type="BoxShape3D" id="TopShape"]
+size = Vector3(8, 4.2, 4)
+
+[sub_resource type="BoxShape3D" id="GoalShape"]
+size = Vector3(2.2, 2, 2.2)
+
+[sub_resource type="BoxMesh" id="GroundMesh"]
+size = Vector3(18, 1, 14)
+
+[sub_resource type="BoxMesh" id="LedgeMesh"]
+size = Vector3(8, 2.4, 4)
+
+[sub_resource type="BoxMesh" id="TopMesh"]
+size = Vector3(8, 4.2, 4)
+
+[sub_resource type="BoxMesh" id="GhostMesh"]
+size = Vector3(1.2, 1.2, 1.2)
+
+[sub_resource type="BoxMesh" id="FlagMesh"]
+size = Vector3(0.9, 0.5, 0.05)
+
+[sub_resource type="CylinderMesh" id="PoleMesh"]
+top_radius = 0.05
+bottom_radius = 0.05
+height = 2
+radial_segments = 8
+rings = 1
+
+[node name="Duo" type="Node3D"]
+script = ExtResource("1_rig")
+platform_scene = ExtResource("3_platform")
+
+[node name="Environment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.819152, -0.368688, 0.439385, 0, 0.766044, 0.642788, -0.573576, -0.526541, 0.627507, 0, 10, 0)
+light_color = Color(1, 0.78, 0.6, 1)
+light_energy = 0.35
+shadow_enabled = true
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.828517, 0.559963, 0, -0.559963, 0.828517, 0, 11, 13)
+fov = 55.0
+
+[node name="Level" type="Node3D" parent="."]
+
+[node name="Ground" type="StaticBody3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+
+[node name="Collider" type="CollisionShape3D" parent="Level/Ground"]
+shape = SubResource("GroundShape")
+
+[node name="Mesh" type="MeshInstance3D" parent="Level/Ground"]
+material_override = SubResource("Ground")
+mesh = SubResource("GroundMesh")
+
+[node name="Ledge" type="StaticBody3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1.2, -5)
+
+[node name="Collider" type="CollisionShape3D" parent="Level/Ledge"]
+shape = SubResource("LedgeShape")
+
+[node name="Mesh" type="MeshInstance3D" parent="Level/Ledge"]
+material_override = SubResource("Ledge")
+mesh = SubResource("LedgeMesh")
+
+[node name="Top" type="StaticBody3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2.1, -5)
+
+[node name="Collider" type="CollisionShape3D" parent="Level/Top"]
+shape = SubResource("TopShape")
+
+[node name="Mesh" type="MeshInstance3D" parent="Level/Top"]
+material_override = SubResource("Top")
+mesh = SubResource("TopMesh")
+
+[node name="Goal" type="Area3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 5.2, -5)
+collision_layer = 0
+collision_mask = 4
+
+[node name="Collider" type="CollisionShape3D" parent="Level/Goal"]
+shape = SubResource("GoalShape")
+
+[node name="Pole" type="MeshInstance3D" parent="Level/Goal"]
+material_override = SubResource("Pole")
+mesh = SubResource("PoleMesh")
+
+[node name="Flag" type="MeshInstance3D" parent="Level/Goal"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.48, 0.7, 0)
+material_override = SubResource("Flag")
+mesh = SubResource("FlagMesh")
+
+[node name="Sparks" type="Node3D" parent="Level"]
+
+[node name="Corner" parent="Level/Sparks" instance=ExtResource("4_spark")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 0.7, 5)
+
+[node name="Middle" parent="Level/Sparks" instance=ExtResource("4_spark")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.7, 2)
+
+[node name="Far" parent="Level/Sparks" instance=ExtResource("4_spark")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0.7, 5)
+
+[node name="OnLedge" parent="Level/Sparks" instance=ExtResource("4_spark")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 3.1, -5)
+
+[node name="Platforms" type="Node3D" parent="."]
+
+[node name="Runner" parent="." instance=ExtResource("2_runner")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, 4)
+
+[node name="Ghost" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+material_override = SubResource("Ghost")
+mesh = SubResource("GhostMesh")
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Info" type="RichTextLabel" parent="Ui"]
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 900.0
+offset_bottom = -22.0
+mouse_filter = 2
+theme_override_colors/default_color = Color(1, 1, 1, 0.92)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+scroll_active = false
+
+[connection signal="taken" from="Level/Sparks/Corner" to="." method="_on_spark_taken"]
+[connection signal="taken" from="Level/Sparks/Middle" to="." method="_on_spark_taken"]
+[connection signal="taken" from="Level/Sparks/Far" to="." method="_on_spark_taken"]
+[connection signal="taken" from="Level/Sparks/OnLedge" to="." method="_on_spark_taken"]
+[connection signal="body_entered" from="Level/Goal" to="." method="_on_goal_body_entered"]
