@@ -450,7 +450,8 @@ func _readout() -> void:
 		"4 дальность (двигает и прицел, и цель): %.0f м" % _tube.sight_range,
 		"G прогнать четыре пуска: %s м" % " / ".join(PackedStringArray(
 			_ranges().map(func(dist: float) -> String: return "%.0f" % dist))),
-		"[color=#66ccff]за спиной у трубы струя: у стены выстрел не пройдёт[/color]",
+		"[color=#66ccff]промах платится до спуска или в полёте, и оружие решает,"
+			+ " когда[/color]",
 	])
 	if _row >= 0:
 		lines.append("")
