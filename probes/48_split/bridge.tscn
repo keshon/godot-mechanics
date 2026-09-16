@@ -1,0 +1,87 @@
+[gd_scene format=3]
+
+
+
+[ext_resource type="Script" path="res://probes/48_split/bridge.gd" id="1_bridge"]
+
+[sub_resource type="BoxShape3D" id="Shape"]
+size = Vector3(2.4, 0.3, 8)
+
+[sub_resource type="BoxMesh" id="LightDeckMesh"]
+size = Vector3(2.4, 0.1, 8)
+
+[sub_resource type="BoxMesh" id="RailMesh"]
+size = Vector3(0.06, 0.06, 8)
+
+[sub_resource type="BoxMesh" id="PlankMesh"]
+size = Vector3(2.4, 0.3, 8)
+
+[sub_resource type="CylinderMesh" id="VineMesh"]
+top_radius = 0.09
+bottom_radius = 0.09
+height = 8
+radial_segments = 8
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="LightDeck"]
+albedo_color = Color(0.04, 0.2, 0.26, 1)
+metallic = 0.2
+roughness = 0.15
+emission_enabled = true
+emission = Color(0.2, 0.85, 1, 1)
+emission_energy_multiplier = 0.35
+
+[sub_resource type="StandardMaterial3D" id="Rail"]
+albedo_color = Color(0.3, 0.9, 1, 1)
+emission_enabled = true
+emission = Color(0.3, 0.95, 1, 1)
+emission_energy_multiplier = 2.5
+
+[sub_resource type="StandardMaterial3D" id="Plank"]
+albedo_color = Color(0.42, 0.28, 0.15, 1)
+metallic = 0
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Vine"]
+albedo_color = Color(0.22, 0.45, 0.16, 1)
+metallic = 0
+roughness = 0.85
+
+[node name="Bridge" type="AnimatableBody3D"]
+script = ExtResource("1_bridge")
+
+[node name="Collider" type="CollisionShape3D" parent="."]
+shape = SubResource("Shape")
+
+[node name="ScifiLook" type="Node3D" parent="."]
+
+[node name="Deck" type="MeshInstance3D" parent="ScifiLook"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+material_override = SubResource("LightDeck")
+mesh = SubResource("LightDeckMesh")
+
+[node name="RailLeft" type="MeshInstance3D" parent="ScifiLook"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.15, 0.55, 0)
+material_override = SubResource("Rail")
+mesh = SubResource("RailMesh")
+
+[node name="RailRight" type="MeshInstance3D" parent="ScifiLook"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.15, 0.55, 0)
+material_override = SubResource("Rail")
+mesh = SubResource("RailMesh")
+
+[node name="FantasyLook" type="Node3D" parent="."]
+
+[node name="Deck" type="MeshInstance3D" parent="FantasyLook"]
+material_override = SubResource("Plank")
+mesh = SubResource("PlankMesh")
+
+[node name="VineLeft" type="MeshInstance3D" parent="FantasyLook"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, -1.1, 0.24, 0)
+material_override = SubResource("Vine")
+mesh = SubResource("VineMesh")
+
+[node name="VineRight" type="MeshInstance3D" parent="FantasyLook"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 1.1, 0.24, 0)
+material_override = SubResource("Vine")
+mesh = SubResource("VineMesh")

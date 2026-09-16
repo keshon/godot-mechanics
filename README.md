@@ -10,7 +10,7 @@
 Правила проекта — в [PURPOSE.md](PURPOSE.md), стиль кода — в [STYLE.md](STYLE.md),
 формат заметки — в [NOTE.md](NOTE.md), показания на экране — в [HUD.md](HUD.md),
 грабли движка — в [GODOT.md](GODOT.md).
-Сейчас проб 46, закрыто 46, мультипроб 3.
+Сейчас проб 47, закрыто 46, мультипроб 3.
 
 ## Запуск
 
@@ -64,6 +64,7 @@
 | <img src="img/probes/42_voronoi.jpg" width="440"><br><b>42_voronoi</b> — скол: ячейки Вороного, куски складываются в целое<br><sub><a href="probes/42_voronoi/README.md">заметка</a> · эталон: Red Faction Guerrilla</sub> | <img src="img/probes/43_stuff.jpg" width="440"><br><b>43_stuff</b> — материал: прочность против вязкости, узор ломания<br><sub><a href="probes/43_stuff/README.md">заметка</a> · эталон: Red Faction Guerrilla</sub> |
 | <img src="img/probes/44_missile.jpg" width="440"><br><b>44_missile</b> — ракета как аппарат: тяга, сопротивление, рули<br><sub><a href="probes/44_missile/README.md">заметка</a> · эталон: ArmA, DCS</sub> | <img src="img/probes/45_seeker.jpg" width="440"><br><b>45_seeker</b> — головка наведения: захват, сближение, срыв<br><sub><a href="probes/45_seeker/README.md">заметка</a> · эталон: DCS, Ace Combat</sub> |
 | <img src="img/probes/46_rocket.jpg" width="440"><br><b>46_rocket</b> — ракета-носитель: тяга, устойчивость, ступени<br><sub><a href="probes/46_rocket/README.md">заметка</a> · эталон: Kerbal Space Program</sub> | <img src="img/probes/47_shoulder.jpg" width="440"><br><b>47_shoulder</b> — пуск с плеча: струя назад, взведение, ведение цели рукой<br><sub><a href="probes/47_shoulder/README.md">заметка</a> · эталон: ArmA</sub> |
+| <br><b>48_split</b> — раздельные миры: одна геометрия, два прочтения<br><sub><a href="probes/48_split/README.md">заметка</a> · эталон: Split Fiction · не закрыта</sub> |  |
 
 ## Мультипробы
 

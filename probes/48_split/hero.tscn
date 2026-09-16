@@ -1,0 +1,55 @@
+[gd_scene format=3]
+
+
+
+[ext_resource type="Script" path="res://probes/48_split/hero.gd" id="1_hero"]
+
+[sub_resource type="CapsuleShape3D" id="Shape"]
+radius = 0.35
+height = 1.7
+
+[sub_resource type="CapsuleMesh" id="SuitMesh"]
+radius = 0.35
+height = 1.7
+
+[sub_resource type="BoxMesh" id="VisorMesh"]
+size = Vector3(0.46, 0.16, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="ScifiSuit"]
+albedo_color = Color(0.72, 0.84, 0.95, 1)
+metallic = 0.4
+roughness = 0.35
+
+[sub_resource type="StandardMaterial3D" id="FantasySuit"]
+albedo_color = Color(0.9, 0.52, 0.24, 1)
+metallic = 0
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="Visor"]
+albedo_color = Color(0.04, 0.05, 0.07, 1)
+metallic = 0.6
+roughness = 0.2
+
+[node name="Hero" type="CharacterBody3D"]
+script = ExtResource("1_hero")
+
+[node name="Collider" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+shape = SubResource("Shape")
+
+[node name="Body" type="Node3D" parent="."]
+
+[node name="ScifiSuit" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+material_override = SubResource("ScifiSuit")
+mesh = SubResource("SuitMesh")
+
+[node name="FantasySuit" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+material_override = SubResource("FantasySuit")
+mesh = SubResource("SuitMesh")
+
+[node name="Visor" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.42, -0.27)
+material_override = SubResource("Visor")
+mesh = SubResource("VisorMesh")

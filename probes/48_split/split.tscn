@@ -1,0 +1,591 @@
+[gd_scene format=3]
+
+
+
+[ext_resource type="Script" path="res://probes/48_split/split.gd" id="1_rig"]
+
+[ext_resource type="Script" path="res://probes/48_split/dual.gd" id="2_dual"]
+
+[ext_resource type="PackedScene" path="res://probes/48_split/hero.tscn" id="3_hero"]
+
+[ext_resource type="PackedScene" path="res://probes/48_split/bridge.tscn" id="4_bridge"]
+
+[ext_resource type="PackedScene" path="res://probes/48_split/switch.tscn" id="5_switch"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ScifiSkyMat"]
+sky_top_color = Color(0.02, 0.03, 0.09, 1)
+sky_horizon_color = Color(0.22, 0.12, 0.34, 1)
+ground_bottom_color = Color(0.01, 0.01, 0.02, 1)
+ground_horizon_color = Color(0.12, 0.07, 0.2, 1)
+
+[sub_resource type="Sky" id="ScifiSky"]
+sky_material = SubResource("ScifiSkyMat")
+
+[sub_resource type="Environment" id="ScifiEnv"]
+background_mode = 2
+sky = SubResource("ScifiSky")
+ambient_light_source = 3
+ambient_light_energy = 1.4
+tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 0.5
+fog_enabled = true
+fog_light_color = Color(0.04, 0.08, 0.16, 1)
+fog_density = 0.01
+fog_sky_affect = 0.0
+
+[sub_resource type="ProceduralSkyMaterial" id="FantasySkyMat"]
+sky_top_color = Color(0.26, 0.5, 0.86, 1)
+sky_horizon_color = Color(0.9, 0.82, 0.6, 1)
+ground_bottom_color = Color(0.24, 0.22, 0.18, 1)
+ground_horizon_color = Color(0.64, 0.58, 0.46, 1)
+
+[sub_resource type="Sky" id="FantasySky"]
+sky_material = SubResource("FantasySkyMat")
+
+[sub_resource type="Environment" id="FantasyEnv"]
+background_mode = 2
+sky = SubResource("FantasySky")
+ambient_light_source = 3
+ambient_light_energy = 0.9
+tonemap_mode = 2
+fog_enabled = true
+fog_light_color = Color(0.88, 0.82, 0.66, 1)
+fog_density = 0.012
+
+[sub_resource type="StandardMaterial3D" id="ScifiDeck"]
+albedo_color = Color(0.22, 0.25, 0.3, 1)
+metallic = 0.5
+roughness = 0.45
+
+[sub_resource type="StandardMaterial3D" id="ScifiTrim"]
+albedo_color = Color(0.2, 0.9, 1, 1)
+emission_enabled = true
+emission = Color(0.2, 0.9, 1, 1)
+emission_energy_multiplier = 2.5
+
+[sub_resource type="StandardMaterial3D" id="ScifiMetal"]
+albedo_color = Color(0.32, 0.35, 0.4, 1)
+metallic = 0.85
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="FantasyGrass"]
+albedo_color = Color(0.36, 0.5, 0.24, 1)
+metallic = 0
+roughness = 1
+
+[sub_resource type="StandardMaterial3D" id="FantasyStone"]
+albedo_color = Color(0.56, 0.51, 0.43, 1)
+metallic = 0
+roughness = 0.95
+
+[sub_resource type="BoxShape3D" id="NearShape"]
+size = Vector3(20, 1, 14)
+
+[sub_resource type="BoxShape3D" id="FarShape"]
+size = Vector3(20, 1, 12)
+
+[sub_resource type="BoxShape3D" id="PillarShape"]
+size = Vector3(0.9, 4, 0.9)
+
+[sub_resource type="BoxMesh" id="NearMesh"]
+size = Vector3(20, 1, 14)
+
+[sub_resource type="BoxMesh" id="FarMesh"]
+size = Vector3(20, 1, 12)
+
+[sub_resource type="BoxMesh" id="TrimMesh"]
+size = Vector3(20, 0.1, 0.25)
+
+[sub_resource type="BoxMesh" id="PillarMesh"]
+size = Vector3(0.9, 4, 0.9)
+
+[sub_resource type="BoxMesh" id="BandMesh"]
+size = Vector3(0.96, 0.1, 0.96)
+
+[sub_resource type="CylinderMesh" id="ColumnMesh"]
+top_radius = 0.5
+bottom_radius = 0.5
+height = 3.4
+radial_segments = 16
+rings = 1
+
+[sub_resource type="BoxMesh" id="SlabMesh"]
+size = Vector3(1.2, 0.3, 1.2)
+
+[node name="Split" type="Node3D"]
+script = ExtResource("1_rig")
+
+[node name="SunScifi" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, -0.441474, 0.234736, 0, 0.469472, 0.882948, -0.5, -0.764655, 0.406574, 0, 10, 0)
+layers = 2
+light_color = Color(0.72, 0.84, 1, 1)
+light_energy = 0.7
+shadow_enabled = true
+
+[node name="SunFantasy" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.766044, 0.340626, -0.545115, 0, 0.848048, 0.529919, 0.642788, -0.405942, 0.649643, 0, 10, 0)
+layers = 4
+light_color = Color(1, 0.88, 0.66, 1)
+light_energy = 1.2
+shadow_enabled = true
+
+[node name="Level" type="Node3D" parent="."]
+
+[node name="NearDeck" type="StaticBody3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 1)
+
+[node name="Collider" type="CollisionShape3D" parent="Level/NearDeck"]
+shape = SubResource("NearShape")
+
+[node name="Look" type="Node3D" parent="Level/NearDeck"]
+script = ExtResource("2_dual")
+
+[node name="Scifi" type="MeshInstance3D" parent="Level/NearDeck/Look"]
+material_override = SubResource("ScifiDeck")
+mesh = SubResource("NearMesh")
+
+[node name="Trim" type="MeshInstance3D" parent="Level/NearDeck/Look/Scifi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -7)
+material_override = SubResource("ScifiTrim")
+mesh = SubResource("TrimMesh")
+
+[node name="Fantasy" type="MeshInstance3D" parent="Level/NearDeck/Look"]
+material_override = SubResource("FantasyGrass")
+mesh = SubResource("NearMesh")
+
+[node name="FarDeck" type="StaticBody3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -20)
+
+[node name="Collider" type="CollisionShape3D" parent="Level/FarDeck"]
+shape = SubResource("FarShape")
+
+[node name="Look" type="Node3D" parent="Level/FarDeck"]
+script = ExtResource("2_dual")
+
+[node name="Scifi" type="MeshInstance3D" parent="Level/FarDeck/Look"]
+material_override = SubResource("ScifiDeck")
+mesh = SubResource("FarMesh")
+
+[node name="Trim" type="MeshInstance3D" parent="Level/FarDeck/Look/Scifi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 6)
+material_override = SubResource("ScifiTrim")
+mesh = SubResource("TrimMesh")
+
+[node name="Fantasy" type="MeshInstance3D" parent="Level/FarDeck/Look"]
+material_override = SubResource("FantasyGrass")
+mesh = SubResource("FarMesh")
+
+[node name="Pillar1" type="StaticBody3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 2, 5)
+
+[node name="Collider" type="CollisionShape3D" parent="Level/Pillar1"]
+shape = SubResource("PillarShape")
+
+[node name="Look" type="Node3D" parent="Level/Pillar1"]
+script = ExtResource("2_dual")
+
+[node name="Scifi" type="MeshInstance3D" parent="Level/Pillar1/Look"]
+material_override = SubResource("ScifiMetal")
+mesh = SubResource("PillarMesh")
+
+[node name="BandLow" type="MeshInstance3D" parent="Level/Pillar1/Look/Scifi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.2, 0)
+material_override = SubResource("ScifiTrim")
+mesh = SubResource("BandMesh")
+
+[node name="BandHigh" type="MeshInstance3D" parent="Level/Pillar1/Look/Scifi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+material_override = SubResource("ScifiTrim")
+mesh = SubResource("BandMesh")
+
+[node name="Fantasy" type="MeshInstance3D" parent="Level/Pillar1/Look"]
+material_override = SubResource("FantasyStone")
+mesh = SubResource("ColumnMesh")
+
+[node name="Capital" type="MeshInstance3D" parent="Level/Pillar1/Look/Fantasy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85, 0)
+material_override = SubResource("FantasyStone")
+mesh = SubResource("SlabMesh")
+
+[node name="Base" type="MeshInstance3D" parent="Level/Pillar1/Look/Fantasy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.85, 0)
+material_override = SubResource("FantasyStone")
+mesh = SubResource("SlabMesh")
+
+[node name="Pillar2" type="StaticBody3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 2, -3)
+
+[node name="Collider" type="CollisionShape3D" parent="Level/Pillar2"]
+shape = SubResource("PillarShape")
+
+[node name="Look" type="Node3D" parent="Level/Pillar2"]
+script = ExtResource("2_dual")
+
+[node name="Scifi" type="MeshInstance3D" parent="Level/Pillar2/Look"]
+material_override = SubResource("ScifiMetal")
+mesh = SubResource("PillarMesh")
+
+[node name="BandLow" type="MeshInstance3D" parent="Level/Pillar2/Look/Scifi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.2, 0)
+material_override = SubResource("ScifiTrim")
+mesh = SubResource("BandMesh")
+
+[node name="BandHigh" type="MeshInstance3D" parent="Level/Pillar2/Look/Scifi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+material_override = SubResource("ScifiTrim")
+mesh = SubResource("BandMesh")
+
+[node name="Fantasy" type="MeshInstance3D" parent="Level/Pillar2/Look"]
+material_override = SubResource("FantasyStone")
+mesh = SubResource("ColumnMesh")
+
+[node name="Capital" type="MeshInstance3D" parent="Level/Pillar2/Look/Fantasy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85, 0)
+material_override = SubResource("FantasyStone")
+mesh = SubResource("SlabMesh")
+
+[node name="Base" type="MeshInstance3D" parent="Level/Pillar2/Look/Fantasy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.85, 0)
+material_override = SubResource("FantasyStone")
+mesh = SubResource("SlabMesh")
+
+[node name="Pillar3" type="StaticBody3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 2, -18)
+
+[node name="Collider" type="CollisionShape3D" parent="Level/Pillar3"]
+shape = SubResource("PillarShape")
+
+[node name="Look" type="Node3D" parent="Level/Pillar3"]
+script = ExtResource("2_dual")
+
+[node name="Scifi" type="MeshInstance3D" parent="Level/Pillar3/Look"]
+material_override = SubResource("ScifiMetal")
+mesh = SubResource("PillarMesh")
+
+[node name="BandLow" type="MeshInstance3D" parent="Level/Pillar3/Look/Scifi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.2, 0)
+material_override = SubResource("ScifiTrim")
+mesh = SubResource("BandMesh")
+
+[node name="BandHigh" type="MeshInstance3D" parent="Level/Pillar3/Look/Scifi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+material_override = SubResource("ScifiTrim")
+mesh = SubResource("BandMesh")
+
+[node name="Fantasy" type="MeshInstance3D" parent="Level/Pillar3/Look"]
+material_override = SubResource("FantasyStone")
+mesh = SubResource("ColumnMesh")
+
+[node name="Capital" type="MeshInstance3D" parent="Level/Pillar3/Look/Fantasy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85, 0)
+material_override = SubResource("FantasyStone")
+mesh = SubResource("SlabMesh")
+
+[node name="Base" type="MeshInstance3D" parent="Level/Pillar3/Look/Fantasy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.85, 0)
+material_override = SubResource("FantasyStone")
+mesh = SubResource("SlabMesh")
+
+[node name="Pillar4" type="StaticBody3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 2, -24)
+
+[node name="Collider" type="CollisionShape3D" parent="Level/Pillar4"]
+shape = SubResource("PillarShape")
+
+[node name="Look" type="Node3D" parent="Level/Pillar4"]
+script = ExtResource("2_dual")
+
+[node name="Scifi" type="MeshInstance3D" parent="Level/Pillar4/Look"]
+material_override = SubResource("ScifiMetal")
+mesh = SubResource("PillarMesh")
+
+[node name="BandLow" type="MeshInstance3D" parent="Level/Pillar4/Look/Scifi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.2, 0)
+material_override = SubResource("ScifiTrim")
+mesh = SubResource("BandMesh")
+
+[node name="BandHigh" type="MeshInstance3D" parent="Level/Pillar4/Look/Scifi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+material_override = SubResource("ScifiTrim")
+mesh = SubResource("BandMesh")
+
+[node name="Fantasy" type="MeshInstance3D" parent="Level/Pillar4/Look"]
+material_override = SubResource("FantasyStone")
+mesh = SubResource("ColumnMesh")
+
+[node name="Capital" type="MeshInstance3D" parent="Level/Pillar4/Look/Fantasy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85, 0)
+material_override = SubResource("FantasyStone")
+mesh = SubResource("SlabMesh")
+
+[node name="Base" type="MeshInstance3D" parent="Level/Pillar4/Look/Fantasy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.85, 0)
+material_override = SubResource("FantasyStone")
+mesh = SubResource("SlabMesh")
+
+[node name="Pillar5" type="StaticBody3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 2, 5)
+
+[node name="Collider" type="CollisionShape3D" parent="Level/Pillar5"]
+shape = SubResource("PillarShape")
+
+[node name="Look" type="Node3D" parent="Level/Pillar5"]
+script = ExtResource("2_dual")
+
+[node name="Scifi" type="MeshInstance3D" parent="Level/Pillar5/Look"]
+material_override = SubResource("ScifiMetal")
+mesh = SubResource("PillarMesh")
+
+[node name="BandLow" type="MeshInstance3D" parent="Level/Pillar5/Look/Scifi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.2, 0)
+material_override = SubResource("ScifiTrim")
+mesh = SubResource("BandMesh")
+
+[node name="BandHigh" type="MeshInstance3D" parent="Level/Pillar5/Look/Scifi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+material_override = SubResource("ScifiTrim")
+mesh = SubResource("BandMesh")
+
+[node name="Fantasy" type="MeshInstance3D" parent="Level/Pillar5/Look"]
+material_override = SubResource("FantasyStone")
+mesh = SubResource("ColumnMesh")
+
+[node name="Capital" type="MeshInstance3D" parent="Level/Pillar5/Look/Fantasy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85, 0)
+material_override = SubResource("FantasyStone")
+mesh = SubResource("SlabMesh")
+
+[node name="Base" type="MeshInstance3D" parent="Level/Pillar5/Look/Fantasy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.85, 0)
+material_override = SubResource("FantasyStone")
+mesh = SubResource("SlabMesh")
+
+[node name="Pillar6" type="StaticBody3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 2, -3)
+
+[node name="Collider" type="CollisionShape3D" parent="Level/Pillar6"]
+shape = SubResource("PillarShape")
+
+[node name="Look" type="Node3D" parent="Level/Pillar6"]
+script = ExtResource("2_dual")
+
+[node name="Scifi" type="MeshInstance3D" parent="Level/Pillar6/Look"]
+material_override = SubResource("ScifiMetal")
+mesh = SubResource("PillarMesh")
+
+[node name="BandLow" type="MeshInstance3D" parent="Level/Pillar6/Look/Scifi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.2, 0)
+material_override = SubResource("ScifiTrim")
+mesh = SubResource("BandMesh")
+
+[node name="BandHigh" type="MeshInstance3D" parent="Level/Pillar6/Look/Scifi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+material_override = SubResource("ScifiTrim")
+mesh = SubResource("BandMesh")
+
+[node name="Fantasy" type="MeshInstance3D" parent="Level/Pillar6/Look"]
+material_override = SubResource("FantasyStone")
+mesh = SubResource("ColumnMesh")
+
+[node name="Capital" type="MeshInstance3D" parent="Level/Pillar6/Look/Fantasy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85, 0)
+material_override = SubResource("FantasyStone")
+mesh = SubResource("SlabMesh")
+
+[node name="Base" type="MeshInstance3D" parent="Level/Pillar6/Look/Fantasy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.85, 0)
+material_override = SubResource("FantasyStone")
+mesh = SubResource("SlabMesh")
+
+[node name="Pillar7" type="StaticBody3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 2, -18)
+
+[node name="Collider" type="CollisionShape3D" parent="Level/Pillar7"]
+shape = SubResource("PillarShape")
+
+[node name="Look" type="Node3D" parent="Level/Pillar7"]
+script = ExtResource("2_dual")
+
+[node name="Scifi" type="MeshInstance3D" parent="Level/Pillar7/Look"]
+material_override = SubResource("ScifiMetal")
+mesh = SubResource("PillarMesh")
+
+[node name="BandLow" type="MeshInstance3D" parent="Level/Pillar7/Look/Scifi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.2, 0)
+material_override = SubResource("ScifiTrim")
+mesh = SubResource("BandMesh")
+
+[node name="BandHigh" type="MeshInstance3D" parent="Level/Pillar7/Look/Scifi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+material_override = SubResource("ScifiTrim")
+mesh = SubResource("BandMesh")
+
+[node name="Fantasy" type="MeshInstance3D" parent="Level/Pillar7/Look"]
+material_override = SubResource("FantasyStone")
+mesh = SubResource("ColumnMesh")
+
+[node name="Capital" type="MeshInstance3D" parent="Level/Pillar7/Look/Fantasy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85, 0)
+material_override = SubResource("FantasyStone")
+mesh = SubResource("SlabMesh")
+
+[node name="Base" type="MeshInstance3D" parent="Level/Pillar7/Look/Fantasy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.85, 0)
+material_override = SubResource("FantasyStone")
+mesh = SubResource("SlabMesh")
+
+[node name="Pillar8" type="StaticBody3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 2, -24)
+
+[node name="Collider" type="CollisionShape3D" parent="Level/Pillar8"]
+shape = SubResource("PillarShape")
+
+[node name="Look" type="Node3D" parent="Level/Pillar8"]
+script = ExtResource("2_dual")
+
+[node name="Scifi" type="MeshInstance3D" parent="Level/Pillar8/Look"]
+material_override = SubResource("ScifiMetal")
+mesh = SubResource("PillarMesh")
+
+[node name="BandLow" type="MeshInstance3D" parent="Level/Pillar8/Look/Scifi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.2, 0)
+material_override = SubResource("ScifiTrim")
+mesh = SubResource("BandMesh")
+
+[node name="BandHigh" type="MeshInstance3D" parent="Level/Pillar8/Look/Scifi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+material_override = SubResource("ScifiTrim")
+mesh = SubResource("BandMesh")
+
+[node name="Fantasy" type="MeshInstance3D" parent="Level/Pillar8/Look"]
+material_override = SubResource("FantasyStone")
+mesh = SubResource("ColumnMesh")
+
+[node name="Capital" type="MeshInstance3D" parent="Level/Pillar8/Look/Fantasy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85, 0)
+material_override = SubResource("FantasyStone")
+mesh = SubResource("SlabMesh")
+
+[node name="Base" type="MeshInstance3D" parent="Level/Pillar8/Look/Fantasy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.85, 0)
+material_override = SubResource("FantasyStone")
+mesh = SubResource("SlabMesh")
+
+[node name="ScifiBridge" parent="." instance=ExtResource("4_bridge")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, -0.15, -10)
+
+[node name="FantasyBridge" parent="." instance=ExtResource("4_bridge")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -0.15, -10)
+world = 1
+
+[node name="Console" parent="." instance=ExtResource("5_switch")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -7, 0, 1)
+
+[node name="Rune" parent="." instance=ExtResource("5_switch")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 7, 0, 1)
+world = 1
+title = "руна"
+
+[node name="HeroScifi" parent="." instance=ExtResource("3_hero")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.1, 4)
+
+[node name="HeroFantasy" parent="." instance=ExtResource("3_hero")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.1, 4)
+world = 1
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Views" type="HBoxContainer" parent="Ui"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="Left" type="SubViewportContainer" parent="Ui/Views"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+stretch = true
+
+[node name="View" type="SubViewport" parent="Ui/Views/Left"]
+handle_input_locally = false
+size = Vector2i(800, 900)
+
+[node name="Camera" type="Camera3D" parent="Ui/Views/Left/View"]
+cull_mask = 3
+environment = SubResource("ScifiEnv")
+fov = 70.0
+far = 300.0
+
+[node name="Right" type="SubViewportContainer" parent="Ui/Views"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+stretch = true
+
+[node name="View" type="SubViewport" parent="Ui/Views/Right"]
+handle_input_locally = false
+size = Vector2i(800, 900)
+
+[node name="Camera" type="Camera3D" parent="Ui/Views/Right/View"]
+cull_mask = 5
+environment = SubResource("FantasyEnv")
+fov = 70.0
+far = 300.0
+
+[node name="Marks" type="Control" parent="Ui"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Divider" type="ColorRect" parent="Ui/Marks"]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_right = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.02, 0.02, 0.03, 1)
+
+[node name="Hands" type="ColorRect" parent="Ui/Marks"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_top = -5.0
+grow_vertical = 0
+mouse_filter = 2
+color = Color(1, 0.83, 0.47, 1)
+
+[node name="Info" type="RichTextLabel" parent="Ui"]
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 770.0
+offset_bottom = -22.0
+mouse_filter = 2
+theme_override_colors/default_color = Color(1, 1, 1, 0.92)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+scroll_active = false
+
+[connection signal="used" from="Console" to="FantasyBridge" method="toggle"]
+[connection signal="used" from="Rune" to="ScifiBridge" method="toggle"]
