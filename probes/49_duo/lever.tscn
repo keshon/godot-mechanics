@@ -1,0 +1,65 @@
+[gd_scene format=3]
+
+
+
+[ext_resource type="Script" path="res://probes/49_duo/lever.gd" id="1_lever"]
+
+[sub_resource type="BoxShape3D" id="Shape"]
+size = Vector3(1.4, 2.4, 2)
+
+[sub_resource type="BoxMesh" id="BaseMesh"]
+size = Vector3(0.7, 0.3, 0.7)
+
+[sub_resource type="CylinderMesh" id="StickMesh"]
+top_radius = 0.05
+bottom_radius = 0.05
+height = 1.2
+radial_segments = 8
+rings = 1
+
+[sub_resource type="SphereMesh" id="KnobMesh"]
+radius = 0.14
+height = 0.28
+
+[sub_resource type="StandardMaterial3D" id="Base"]
+albedo_color = Color(0.4, 0.38, 0.36, 1)
+metallic = 0
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Stick"]
+albedo_color = Color(0.3, 0.2, 0.12, 1)
+metallic = 0
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="Knob"]
+albedo_color = Color(1, 0.8, 0.4, 1)
+emission_enabled = true
+emission = Color(1, 0.75, 0.3, 1)
+emission_energy_multiplier = 1.5
+
+[node name="Lever" type="Area3D"]
+collision_layer = 0
+collision_mask = 4
+script = ExtResource("1_lever")
+
+[node name="Collider" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+shape = SubResource("Shape")
+
+[node name="Base" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+material_override = SubResource("Base")
+mesh = SubResource("BaseMesh")
+
+[node name="Handle" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+
+[node name="Stick" type="MeshInstance3D" parent="Handle"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+material_override = SubResource("Stick")
+mesh = SubResource("StickMesh")
+
+[node name="Knob" type="MeshInstance3D" parent="Handle"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+material_override = SubResource("Knob")
+mesh = SubResource("KnobMesh")

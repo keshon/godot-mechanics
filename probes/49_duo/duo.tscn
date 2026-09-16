@@ -4,17 +4,21 @@
 
 [ext_resource type="Script" path="res://probes/49_duo/duo.gd" id="1_rig"]
 
-[ext_resource type="PackedScene" path="res://probes/49_duo/runner.tscn" id="2_runner"]
+[ext_resource type="PackedScene" path="res://probes/49_duo/body.tscn" id="2_body"]
 
-[ext_resource type="PackedScene" path="res://probes/49_duo/platform.tscn" id="3_platform"]
+[ext_resource type="PackedScene" path="res://probes/49_duo/nail.tscn" id="3_nail"]
 
-[ext_resource type="PackedScene" path="res://probes/49_duo/spark.tscn" id="4_spark"]
+[ext_resource type="PackedScene" path="res://probes/49_duo/lever.tscn" id="4_lever"]
+
+[ext_resource type="PackedScene" path="res://probes/49_duo/bridge.tscn" id="5_bridge"]
+
+[ext_resource type="PhysicsMaterial" path="res://probes/49_duo/wood.tres" id="6_wood"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
-sky_top_color = Color(0.12, 0.1, 0.24, 1)
-sky_horizon_color = Color(0.62, 0.36, 0.3, 1)
-ground_bottom_color = Color(0.05, 0.05, 0.07, 1)
-ground_horizon_color = Color(0.3, 0.2, 0.2, 1)
+sky_top_color = Color(0.36, 0.52, 0.72, 1)
+sky_horizon_color = Color(0.86, 0.8, 0.68, 1)
+ground_bottom_color = Color(0.2, 0.18, 0.16, 1)
+ground_horizon_color = Color(0.6, 0.54, 0.46, 1)
 
 [sub_resource type="Sky" id="Sky"]
 sky_material = SubResource("SkyMat")
@@ -23,30 +27,26 @@ sky_material = SubResource("SkyMat")
 background_mode = 2
 sky = SubResource("Sky")
 ambient_light_source = 3
-ambient_light_energy = 0.35
+ambient_light_energy = 0.8
 tonemap_mode = 2
-glow_enabled = true
-glow_intensity = 0.4
+fog_enabled = true
+fog_light_color = Color(0.7, 0.72, 0.74, 1)
+fog_density = 0.008
 
-[sub_resource type="StandardMaterial3D" id="Ground"]
-albedo_color = Color(0.36, 0.34, 0.33, 1)
+[sub_resource type="StandardMaterial3D" id="Stone"]
+albedo_color = Color(0.5, 0.48, 0.45, 1)
 metallic = 0
 roughness = 0.95
 
-[sub_resource type="StandardMaterial3D" id="Ledge"]
-albedo_color = Color(0.44, 0.4, 0.36, 1)
+[sub_resource type="StandardMaterial3D" id="WoodPaint"]
+albedo_color = Color(0.58, 0.4, 0.22, 1)
 metallic = 0
-roughness = 0.9
+roughness = 0.85
 
-[sub_resource type="StandardMaterial3D" id="Top"]
-albedo_color = Color(0.5, 0.45, 0.4, 1)
+[sub_resource type="StandardMaterial3D" id="Backdrop"]
+albedo_color = Color(0.34, 0.33, 0.33, 1)
 metallic = 0
-roughness = 0.9
-
-[sub_resource type="StandardMaterial3D" id="Pole"]
-albedo_color = Color(0.3, 0.28, 0.26, 1)
-metallic = 0.2
-roughness = 0.6
+roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Flag"]
 albedo_color = Color(1, 0.8, 0.4, 1)
@@ -54,96 +54,251 @@ emission_enabled = true
 emission = Color(1, 0.75, 0.3, 1)
 emission_energy_multiplier = 2
 
-[sub_resource type="StandardMaterial3D" id="Ghost"]
+[sub_resource type="StandardMaterial3D" id="Aim"]
+shading_mode = 0
+albedo_color = Color(0.5, 0.88, 0.54, 1)
+
+[sub_resource type="StandardMaterial3D" id="AimLine"]
 transparency = 1
 shading_mode = 0
-albedo_color = Color(0.5, 0.88, 0.54, 0.35)
+albedo_color = Color(1, 1, 1, 0.35)
 
-[sub_resource type="BoxShape3D" id="GroundShape"]
-size = Vector3(18, 1, 14)
+[sub_resource type="BoxMesh" id="BackdropMesh"]
+size = Vector3(115, 26, 1)
 
-[sub_resource type="BoxShape3D" id="LedgeShape"]
-size = Vector3(8, 2.4, 4)
+[sub_resource type="BoxMesh" id="AimLineMesh"]
+size = Vector3(0.03, 1, 0.03)
 
-[sub_resource type="BoxShape3D" id="TopShape"]
-size = Vector3(8, 4.2, 4)
+[sub_resource type="SphereMesh" id="AimMarkMesh"]
+radius = 0.14
+height = 0.28
 
 [sub_resource type="BoxShape3D" id="GoalShape"]
-size = Vector3(2.2, 2, 2.2)
-
-[sub_resource type="BoxMesh" id="GroundMesh"]
-size = Vector3(18, 1, 14)
-
-[sub_resource type="BoxMesh" id="LedgeMesh"]
-size = Vector3(8, 2.4, 4)
-
-[sub_resource type="BoxMesh" id="TopMesh"]
-size = Vector3(8, 4.2, 4)
-
-[sub_resource type="BoxMesh" id="GhostMesh"]
-size = Vector3(1.2, 1.2, 1.2)
-
-[sub_resource type="BoxMesh" id="FlagMesh"]
-size = Vector3(0.9, 0.5, 0.05)
+size = Vector3(6, 3, 3)
 
 [sub_resource type="CylinderMesh" id="PoleMesh"]
-top_radius = 0.05
-bottom_radius = 0.05
-height = 2
+top_radius = 0.06
+bottom_radius = 0.06
+height = 3
 radial_segments = 8
 rings = 1
 
+[sub_resource type="BoxMesh" id="FlagMesh"]
+size = Vector3(1.2, 0.7, 0.05)
+
+[sub_resource type="BoxShape3D" id="StartShape"]
+size = Vector3(14, 2, 3)
+
+[sub_resource type="BoxMesh" id="StartMesh"]
+size = Vector3(14, 2, 3)
+
+[sub_resource type="BoxShape3D" id="SecondShape"]
+size = Vector3(10, 2, 3)
+
+[sub_resource type="BoxMesh" id="SecondMesh"]
+size = Vector3(10, 2, 3)
+
+[sub_resource type="BoxShape3D" id="ThirdShape"]
+size = Vector3(10, 2, 3)
+
+[sub_resource type="BoxMesh" id="ThirdMesh"]
+size = Vector3(10, 2, 3)
+
+[sub_resource type="BoxShape3D" id="LastShape"]
+size = Vector3(18, 2, 3)
+
+[sub_resource type="BoxMesh" id="LastMesh"]
+size = Vector3(18, 2, 3)
+
+[sub_resource type="BoxShape3D" id="Beam1Shape"]
+size = Vector3(12, 0.6, 1.2)
+
+[sub_resource type="BoxMesh" id="Beam1Mesh"]
+size = Vector3(12, 0.6, 1.2)
+
+[sub_resource type="BoxShape3D" id="Beam2Shape"]
+size = Vector3(4, 0.6, 1.2)
+
+[sub_resource type="BoxMesh" id="Beam2Mesh"]
+size = Vector3(4, 0.6, 1.2)
+
+[sub_resource type="BoxShape3D" id="Beam3Shape"]
+size = Vector3(5, 0.6, 1.2)
+
+[sub_resource type="BoxMesh" id="Beam3Mesh"]
+size = Vector3(5, 0.6, 1.2)
+
+[sub_resource type="BoxShape3D" id="Beam4Shape"]
+size = Vector3(2, 0.6, 1.2)
+
+[sub_resource type="BoxMesh" id="Beam4Mesh"]
+size = Vector3(2, 0.6, 1.2)
+
+[sub_resource type="BoxShape3D" id="SlabShape"]
+size = Vector3(5, 0.6, 1.2)
+
+[sub_resource type="BoxMesh" id="SlabMesh"]
+size = Vector3(5, 0.6, 1.2)
+
+[sub_resource type="BoxShape3D" id="Beam5Shape"]
+size = Vector3(5, 0.6, 1.2)
+
+[sub_resource type="BoxMesh" id="Beam5Mesh"]
+size = Vector3(5, 0.6, 1.2)
+
 [node name="Duo" type="Node3D"]
 script = ExtResource("1_rig")
-platform_scene = ExtResource("3_platform")
+nail_scene = ExtResource("3_nail")
+wood = ExtResource("6_wood")
 
 [node name="Environment" type="WorldEnvironment" parent="."]
 environment = SubResource("Env")
 
 [node name="Sun" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.819152, -0.368688, 0.439385, 0, 0.766044, 0.642788, -0.573576, -0.526541, 0.627507, 0, 10, 0)
-light_color = Color(1, 0.78, 0.6, 1)
-light_energy = 0.35
+transform = Transform3D(0.906308, -0.323744, 0.271654, 0, 0.642788, 0.766044, -0.422618, -0.694272, 0.582563, 0, 20, 0)
+light_energy = 1.1
 shadow_enabled = true
 
 [node name="Camera" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.828517, 0.559963, 0, -0.559963, 0.828517, 0, 11, 13)
-fov = 55.0
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 13)
+fov = 50.0
 
 [node name="Level" type="Node3D" parent="."]
 
-[node name="Ground" type="StaticBody3D" parent="Level"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+[node name="Backdrop" type="MeshInstance3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 39, 1, -3)
+material_override = SubResource("Backdrop")
+mesh = SubResource("BackdropMesh")
 
-[node name="Collider" type="CollisionShape3D" parent="Level/Ground"]
-shape = SubResource("GroundShape")
+[node name="Start" type="StaticBody3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -1, 0)
 
-[node name="Mesh" type="MeshInstance3D" parent="Level/Ground"]
-material_override = SubResource("Ground")
-mesh = SubResource("GroundMesh")
+[node name="Collider" type="CollisionShape3D" parent="Level/Start"]
+shape = SubResource("StartShape")
 
-[node name="Ledge" type="StaticBody3D" parent="Level"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1.2, -5)
+[node name="Mesh" type="MeshInstance3D" parent="Level/Start"]
+material_override = SubResource("Stone")
+mesh = SubResource("StartMesh")
 
-[node name="Collider" type="CollisionShape3D" parent="Level/Ledge"]
-shape = SubResource("LedgeShape")
+[node name="Second" type="StaticBody3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, -1, 0)
 
-[node name="Mesh" type="MeshInstance3D" parent="Level/Ledge"]
-material_override = SubResource("Ledge")
-mesh = SubResource("LedgeMesh")
+[node name="Collider" type="CollisionShape3D" parent="Level/Second"]
+shape = SubResource("SecondShape")
 
-[node name="Top" type="StaticBody3D" parent="Level"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2.1, -5)
+[node name="Mesh" type="MeshInstance3D" parent="Level/Second"]
+material_override = SubResource("Stone")
+mesh = SubResource("SecondMesh")
 
-[node name="Collider" type="CollisionShape3D" parent="Level/Top"]
-shape = SubResource("TopShape")
+[node name="Third" type="StaticBody3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 49, -1, 0)
 
-[node name="Mesh" type="MeshInstance3D" parent="Level/Top"]
-material_override = SubResource("Top")
-mesh = SubResource("TopMesh")
+[node name="Collider" type="CollisionShape3D" parent="Level/Third"]
+shape = SubResource("ThirdShape")
+
+[node name="Mesh" type="MeshInstance3D" parent="Level/Third"]
+material_override = SubResource("Stone")
+mesh = SubResource("ThirdMesh")
+
+[node name="Last" type="StaticBody3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 77, -1, 0)
+
+[node name="Collider" type="CollisionShape3D" parent="Level/Last"]
+shape = SubResource("LastShape")
+
+[node name="Mesh" type="MeshInstance3D" parent="Level/Last"]
+material_override = SubResource("Stone")
+mesh = SubResource("LastMesh")
+
+[node name="Beam1" type="StaticBody3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 6.3, 0)
+physics_material_override = ExtResource("6_wood")
+
+[node name="Collider" type="CollisionShape3D" parent="Level/Beam1"]
+shape = SubResource("Beam1Shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="Level/Beam1"]
+material_override = SubResource("WoodPaint")
+mesh = SubResource("Beam1Mesh")
+
+[node name="Beam2" type="StaticBody3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33, 5.9, 0)
+physics_material_override = ExtResource("6_wood")
+
+[node name="Collider" type="CollisionShape3D" parent="Level/Beam2"]
+shape = SubResource("Beam2Shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="Level/Beam2"]
+material_override = SubResource("WoodPaint")
+mesh = SubResource("Beam2Mesh")
+
+[node name="Beam3" type="StaticBody3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40.5, 6.6, 0)
+physics_material_override = ExtResource("6_wood")
+
+[node name="Collider" type="CollisionShape3D" parent="Level/Beam3"]
+shape = SubResource("Beam3Shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="Level/Beam3"]
+material_override = SubResource("WoodPaint")
+mesh = SubResource("Beam3Mesh")
+
+[node name="Beam4" type="StaticBody3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 56, 6.1, 0)
+physics_material_override = ExtResource("6_wood")
+
+[node name="Collider" type="CollisionShape3D" parent="Level/Beam4"]
+shape = SubResource("Beam4Shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="Level/Beam4"]
+material_override = SubResource("WoodPaint")
+mesh = SubResource("Beam4Mesh")
+
+[node name="Slab" type="StaticBody3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 59.5, 6.1, 0)
+
+[node name="Collider" type="CollisionShape3D" parent="Level/Slab"]
+shape = SubResource("SlabShape")
+
+[node name="Mesh" type="MeshInstance3D" parent="Level/Slab"]
+material_override = SubResource("Stone")
+mesh = SubResource("SlabMesh")
+
+[node name="Beam5" type="StaticBody3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 64.5, 6.6, 0)
+physics_material_override = ExtResource("6_wood")
+
+[node name="Collider" type="CollisionShape3D" parent="Level/Beam5"]
+shape = SubResource("Beam5Shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="Level/Beam5"]
+material_override = SubResource("WoodPaint")
+mesh = SubResource("Beam5Mesh")
+
+[node name="Levers" type="Node3D" parent="Level"]
+
+[node name="Lever1" parent="Level/Levers" instance=ExtResource("4_lever")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23, 0, 0)
+
+[node name="Lever2" parent="Level/Levers" instance=ExtResource("4_lever")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 47, 0, 0)
+
+[node name="Lever3" parent="Level/Levers" instance=ExtResource("4_lever")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 71, 0, 0)
+
+[node name="Bridges" type="Node3D" parent="Level"]
+
+[node name="Bridge1" parent="Level/Bridges" instance=ExtResource("5_bridge")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 0)
+
+[node name="Bridge2" parent="Level/Bridges" instance=ExtResource("5_bridge")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44, 0, 0)
+
+[node name="Bridge3" parent="Level/Bridges" instance=ExtResource("5_bridge")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 68, 0, 0)
 
 [node name="Goal" type="Area3D" parent="Level"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 5.2, -5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 80, 1.5, 0)
 collision_layer = 0
 collision_mask = 4
 
@@ -151,37 +306,35 @@ collision_mask = 4
 shape = SubResource("GoalShape")
 
 [node name="Pole" type="MeshInstance3D" parent="Level/Goal"]
-material_override = SubResource("Pole")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, -1)
+material_override = SubResource("Stone")
 mesh = SubResource("PoleMesh")
 
 [node name="Flag" type="MeshInstance3D" parent="Level/Goal"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.48, 0.7, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.1, 1.1, -1)
 material_override = SubResource("Flag")
 mesh = SubResource("FlagMesh")
 
-[node name="Sparks" type="Node3D" parent="Level"]
+[node name="Nails" type="Node3D" parent="."]
 
-[node name="Corner" parent="Level/Sparks" instance=ExtResource("4_spark")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 0.7, 5)
+[node name="Thrower" parent="." instance=ExtResource("2_body")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.1, 0)
 
-[node name="Middle" parent="Level/Sparks" instance=ExtResource("4_spark")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.7, 2)
+[node name="Swinger" parent="." instance=ExtResource("2_body")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.1, 0)
+can_swing = true
 
-[node name="Far" parent="Level/Sparks" instance=ExtResource("4_spark")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0.7, 5)
-
-[node name="OnLedge" parent="Level/Sparks" instance=ExtResource("4_spark")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 3.1, -5)
-
-[node name="Platforms" type="Node3D" parent="."]
-
-[node name="Runner" parent="." instance=ExtResource("2_runner")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, 4)
-
-[node name="Ghost" type="MeshInstance3D" parent="."]
+[node name="AimLine" type="MeshInstance3D" parent="."]
+top_level = true
 cast_shadow = 0
-material_override = SubResource("Ghost")
-mesh = SubResource("GhostMesh")
+material_override = SubResource("AimLine")
+mesh = SubResource("AimLineMesh")
+
+[node name="AimMark" type="MeshInstance3D" parent="."]
+top_level = true
+cast_shadow = 0
+material_override = SubResource("Aim")
+mesh = SubResource("AimMarkMesh")
 
 [node name="Ui" type="CanvasLayer" parent="."]
 
@@ -191,7 +344,7 @@ anchor_bottom = 1.0
 grow_vertical = 2
 offset_left = 24.0
 offset_top = 20.0
-offset_right = 900.0
+offset_right = 1000.0
 offset_bottom = -22.0
 mouse_filter = 2
 theme_override_colors/default_color = Color(1, 1, 1, 0.92)
@@ -202,8 +355,6 @@ theme_override_font_sizes/normal_font_size = 15
 bbcode_enabled = true
 scroll_active = false
 
-[connection signal="taken" from="Level/Sparks/Corner" to="." method="_on_spark_taken"]
-[connection signal="taken" from="Level/Sparks/Middle" to="." method="_on_spark_taken"]
-[connection signal="taken" from="Level/Sparks/Far" to="." method="_on_spark_taken"]
-[connection signal="taken" from="Level/Sparks/OnLedge" to="." method="_on_spark_taken"]
-[connection signal="body_entered" from="Level/Goal" to="." method="_on_goal_body_entered"]
+[connection signal="pulled" from="Level/Levers/Lever1" to="Level/Bridges/Bridge1" method="lay"]
+[connection signal="pulled" from="Level/Levers/Lever2" to="Level/Bridges/Bridge2" method="lay"]
+[connection signal="pulled" from="Level/Levers/Lever3" to="Level/Bridges/Bridge3" method="lay"]

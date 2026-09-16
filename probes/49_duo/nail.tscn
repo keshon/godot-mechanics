@@ -1,0 +1,40 @@
+[gd_scene format=3]
+
+
+
+[ext_resource type="Script" path="res://probes/49_duo/nail.gd" id="1_nail"]
+
+[ext_resource type="PhysicsMaterial" path="res://probes/49_duo/wood.tres" id="2_wood"]
+
+[sub_resource type="CylinderMesh" id="ShaftMesh"]
+top_radius = 0.035
+bottom_radius = 0.035
+height = 0.55
+radial_segments = 8
+rings = 1
+
+[sub_resource type="CylinderMesh" id="HeadMesh"]
+top_radius = 0.1
+bottom_radius = 0.1
+height = 0.05
+radial_segments = 12
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="Steel"]
+albedo_color = Color(0.75, 0.77, 0.8, 1)
+metallic = 0.9
+roughness = 0.3
+
+[node name="Nail" type="Node3D"]
+script = ExtResource("1_nail")
+holds_in = ExtResource("2_wood")
+
+[node name="Shaft" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0.1)
+material_override = SubResource("Steel")
+mesh = SubResource("ShaftMesh")
+
+[node name="Head" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0.38)
+material_override = SubResource("Steel")
+mesh = SubResource("HeadMesh")
