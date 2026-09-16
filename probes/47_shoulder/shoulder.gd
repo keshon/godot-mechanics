@@ -17,6 +17,26 @@ extends Node3D
 ## stopped working. Measuring both over one set of ranges hides that behind a column of misses.
 const THROWN := [80.0, 160.0, 240.0, 320.0]
 const RIDDEN := [300.0, 600.0, 900.0, 1200.0]
+## THREE UNGUIDED ROUNDS, AND IT IS ONE QUESTION RATHER THAN THREE SETTINGS: a flat flight is
+## bought with speed, and these three are the price tags. The Mukha has no sustainer at all and
+## arcs like a mortar; the RPG-7 burns for eight tenths of a second; the S-8 burns for most of a
+## second up to six hundred metres per second and flies very nearly straight. Nobody fires an S-8
+## off a shoulder, and that is the point: at shoulder speeds a straight unguided flight does not
+## exist, which is the whole reason the beam in the other mode is worth its wire.
+const SHELLS: Array[String] = ["«Муха» (РПГ-18)", "РПГ-7 (ПГ-7В)", "НУРС С-8"]
+const SHELL_SPEED: Array[float] = [114.0, 117.0, 40.0]
+const SHELL_TOP: Array[float] = [114.0, 294.0, 610.0]
+const SHELL_BOOST: Array[float] = [0.0, 0.8, 0.7]
+const SHELL_DRAG: Array[float] = [0.0006, 0.0006, 0.0001]
+## A finned grenade turns into the airflow; a spun rocket holds the axis it left on.
+const SHELL_VANE: Array[bool] = [true, true, false]
+## Each round gets its OWN range marks, for the same reason the two kinds do: measuring a Mukha
+## at three hundred metres measures a column of misses and nothing else.
+const SHELL_MARKS: Array = [
+	[50.0, 100.0, 150.0, 200.0],
+	[80.0, 160.0, 240.0, 320.0],
+	[200.0, 400.0, 600.0, 800.0],
+]
 ## How steady the machine's hand is during a measured shot, degrees of wobble. Zero would be a
 ## hand nobody has; this is roughly a trained one on a rest.
 const STEADY := 0.25
@@ -40,6 +60,8 @@ const TRACE_STEP := 1.5
 @export_range(40.0, 100.0, 1.0) var open_fov := 70.0
 
 var _kind := ShoulderRound.Kind.BEAM
+## Which of the three unguided rounds is in the tube. Means nothing to the beam rider.
+var _shell := 1
 var _yaw := 0.0
 var _pitch := 0.0
 var _zoom := false
@@ -135,6 +157,11 @@ func _apply_key(keycode: Key) -> void:
 			var marks := _ranges()
 			var step: int = marks.find(_tube.sight_range)
 			_set_range(marks[(step + 1) % marks.size()])
+		KEY_5:
+			_shell = (_shell + 1) % SHELLS.size()
+			_table.clear()
+			if _kind == ShoulderRound.Kind.DUMB:
+				_set_range(_ranges()[1])
 		KEY_G:
 			_table.clear()
 			_row = 0
@@ -148,7 +175,10 @@ func _apply_key(keycode: Key) -> void:
 
 
 func _ranges() -> Array:
-	return THROWN if _kind == ShoulderRound.Kind.DUMB else RIDDEN
+	if _kind == ShoulderRound.Kind.BEAM:
+		return RIDDEN
+	var marks: Array = SHELL_MARKS[_shell]
+	return marks
 
 
 ## The round kind lives on the ROUND, not on the tube, so switching it means switching what
@@ -172,7 +202,7 @@ func _set_range(dist: float) -> void:
 	# CUT AGAINST THE ROUND ITSELF, with a throwaway copy rather than a table of its numbers: a
 	# sight has to be asking the thing it will actually fire.
 	var sample := _tube.round_scene.instantiate() as ShoulderRound
-	sample.kind = _kind
+	_dress(sample)
 	_tube.cut(sample, _mark.centre().y - _tube.muzzle().origin.y)
 	sample.free()
 
@@ -181,7 +211,7 @@ func _pull() -> void:
 	var shot := _tube.fire()
 	if shot == null:
 		return
-	shot.kind = _kind
+	_dress(shot)
 	_shots.add_child(shot)
 	shot.launch(_tube.muzzle(), _mark)
 	shot.finished.connect(_on_round_finished)
@@ -189,6 +219,32 @@ func _pull() -> void:
 	_flight = 0.0
 	_hold = 0.0
 	_path = PackedVector3Array([_tube.muzzle().origin])
+
+
+## A round is dressed before every shot AND before the sight is cut, by one hand, so that the
+## scale is cut against what will actually leave the tube. The presets touch the unguided round
+## only: the beam rider has a speed of its own, and swapping it would change the subject of the
+## other mode rather than add to this one.
+func _dress(shot: ShoulderRound) -> void:
+	shot.kind = _kind
+	if _kind != ShoulderRound.Kind.DUMB:
+		return
+	shot.speed = SHELL_SPEED[_shell]
+	shot.thrown = SHELL_TOP[_shell]
+	shot.boost = SHELL_BOOST[_shell]
+	shot.drag = SHELL_DRAG[_shell]
+	shot.weathercock = SHELL_VANE[_shell]
+
+
+## A round without a sustainer and a round with one are not described the same way, and
+## "114 -> 114" is a format artefact rather than a description.
+func _shell_line() -> String:
+	var from: float = SHELL_SPEED[_shell]
+	var top: float = SHELL_TOP[_shell]
+	var burn: float = SHELL_BOOST[_shell]
+	if burn <= 0.0:
+		return "%s   %.0f м/с со ствола, маршевого нет" % [SHELLS[_shell], from]
+	return "%s   %.0f → %.0f м/с за %.1f с" % [SHELLS[_shell], from, top, burn]
 
 
 func _look() -> void:
@@ -390,6 +446,7 @@ func _readout() -> void:
 		"2 цель: %s" % ("идёт" if _mark.speed > 0.0 else "стоит"),
 		"3 взгляд: %s" % ("со стороны — видно траекторию и луч" if _side else "с плеча"),
 		"4 дальность (двигает и прицел, и цель): %.0f м" % _tube.sight_range,
+		"5 снаряд неуправляемой: %s" % _shell_line(),
 		"G прогнать четыре пуска: %s м" % " / ".join(PackedStringArray(
 			_ranges().map(func(dist: float) -> String: return "%.0f" % dist))),
 		"[color=#66ccff]за спиной у трубы струя: у стены выстрел не пройдёт[/color]",

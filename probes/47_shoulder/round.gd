@@ -47,10 +47,16 @@ const PASS_GAP := 60.0
 ## below some speed a flight becomes something a person can watch and steer, and above it the
 ## shot is over before the eye has found it. Here the prototype numbers are kept and the RANGE
 ## is opened up instead, because that is what the real weapons do with them.
-@export_range(20.0, 500.0, 5.0) var thrown := 294.0
+@export_range(20.0, 700.0, 5.0) var thrown := 294.0
 @export_range(20.0, 500.0, 5.0) var ridden := 200.0
 ## Seconds the sustainer burns.
 @export_range(0.0, 3.0, 0.05) var boost := 0.8
+## Whether the round turns into the airflow while the motor is burning. A finned grenade
+## weathercocks, and from that moment the sustainer pushes it along a line gravity has already
+## bent downwards — the motor helps it fall. A spun rocket holds the axis it left on, and the
+## same thrust works ACROSS the drop instead of with it. Neither is a detail: over three hundred
+## metres the two differ by three and a half metres of fall.
+@export var weathercock := true
 ## Ceiling on lateral acceleration, g. Beam riding asks for most of it at the moment the round
 ## gathers onto the line, which is why a shot taken while swinging the sight misses.
 @export_range(2.0, 40.0, 0.5) var limit := 9.0
@@ -90,6 +96,9 @@ var pulled := 0.0
 var travelled := 0.0
 
 var _velocity := Vector3.ZERO
+## The way the tube was pointing. Not the same as where the nose points: the nose is turned onto
+## the velocity every tick, so a round that does NOT weathercock has to remember its own launch.
+var _axis := Vector3.FORWARD
 var _target: ShoulderTarget = null
 var _closest := INF
 var _last_offset := Vector3.ZERO
@@ -108,7 +117,8 @@ func _physics_process(delta: float) -> void:
 
 	var top := thrown if kind == Kind.DUMB else ridden
 	if clock < boost and _velocity.length() < top:
-		_velocity += _velocity.normalized() * (top - speed) / maxf(boost, 0.01) * delta
+		var push := _velocity.normalized() if weathercock else _axis
+		_velocity += push * (top - speed) / maxf(boost, 0.01) * delta
 	if kind == Kind.BEAM:
 		_ride(delta)
 	else:
@@ -127,6 +137,7 @@ func _physics_process(delta: float) -> void:
 func launch(from: Transform3D, at: ShoulderTarget) -> void:
 	global_transform = from
 	_velocity = -from.basis.z * speed
+	_axis = -from.basis.z
 	_target = at
 	_closest = INF
 	_last_offset = at.centre() - from.origin if at != null else Vector3.ZERO
@@ -223,13 +234,15 @@ func _score() -> void:
 ## Height above the muzzle once the round has covered `dist` horizontally, launched at `angle`.
 ## The round's own boost, gravity and drag, run forward on paper.
 func _reach(dist: float, angle: float) -> float:
-	var velocity := Vector2(cos(angle), sin(angle)) * speed
+	var axis := Vector2(cos(angle), sin(angle))
+	var velocity := axis * speed
 	var at := Vector2.ZERO
 	var clock_on_paper := 0.0
 	var top := thrown if kind == Kind.DUMB else ridden
 	while at.x < dist and clock_on_paper < life:
 		if clock_on_paper < boost and velocity.length() < top:
-			velocity += velocity.normalized() * (top - speed) / maxf(boost, 0.01) * STEP
+			var push := velocity.normalized() if weathercock else axis
+			velocity += push * (top - speed) / maxf(boost, 0.01) * STEP
 		velocity.y -= gravity * STEP
 		velocity -= velocity * velocity.length() * drag * STEP
 		at += velocity * STEP
