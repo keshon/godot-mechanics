@@ -9,15 +9,15 @@ extends Node3D
 ##             Настоящая геометрия — коллизия достаётся даром. Цена платится рывками.
 ##   КЛИПМАП   кольца вокруг игрока, шаг удваивается наружу, кольца сдвигаются.
 ##             Постоянное число вершин, дальнее почти не пересчитывается.
-##             Физики нет вовсе — её надо строить отдельно.
+##             Коллизия — отдельный локальный участок карты высот.
 ##
 ## Вторая ось — ОТКУДА ВЫСОТА: функция в точке (бесконечно, дорого), запечённая карта в
 ## 16 бит (быстро, повторяется), она же в 8 бит (ровно то, что скачаешь из интернета, и
 ## ровно та ловушка, которую никто не объясняет).
 ##
 ## Третья — КООРДИНАТЫ. `Vector3` в Godot тридцатидвухбитный: на ста километрах от нуля
-## шаг сетки уже 6.6 мм, на тысяче — пять сантиметров. Плавающее начало возвращает игрока
-## к нулю, и мир становится по-настоящему безграничным. Клавиша 9 отправляет на сто
+## шаг float32 около 7.8 мм, на тысяче — 6.25 см. Плавающее начало возвращает камеру
+## к нулю; точность источника рельефа проверяется отдельно. Клавиша 9 отправляет на сто
 ## километров, чтобы это можно было увидеть глазами, а не только прочитать.
 
 ## ЛЕСТНИЦА ДАЛЬНОСТИ. Одна цель в метрах на обе схемы — каждая пересчитывает её в свои
@@ -43,9 +43,9 @@ var far_away := false
 
 ## ИСТИННОЕ ПОЛОЖЕНИЕ В МИРЕ — в обычных `float`, а они в GDScript ДВОЙНОЙ точности.
 ## Именно поэтому плавающее начало вообще возможно: авторитетная координата остаётся
-## точной, а тридцатидвухбитным остаётся только то, что уходит в отрисовку.
-var world := Vector3(0.0, 60.0, 0.0)
-var origin := Vector3.ZERO
+## в 64 битах. Выбор чанков принимает Vector3, но не записывает его обратно в world.
+var world := PackedFloat64Array([0.0, 60.0, 0.0])
+var origin := PackedFloat64Array([0.0, 0.0, 0.0])
 
 var gpu_ms := 0.0
 var cpu_ms := 0.0
@@ -86,7 +86,7 @@ func _ready() -> void:
 	_chunks.setup(_source, _chunk_root, _material)
 	_clipmap = ScaleClipmap.new()
 	_clipmap.setup(_source, _clip_root, _material)
-	world.y = _source.height(0.0, 0.0) + 70.0
+	world[1] = _source.height(0.0, 0.0) + 70.0
 	_apply_coverage()
 
 
@@ -96,11 +96,11 @@ func _process(delta: float) -> void:
 	# сотен живых кусков каждый кадр, у клипмапа — пять сравнений. Разница тут крупнее,
 	# чем в треугольниках, и без этого счётчика её не видно вовсе.
 	var started := Time.get_ticks_usec()
-	_active().update(world)
+	_active().update(Vector3(world[0], world[1], world[2]))
 	update_ms = lerpf(update_ms, (Time.get_ticks_usec() - started) / 1000.0, 0.06)
 	if floating_origin:
 		_rebase()
-	_camera.position = world - origin
+	_camera.position = local_position()
 	_camera.rotation = Vector3(_pitch, _yaw, 0.0)
 
 	var viewport := get_viewport().get_viewport_rid()
@@ -164,6 +164,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			_clipmap.use_collision = _chunks.use_collision
 		KEY_6:
 			floating_origin = not floating_origin
+			if not floating_origin:
+				_shift_origin(-Vector3(origin[0], origin[1], origin[2]))
 		KEY_7:
 			use_paint = not use_paint
 		KEY_8:
@@ -172,8 +174,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			far_away = not far_away
 			# Прыжок делается по ИСТИННОЙ координате. При выключенном плавающем начале
 			# отрисовочная уедет туда же, и сетка float32 станет видна глазом.
-			world.x = 100000.0 if far_away else 0.0
-			world.y = _source.height(world.x, world.z) + 70.0
+			world[0] = 100000.0 if far_away else 0.0
+			world[1] = _source.height(world[0], world[2]) + 70.0
 			_chunks.clear()
 			_clipmap.clear()
 		KEY_0:
@@ -186,9 +188,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			use_paint = true
 			autopilot = false
 		KEY_R:
-			world = Vector3(0.0, _source.height(0.0, 0.0) + 70.0, 0.0)
+			world = PackedFloat64Array([0.0, _source.height(0.0, 0.0) + 70.0, 0.0])
 			far_away = false
-			origin = Vector3.ZERO
+			_shift_origin(-Vector3(origin[0], origin[1], origin[2]))
 			rebases = 0
 			_chunks.clear()
 			_clipmap.clear()
@@ -203,6 +205,24 @@ func _unhandled_input(event: InputEvent) -> void:
 			_apply_coverage()
 		KEY_ESCAPE:
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+
+## Subtract in double precision BEFORE constructing a render-space Vector3.
+func local_position() -> Vector3:
+	return Vector3(world[0] - origin[0], world[1] - origin[1], world[2] - origin[2])
+
+
+## Only the small displacement is a Vector3; accumulated coordinates stay 64-bit.
+func advance(displacement: Vector3) -> void:
+	for axis in 3:
+		world[axis] += displacement[axis]
+
+
+func _shift_origin(by: Vector3) -> void:
+	for axis in 3:
+		origin[axis] += by[axis]
+	_chunks.shift(by)
+	_clipmap.shift(by)
 
 
 func _active() -> ScaleTerrain:
@@ -233,21 +253,19 @@ func _apply_coverage() -> void:
 ## обратно к нулю. Истинное положение при этом не меняется — меняется только то, из чего
 ## вычитается. Ровно это и делают взрослые движки под именем origin rebasing.
 func _rebase() -> void:
-	var render := world - origin
+	var render := local_position()
 	if Vector2(render.x, render.z).length() < rebase_at:
 		return
-	var by := Vector3(render.x, 0.0, render.z)
-	origin += by
-	_chunks.shift(by)
-	_clipmap.shift(by)
+	var by := Vector3(roundf(render.x), 0.0, roundf(render.z))
+	_shift_origin(by)
 	rebases += 1
 
 
 func _fly(delta: float) -> void:
 	var ahead := Vector3(-sin(_yaw), 0.0, -cos(_yaw))
 	if autopilot:
-		world += ahead * autopilot_speed * delta
-		world.y = _source.height(world.x, world.z) + 45.0
+		advance(ahead * autopilot_speed * delta)
+		world[1] = _source.height(world[0], world[2]) + 45.0
 		return
 	var right := Vector3(cos(_yaw), 0.0, -sin(_yaw))
 	var wanted := Vector3.ZERO
@@ -266,7 +284,7 @@ func _fly(delta: float) -> void:
 	if wanted == Vector3.ZERO:
 		return
 	var fast := fast_mult if Input.is_physical_key_pressed(KEY_SHIFT) else 1.0
-	world += wanted.normalized() * fly_speed * fast * delta
+	advance(wanted.normalized() * fly_speed * fast * delta)
 
 
 ## Наименьшая величина, которую ещё различает `Vector3` на текущем удалении. Это и есть
@@ -285,8 +303,8 @@ func _row(on: bool, key: String, text: String) -> String:
 
 func _draw_hud() -> void:
 	var active := _active()
-	var render := world - origin
-	var far := Vector2(world.x, world.z).length()
+	var render := local_position()
+	var far := Vector2(world[0], world[2]).length()
 	var text := "[font_size=28][b]%s[/b][/font_size]   %s\n" % [
 		"ЧАНКИ" if scheme == 0 else "КЛИПМАП", _source.label()]
 	text += "треугольников [b]%d[/b]   кусков %d   форм коллизии %d\n" % [

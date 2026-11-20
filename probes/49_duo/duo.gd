@@ -8,10 +8,8 @@ extends Node3D
 ## side that lays a bridge for the thrower. Three nails in hand means the one behind has to be
 ## called back while the swinger is still hanging from the one in front.
 ##
-## WAITING IS READ OFF THE STATE, NOT OFF THE DEVICES. A player counts as waiting when standing at
-## the edge of a pit with no way across: the thrower with no bridge, the swinger with no nail ahead.
-## A silent device is not a waiting player — the thrower aiming with the mouse is busy with his
-## hands still.
+## Edge occupancy and the lack of a currently reachable, stuck anchor are separate counters.
+## Neither measures boredom: a player standing still may be aiming or planning a jump.
 ##
 ## Devices split by class. The mouse is always the thrower's; WASD and space belong to the thrower,
 ## the stick and its buttons to the swinger. With no pad, TAB hands the keyboard to the swinger, so
@@ -37,10 +35,8 @@ const CAMERA_RISE := 3.0
 ## How far ahead of the feet the edge test looks, m, and how deep, m.
 const EDGE_AHEAD := 1.0
 const EDGE_DEPTH := 4.0
-## A nail this far ahead of the swinger still counts as a way across, m.
-const NAIL_AHEAD := 10.0
-const VERDICT := ("вдвоём интересно, когда глаголы сходятся в одной секунде: гвоздь нужен в"
-		+ " воздухе, а не до прыжка")
+const VERDICT := ("гипотеза: гвоздь, нужный в полёте, делает сотрудничество интереснее;"
+		+ " нужна игра вдвоём")
 
 @export var nail_scene: PackedScene
 ## The material that takes a nail; the aim uses it to say in advance whether a throw will hold.
@@ -65,6 +61,10 @@ var _started := false
 var _finished_at := -1.0
 ## Seconds each player waited at a pit, thrower first.
 var _waited := PackedFloat32Array([0.0, 0.0])
+var _without_anchor := 0.0
+var _handoffs := 0
+var _missed_grabs := 0
+var _failed_handoffs := 0
 var _pad := -1
 var _pad_news := ""
 
@@ -85,6 +85,7 @@ func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	Input.joy_connection_changed.connect(_on_joy_connection_changed)
 	_pick_pad()
+	_swinger.respawned.connect(_on_swinger_respawned)
 	_apply_knobs()
 	_camera.global_position = Vector3(_thrower.global_position.x, CAMERA_RISE, CAMERA_NEAR)
 
@@ -224,12 +225,14 @@ func _toggle_grab() -> void:
 			best = nail
 			best_distance = distance
 	if best == null:
+		_missed_grabs += 1
 		_swing_note = "[color=#ff8a6a]не за что схватиться: гвоздя ближе %.1f м нет[/color]" % (
 			_swinger.reach)
 		return
 	_swinger.grab(best.tip())
 	_held = best
 	if _released_at >= 0.0:
+		_handoffs += 1
 		_swing_note = "от гвоздя до гвоздя %.2f с" % (_clock - _released_at)
 	_released_at = -1.0
 
@@ -252,14 +255,17 @@ func _account(delta: float) -> void:
 		_held = null
 		_released_at = _clock
 	if _swinger.is_on_floor():
+		_finish_handoff()
 		_released_at = -1.0
 	if not _started or _finished_at >= 0.0:
 		return
 	_clock += delta
 	if _at_pit(_thrower):
 		_waited[0] += delta
-	if _at_pit(_swinger) and not _nail_ahead():
+	if _at_pit(_swinger):
 		_waited[1] += delta
+		if not _nail_ahead():
+			_without_anchor += delta
 	var inside := _goal.get_overlapping_bodies()
 	if inside.has(_thrower) and inside.has(_swinger):
 		_finished_at = _clock
@@ -279,9 +285,18 @@ func _nail_ahead() -> bool:
 	var ahead := false
 	for nail in _nails:
 		var gap := nail.tip().x - _swinger.global_position.x
-		if nail.state != DuoNail.State.RETURNING and gap > 0.0 and gap < NAIL_AHEAD:
+		if (nail.state == DuoNail.State.STUCK and gap > 0.0
+				and nail.tip().distance_to(_swinger.hand()) <= _swinger.reach):
 			ahead = true
 	return ahead
+
+
+## A release followed by landing or respawn did not become an airborne handoff.
+## This includes deliberate landings; the counter measures outcomes, not player intent.
+func _finish_handoff() -> void:
+	if _released_at >= 0.0:
+		_failed_handoffs += 1
+	_released_at = -1.0
 
 
 func _in_hand() -> int:
@@ -306,6 +321,10 @@ func _restart() -> void:
 	_finished_at = -1.0
 	_released_at = -1.0
 	_waited = PackedFloat32Array([0.0, 0.0])
+	_without_anchor = 0.0
+	_handoffs = 0
+	_missed_grabs = 0
+	_failed_handoffs = 0
 	_throw_note = "—"
 	_swing_note = "—"
 
@@ -334,7 +353,10 @@ func _readout() -> void:
 			share.call(_waited[0]),
 			"%d из %d" % [_in_hand(), NAILS_IN_HAND] if _nails_counted else "без счёта",
 			_throw_note],
-		"качается: ждёт гвоздя у пропасти %s   %s" % [share.call(_waited[1]), _swing_note],
+		"качается: у края %s, без доступного гвоздя %s   %s" % [
+			share.call(_waited[1]), share.call(_without_anchor), _swing_note],
+		"перехватов %d, отпусканий без перехвата %d, пустых хватов %d" % [
+			_handoffs, _failed_handoffs, _missed_grabs],
 		"мостов опущено %d из %d   дошли оба: %s   %s" % [
 			laid, _bridges.get_child_count(),
 			"[color=#7fe08a]да, за %.1f с[/color]" % _finished_at if _finished_at >= 0.0
@@ -382,3 +404,11 @@ func _on_joy_connection_changed(_device: int, connected: bool) -> void:
 	_pick_pad()
 	_pad_news = "геймпад %s на %.0f с попытки" % [
 		"подключился" if connected else "отключился", _clock]
+
+
+func _on_swinger_respawned() -> void:
+	# Respawn may precede the rig's next frame, while it still remembers the held nail.
+	if _held != null:
+		_released_at = _clock
+		_held = null
+	_finish_handoff()

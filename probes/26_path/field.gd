@@ -141,25 +141,28 @@ func smoothed(route: Array[Vector2i]) -> Array[Vector2i]:
 	return cut
 
 
-## Line of sight between two cells: Bresenham, and every cell the line touches must be
-## open.
+## Supercover from cell centre to cell centre. At a corner both side cells must be open,
+## just like A*: a thin line must not squeeze between two blocked cells.
 func is_clear(from: Vector2i, to: Vector2i) -> bool:
-	var span := Vector2i(absi(to.x - from.x), -absi(to.y - from.y))
+	var span := Vector2i(absi(to.x - from.x), absi(to.y - from.y))
 	var step := Vector2i(1 if from.x < to.x else -1, 1 if from.y < to.y else -1)
-	var error := span.x + span.y
+	var crossed := Vector2i.ZERO
 	var at := from
-	for _guard in SIZE * 4:
+	while true:
 		if not is_walkable(at.x, at.y):
 			return false
 		if at == to:
 			return true
-		var doubled := error * 2
-		if doubled >= span.y:
-			error += span.y
+		var decision: int = (1 + 2 * crossed.x) * span.y - (1 + 2 * crossed.y) * span.x
+		if decision == 0:
+			if not is_walkable(at.x + step.x, at.y) or not is_walkable(at.x, at.y + step.y):
+				return false
+		if decision <= 0:
 			at.x += step.x
-		if doubled <= span.x:
-			error += span.x
+			crossed.x += 1
+		if decision >= 0:
 			at.y += step.y
+			crossed.y += 1
 	return false
 
 
@@ -194,6 +197,9 @@ func _keep_largest() -> void:
 				var y := index / SIZE + step.y
 				if x < 0 or y < 0 or x >= SIZE or y >= SIZE:
 					continue
+				if step.x != 0 and step.y != 0:
+					if not is_walkable(x, index / SIZE) or not is_walkable(index % SIZE, y):
+						continue
 				var into := y * SIZE + x
 				if solid[into] == 1 or seen[into] == 1:
 					continue
@@ -209,14 +215,17 @@ func _keep_largest() -> void:
 
 
 func _rebuild() -> void:
+	# update() does not clear solids when region and cell size are unchanged.
+	astar.clear()
 	astar.region = Rect2i(0, 0, SIZE, SIZE)
 	astar.cell_size = Vector2.ONE
 	# ONLY_IF_NO_OBSTACLES: a diagonal step is allowed only when both cells beside it are
 	# open, so nothing cuts a corner through a wall. The mode is free; noticing that the
 	# default lets you slice diagonally through masonry is not.
 	astar.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
-	astar.default_compute_heuristic = AStarGrid2D.HEURISTIC_OCTILE
-	astar.default_estimate_heuristic = AStarGrid2D.HEURISTIC_OCTILE
+	# Unit cost for all eight moves, matching the breadth-first flow field.
+	astar.default_compute_heuristic = AStarGrid2D.HEURISTIC_CHEBYSHEV
+	astar.default_estimate_heuristic = AStarGrid2D.HEURISTIC_CHEBYSHEV
 	astar.update()
 	for index in SIZE * SIZE:
 		if solid[index] == 1:

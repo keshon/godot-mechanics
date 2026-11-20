@@ -49,6 +49,7 @@ var error_degrees := -1.0
 
 ## [вариант][слой] -> AudioStreamWAV.
 var _bank: Array = []
+var _owned_buses: Array[StringName] = []
 ## [вариант] -> AudioStreamWAV.
 var _flat: Array = []
 var _boom: AudioStreamWAV
@@ -110,6 +111,20 @@ func _process(delta: float) -> void:
 		_far_shot()
 	_play_due()
 	_draw_hud()
+
+
+func _exit_tree() -> void:
+	# Stop playback before the audio server and its buses outlive this scene.
+	for voice in _pool:
+		voice.stop()
+		voice.stream = null
+	for voice in _flat_pool:
+		voice.stop()
+		voice.stream = null
+	for bus_name in _owned_buses:
+		var index: int = AudioServer.get_bus_index(bus_name)
+		if index >= 0:
+			AudioServer.remove_bus(index)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -201,12 +216,14 @@ func _make_buses() -> void:
 	AudioServer.add_bus()
 	var dry := AudioServer.bus_count - 1
 	AudioServer.set_bus_name(dry, "Dry")
+	_owned_buses.append(&"Dry")
 	AudioServer.set_bus_send(dry, "Master")
 	AudioServer.add_bus_effect(dry, AudioEffectReverb.new())
 
 	AudioServer.add_bus()
 	var muffled := AudioServer.bus_count - 1
 	AudioServer.set_bus_name(muffled, "Muffled")
+	_owned_buses.push_front(&"Muffled")
 	AudioServer.set_bus_send(muffled, "Master")
 	AudioServer.add_bus_effect(muffled, AudioEffectLowPassFilter.new())
 	AudioServer.add_bus_effect(muffled, AudioEffectReverb.new())

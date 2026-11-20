@@ -35,6 +35,9 @@ func begin() -> void:
 func add_shader(material: ShaderMaterial, title: String) -> void:
 	_material = material
 	_add_title(title)
+	if DisplayServer.get_name() == "headless":
+		_add_title("нужен графический рендерер: значения шейдера недоступны")
+		return
 	# `true` asks for group markers too: `group_uniforms` comes back as an entry with
 	# PROPERTY_USAGE_GROUP and no type of its own.
 	for uniform in material.shader.get_shader_uniform_list(true):

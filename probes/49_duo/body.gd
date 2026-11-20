@@ -11,6 +11,8 @@ extends CharacterBody3D
 ## nothing to join to. The angle is measured from straight down; the body is then driven towards
 ## where the angle puts it with `move_and_slide`, so a beam or a wall in the way still stops it.
 
+signal respawned
+
 ## Height of the hands above the feet, m. The rope hangs from here.
 const HAND_HEIGHT := 1.9
 
@@ -109,6 +111,7 @@ func respawn() -> void:
 	hanging = false
 	global_position = _safe + Vector3.UP * 0.2
 	velocity = Vector3.ZERO
+	respawned.emit()
 
 
 ## Back to where the body stood at the start, not to the last safe ground.

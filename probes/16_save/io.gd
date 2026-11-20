@@ -13,14 +13,19 @@ extends RefCounted
 ## First four bytes of either file. A file that does not start with this is not
 ## ours, and reading it as if it were is how a save loader corrupts a save.
 const MAGIC := 0x57424F58
-const VERSION := 1
+const VERSION := 2
+const STATE := 1
+const REPLAY := 2
 
 
 ## Returns the size of the file it wrote, in bytes.
 static func write_state(world: SaveWorld, path: String, store_die: bool) -> int:
 	var file := FileAccess.open(path, FileAccess.WRITE)
+	if file == null:
+		return -1
 	file.store_32(MAGIC)
 	file.store_32(VERSION)
+	file.store_32(STATE)
 	file.store_32(world.seed_value)
 	file.store_32(world.turn)
 	file.store_32(world.map.size())
@@ -42,15 +47,23 @@ static func write_state(world: SaveWorld, path: String, store_die: bool) -> int:
 
 static func read_state(path: String) -> SaveWorld:
 	var file := FileAccess.open(path, FileAccess.READ)
-	if file == null or file.get_32() != MAGIC:
+	if not _header_matches(file, STATE):
 		return null
-	file.get_32()  # version, read past: there is only one of them so far
+	if file.get_length() < 37:
+		return null
 	var world := SaveWorld.new()
 	world.seed_value = file.get_32()
 	world.turn = file.get_32()
-	world.map = file.get_buffer(file.get_32())
+	var map_size: int = file.get_32()
+	if map_size != SaveWorld.WIDTH * SaveWorld.HEIGHT:
+		return null
+	world.map = file.get_buffer(map_size)
+	if world.map.size() != map_size:
+		return null
 	world.actors = []
 	var count := file.get_32()
+	if count > map_size or file.get_length() - file.get_position() != count * 12 + 9:
+		return null
 	for _i in count:
 		world.actors.append({
 			"x": file.get_16(),
@@ -75,8 +88,11 @@ static func read_state(path: String) -> SaveWorld:
 ## Returns the size of the file it wrote, in bytes.
 static func write_replay(world: SaveWorld, path: String) -> int:
 	var file := FileAccess.open(path, FileAccess.WRITE)
+	if file == null:
+		return -1
 	file.store_32(MAGIC)
 	file.store_32(VERSION)
+	file.store_32(REPLAY)
 	file.store_32(world.seed_value)
 	file.store_32(world.actions.size())
 	for direction in world.actions:
@@ -91,15 +107,26 @@ static func write_replay(world: SaveWorld, path: String) -> int:
 ## two formats.
 static func read_replay(path: String) -> SaveWorld:
 	var file := FileAccess.open(path, FileAccess.READ)
-	if file == null or file.get_32() != MAGIC:
+	if not _header_matches(file, REPLAY):
 		return null
-	file.get_32()  # version
+	if file.get_length() < 20:
+		return null
 	var world := SaveWorld.new()
 	world.begin(file.get_32())
 	var count := file.get_32()
+	if file.get_length() - file.get_position() != count * 2:
+		return null
 	for _i in count:
 		var x := file.get_8() - 1
 		var y := file.get_8() - 1
+		if not SaveWorld.DIRS.has(Vector2i(x, y)):
+			return null
 		world.play(Vector2i(x, y))
 	file.close()
 	return world
+
+
+static func _header_matches(file: FileAccess, kind: int) -> bool:
+	if file == null or file.get_length() < 12:
+		return false
+	return file.get_32() == MAGIC and file.get_32() == VERSION and file.get_32() == kind

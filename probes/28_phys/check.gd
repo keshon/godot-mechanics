@@ -8,7 +8,7 @@ extends RefCounted
 ##             number of passes over the constraints, and the sag is what it gave up on.
 ##   ПОВТОР    run the same thing twice from the same state and compare. Rule 4 says
 ##             tests come back for the deterministic step; this finds out if there is
-##             one.
+##             one. Only final positions are compared, not the complete solver state.
 
 enum Phase {
 	IDLE,
@@ -106,13 +106,13 @@ func tick(boxes: Array[RigidBody3D]) -> void:
 	var worst := 0.0
 	for i in second.size():
 		worst = maxf(worst, _first_run[i].distance_to(second[i]))
-	# 1e-6 m is a micrometre: below that the two runs are the same run.
+	# Agreement means final positions within one micrometre, not bitwise state equality.
 	#
 	# NOT "%.1e": GDScript string formatting has no scientific notation at all, and says
 	# so only at runtime — "unsupported format character", with the raw %.1e left in the
 	# text. The supported set is smaller than C and %e is not in it.
 	if worst < 1e-6:
-		verdict = "[color=#7fe08a]совпало, расхождение %.9f м[/color]" % worst
+		verdict = "[color=#7fe08a]позиции близки, расхождение %.9f м[/color]" % worst
 	else:
 		verdict = "[color=#ff8a6a]разошлось на %.4f м[/color]" % worst
 	_phase = Phase.IDLE
