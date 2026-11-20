@@ -21,7 +21,8 @@ def main():
     base = [args.godot, '--path', str(ROOT)]
     if not args.render:
         base.append('--headless')
-    jobs = [('checks', ['--script', 'res://tools/verify.gd'])]
+    jobs = [('checks', ['--script', 'res://tools/verify.gd']),
+            ('bike-checks', ['--script', 'res://tools/verify_bike.gd', '--fixed-fps', '60'])]
     if args.all:
         for kind in ['probes', 'mixes']:
             for folder in sorted((ROOT / kind).iterdir()):
@@ -39,7 +40,7 @@ def main():
                                     encoding='utf-8', errors='replace', timeout=90)
             output = result.stdout + result.stderr
             passed = result.returncode == 0 and 'ERROR:' not in output
-            if name == 'checks':
+            if name in ('checks', 'bike-checks'):
                 passed = passed and 'RESULT checks=' in output and 'failures=0' in output
             rows.append({'name': name, 'passed': passed, 'exit': result.returncode,
                          'output': output})
