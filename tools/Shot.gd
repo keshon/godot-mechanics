@@ -33,6 +33,8 @@ const SETTLE := 150
 ## огня. `frames` продлевает ожидание: пробе, которая после нажатия что-то СЧИТАЕТ, полутора
 ## секунд мало. Кадры отсчитываются от появления сцены, снимок берётся на последнем.
 const SCRIPTED := {
+	"51_session": {"keys": [[20, KEY_ENTER]], "hold": [KEY_W, 40, 100]},
+	"52_traversal": {"hold": [KEY_W, 60, 100]},
 	"50_bike": {"keys": [[20, KEY_TAB], [30, KEY_TAB]], "hold": [KEY_W, 120, 999], "frames": 380},
 	"08_boom":    {"keys": [[60, KEY_SPACE]]},
 	"09_fx":      {"keys": [[40, KEY_SPACE], [90, KEY_SPACE]]},

@@ -1,0 +1,446 @@
+[gd_scene format=3]
+
+
+[sub_resource type="StandardMaterial3D" id="r0"]
+albedo_color = Color(0.16, 0.27, 0.32, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="r1"]
+albedo_color = Color(0.95, 0.62, 0.20, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="r2"]
+albedo_color = Color(0.23, 0.55, 0.43, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="r3"]
+albedo_color = Color(0.055, 0.10, 0.15, 1)
+roughness = 0.85
+
+[sub_resource type="BoxMesh" id="r4"]
+size = Vector3(85, 0.2, 100)
+material = SubResource("r3")
+
+[sub_resource type="BoxMesh" id="r5"]
+size = Vector3(9, 1, 10)
+material = SubResource("r0")
+
+[sub_resource type="BoxShape3D" id="r6"]
+size = Vector3(9, 1, 10)
+
+[sub_resource type="BoxMesh" id="r7"]
+size = Vector3(9, 0.03, 0.15)
+material = SubResource("r1")
+
+[sub_resource type="BoxMesh" id="r8"]
+size = Vector3(9, 1, 10)
+material = SubResource("r0")
+
+[sub_resource type="BoxShape3D" id="r9"]
+size = Vector3(9, 1, 10)
+
+[sub_resource type="BoxMesh" id="r10"]
+size = Vector3(9, 0.03, 0.15)
+material = SubResource("r1")
+
+[sub_resource type="BoxMesh" id="r11"]
+size = Vector3(9, 1, 10)
+material = SubResource("r0")
+
+[sub_resource type="BoxShape3D" id="r12"]
+size = Vector3(9, 1, 10)
+
+[sub_resource type="BoxMesh" id="r13"]
+size = Vector3(9, 0.03, 0.15)
+material = SubResource("r1")
+
+[sub_resource type="BoxMesh" id="r14"]
+size = Vector3(8, 1, 6)
+material = SubResource("r0")
+
+[sub_resource type="BoxShape3D" id="r15"]
+size = Vector3(8, 1, 6)
+
+[sub_resource type="BoxMesh" id="r16"]
+size = Vector3(8, 0.03, 0.15)
+material = SubResource("r1")
+
+[sub_resource type="BoxMesh" id="r17"]
+size = Vector3(8, 1, 6)
+material = SubResource("r0")
+
+[sub_resource type="BoxShape3D" id="r18"]
+size = Vector3(8, 1, 6)
+
+[sub_resource type="BoxMesh" id="r19"]
+size = Vector3(8, 0.03, 0.15)
+material = SubResource("r1")
+
+[sub_resource type="BoxMesh" id="r20"]
+size = Vector3(8, 1, 6)
+material = SubResource("r0")
+
+[sub_resource type="BoxShape3D" id="r21"]
+size = Vector3(8, 1, 6)
+
+[sub_resource type="BoxMesh" id="r22"]
+size = Vector3(8, 0.03, 0.15)
+material = SubResource("r1")
+
+[sub_resource type="BoxMesh" id="r23"]
+size = Vector3(8, 1, 6)
+material = SubResource("r2")
+
+[sub_resource type="BoxShape3D" id="r24"]
+size = Vector3(8, 1, 6)
+
+[sub_resource type="BoxMesh" id="r25"]
+size = Vector3(8, 0.03, 0.15)
+material = SubResource("r1")
+
+[sub_resource type="BoxMesh" id="r26"]
+size = Vector3(8, 1, 6)
+material = SubResource("r0")
+
+[sub_resource type="BoxShape3D" id="r27"]
+size = Vector3(8, 1, 6)
+
+[sub_resource type="BoxMesh" id="r28"]
+size = Vector3(8, 0.03, 0.15)
+material = SubResource("r1")
+
+[sub_resource type="BoxMesh" id="r29"]
+size = Vector3(8, 1, 12)
+material = SubResource("r0")
+
+[sub_resource type="BoxShape3D" id="r30"]
+size = Vector3(8, 1, 12)
+
+[sub_resource type="BoxMesh" id="r31"]
+size = Vector3(8, 0.03, 0.15)
+material = SubResource("r1")
+
+[sub_resource type="BoxMesh" id="r32"]
+size = Vector3(2.4, 1, 2.4)
+material = SubResource("r2")
+
+[sub_resource type="BoxShape3D" id="r33"]
+size = Vector3(2.4, 1, 2.4)
+
+[sub_resource type="BoxMesh" id="r34"]
+size = Vector3(2.4, 0.03, 0.15)
+material = SubResource("r1")
+
+[sub_resource type="BoxMesh" id="r35"]
+size = Vector3(2.4, 1, 2.4)
+material = SubResource("r0")
+
+[sub_resource type="BoxShape3D" id="r36"]
+size = Vector3(2.4, 1, 2.4)
+
+[sub_resource type="BoxMesh" id="r37"]
+size = Vector3(2.4, 0.03, 0.15)
+material = SubResource("r1")
+
+[sub_resource type="BoxMesh" id="r38"]
+size = Vector3(2.4, 1, 2.4)
+material = SubResource("r0")
+
+[sub_resource type="BoxShape3D" id="r39"]
+size = Vector3(2.4, 1, 2.4)
+
+[sub_resource type="BoxMesh" id="r40"]
+size = Vector3(2.4, 0.03, 0.15)
+material = SubResource("r1")
+
+[sub_resource type="BoxMesh" id="r41"]
+size = Vector3(3, 1, 3)
+material = SubResource("r0")
+
+[sub_resource type="BoxShape3D" id="r42"]
+size = Vector3(3, 1, 3)
+
+[sub_resource type="BoxMesh" id="r43"]
+size = Vector3(3, 0.03, 0.15)
+material = SubResource("r1")
+
+[sub_resource type="BoxMesh" id="r44"]
+size = Vector3(8, 1, 5)
+material = SubResource("r2")
+
+[sub_resource type="BoxShape3D" id="r45"]
+size = Vector3(8, 1, 5)
+
+[sub_resource type="BoxMesh" id="r46"]
+size = Vector3(8, 0.03, 0.15)
+material = SubResource("r1")
+
+[node name="Course" type="Node3D"]
+
+
+[node name="Abyss" type="MeshInstance3D" parent="."]
+position = Vector3(18, -10, -24)
+mesh = SubResource("r4")
+
+[node name="Start0" type="StaticBody3D" parent="."]
+position = Vector3(0, -0.5, 3)
+
+[node name="Mesh" type="MeshInstance3D" parent="Start0"]
+mesh = SubResource("r5")
+
+[node name="Collision" type="CollisionShape3D" parent="Start0"]
+shape = SubResource("r6")
+
+[node name="Sign0" type="Label3D" parent="."]
+position = Vector3(4, 2, 3)
+text = "01 / ПРЫЖОК"
+font_size = 48
+pixel_size = 0.005
+outline_size = 8
+
+[node name="Edge0" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.015, -1.85)
+mesh = SubResource("r7")
+
+[node name="Start1" type="StaticBody3D" parent="."]
+position = Vector3(18, -0.5, 3)
+
+[node name="Mesh" type="MeshInstance3D" parent="Start1"]
+mesh = SubResource("r8")
+
+[node name="Collision" type="CollisionShape3D" parent="Start1"]
+shape = SubResource("r9")
+
+[node name="Sign1" type="Label3D" parent="."]
+position = Vector3(22, 2, 3)
+text = "02 / РЫВОК + ВТОРОЙ"
+font_size = 48
+pixel_size = 0.005
+outline_size = 8
+
+[node name="Edge1" type="MeshInstance3D" parent="."]
+position = Vector3(18, 0.015, -1.85)
+mesh = SubResource("r10")
+
+[node name="Start2" type="StaticBody3D" parent="."]
+position = Vector3(36, -0.5, 3)
+
+[node name="Mesh" type="MeshInstance3D" parent="Start2"]
+mesh = SubResource("r11")
+
+[node name="Collision" type="CollisionShape3D" parent="Start2"]
+shape = SubResource("r12")
+
+[node name="Sign2" type="Label3D" parent="."]
+position = Vector3(40, 2, 3)
+text = "03 / ТОЧНАЯ ПОСАДКА"
+font_size = 48
+pixel_size = 0.005
+outline_size = 8
+
+[node name="Edge2" type="MeshInstance3D" parent="."]
+position = Vector3(36, 0.015, -1.85)
+mesh = SubResource("r13")
+
+[node name="Platform0" type="StaticBody3D" parent="."]
+position = Vector3(0, -0.5, -8)
+
+[node name="Mesh" type="MeshInstance3D" parent="Platform0"]
+mesh = SubResource("r14")
+
+[node name="Collision" type="CollisionShape3D" parent="Platform0"]
+shape = SubResource("r15")
+
+[node name="Lip0" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.015, -5.1)
+mesh = SubResource("r16")
+
+[node name="Platform1" type="StaticBody3D" parent="."]
+position = Vector3(0, -0.5, -17)
+
+[node name="Mesh" type="MeshInstance3D" parent="Platform1"]
+mesh = SubResource("r17")
+
+[node name="Collision" type="CollisionShape3D" parent="Platform1"]
+shape = SubResource("r18")
+
+[node name="Lip1" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.015, -14.1)
+mesh = SubResource("r19")
+
+[node name="Platform2" type="StaticBody3D" parent="."]
+position = Vector3(0, -0.5, -27)
+
+[node name="Mesh" type="MeshInstance3D" parent="Platform2"]
+mesh = SubResource("r20")
+
+[node name="Collision" type="CollisionShape3D" parent="Platform2"]
+shape = SubResource("r21")
+
+[node name="Lip2" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.015, -24.1)
+mesh = SubResource("r22")
+
+[node name="Platform3" type="StaticBody3D" parent="."]
+position = Vector3(18, -0.5, -12)
+
+[node name="Mesh" type="MeshInstance3D" parent="Platform3"]
+mesh = SubResource("r23")
+
+[node name="Collision" type="CollisionShape3D" parent="Platform3"]
+shape = SubResource("r24")
+
+[node name="Lip3" type="MeshInstance3D" parent="."]
+position = Vector3(18, 0.015, -9.1)
+mesh = SubResource("r25")
+
+[node name="Platform4" type="StaticBody3D" parent="."]
+position = Vector3(18, -0.5, -26)
+
+[node name="Mesh" type="MeshInstance3D" parent="Platform4"]
+mesh = SubResource("r26")
+
+[node name="Collision" type="CollisionShape3D" parent="Platform4"]
+shape = SubResource("r27")
+
+[node name="Lip4" type="MeshInstance3D" parent="."]
+position = Vector3(18, 0.015, -23.1)
+mesh = SubResource("r28")
+
+[node name="Platform5" type="StaticBody3D" parent="."]
+position = Vector3(18, -0.5, -42)
+
+[node name="Mesh" type="MeshInstance3D" parent="Platform5"]
+mesh = SubResource("r29")
+
+[node name="Collision" type="CollisionShape3D" parent="Platform5"]
+shape = SubResource("r30")
+
+[node name="Lip5" type="MeshInstance3D" parent="."]
+position = Vector3(18, 0.015, -36.1)
+mesh = SubResource("r31")
+
+[node name="Platform6" type="StaticBody3D" parent="."]
+position = Vector3(36, -0.09999999999999998, -6)
+
+[node name="Mesh" type="MeshInstance3D" parent="Platform6"]
+mesh = SubResource("r32")
+
+[node name="Collision" type="CollisionShape3D" parent="Platform6"]
+shape = SubResource("r33")
+
+[node name="Lip6" type="MeshInstance3D" parent="."]
+position = Vector3(36, 0.41500000000000004, -4.8999999999999995)
+mesh = SubResource("r34")
+
+[node name="Platform7" type="StaticBody3D" parent="."]
+position = Vector3(38, 0.30000000000000004, -10)
+
+[node name="Mesh" type="MeshInstance3D" parent="Platform7"]
+mesh = SubResource("r35")
+
+[node name="Collision" type="CollisionShape3D" parent="Platform7"]
+shape = SubResource("r36")
+
+[node name="Lip7" type="MeshInstance3D" parent="."]
+position = Vector3(38, 0.8150000000000001, -8.9)
+mesh = SubResource("r37")
+
+[node name="Platform8" type="StaticBody3D" parent="."]
+position = Vector3(35, 0.7, -14)
+
+[node name="Mesh" type="MeshInstance3D" parent="Platform8"]
+mesh = SubResource("r38")
+
+[node name="Collision" type="CollisionShape3D" parent="Platform8"]
+shape = SubResource("r39")
+
+[node name="Lip8" type="MeshInstance3D" parent="."]
+position = Vector3(35, 1.2149999999999999, -12.9)
+mesh = SubResource("r40")
+
+[node name="Platform9" type="StaticBody3D" parent="."]
+position = Vector3(37, 1.1, -18)
+
+[node name="Mesh" type="MeshInstance3D" parent="Platform9"]
+mesh = SubResource("r41")
+
+[node name="Collision" type="CollisionShape3D" parent="Platform9"]
+shape = SubResource("r42")
+
+[node name="Lip9" type="MeshInstance3D" parent="."]
+position = Vector3(37, 1.615, -16.6)
+mesh = SubResource("r43")
+
+[node name="Platform10" type="StaticBody3D" parent="."]
+position = Vector3(36, 1.1, -24)
+
+[node name="Mesh" type="MeshInstance3D" parent="Platform10"]
+mesh = SubResource("r44")
+
+[node name="Collision" type="CollisionShape3D" parent="Platform10"]
+shape = SubResource("r45")
+
+[node name="Lip10" type="MeshInstance3D" parent="."]
+position = Vector3(36, 1.615, -21.6)
+mesh = SubResource("r46")
+
+[node name="Gap0" type="Label3D" parent="."]
+position = Vector3(0, 0.1, -3.5)
+text = "3 м"
+font_size = 48
+pixel_size = 0.012
+outline_size = 8
+
+[node name="Gap1" type="Label3D" parent="."]
+position = Vector3(0, 0.1, -12.5)
+text = "3 м"
+font_size = 48
+pixel_size = 0.012
+outline_size = 8
+
+[node name="Gap2" type="Label3D" parent="."]
+position = Vector3(0, 0.1, -22)
+text = "4 м"
+font_size = 48
+pixel_size = 0.012
+outline_size = 8
+
+[node name="Gap3" type="Label3D" parent="."]
+position = Vector3(18, 0.1, -5.5)
+text = "7 м"
+font_size = 48
+pixel_size = 0.012
+outline_size = 8
+
+[node name="Gap4" type="Label3D" parent="."]
+position = Vector3(18, 0.1, -19)
+text = "8 м"
+font_size = 48
+pixel_size = 0.012
+outline_size = 8
+
+[node name="Gap5" type="Label3D" parent="."]
+position = Vector3(18, 0.1, -32.5)
+text = "7 м"
+font_size = 48
+pixel_size = 0.012
+outline_size = 8
+
+[node name="Finish0" type="Label3D" parent="."]
+position = Vector3(0, 1.2, -28)
+text = "ФИНИШ · R / Y повторить"
+font_size = 48
+pixel_size = 0.007
+
+[node name="Finish1" type="Label3D" parent="."]
+position = Vector3(18, 1.2, -46)
+text = "ФИНИШ · R / Y повторить"
+font_size = 48
+pixel_size = 0.007
+
+[node name="Finish2" type="Label3D" parent="."]
+position = Vector3(36, 2.8, -25)
+text = "ФИНИШ · R / Y повторить"
+font_size = 48
+pixel_size = 0.007

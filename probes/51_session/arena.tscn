@@ -1,0 +1,121 @@
+[gd_scene format=3]
+
+
+[sub_resource type="StandardMaterial3D" id="r0"]
+albedo_color = Color(0.09, 0.15, 0.19, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="r1"]
+albedo_color = Color(0.3, 0.4, 0.43, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="r2"]
+albedo_color = Color(0.12, 0.72, 0.88, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="r3"]
+albedo_color = Color(1, 0.58, 0.16, 1)
+roughness = 0.85
+
+[sub_resource type="BoxMesh" id="r4"]
+size = Vector3(22, 1, 18)
+material = SubResource("r0")
+
+[sub_resource type="BoxShape3D" id="r5"]
+size = Vector3(22, 1, 18)
+
+[sub_resource type="CylinderMesh" id="r6"]
+top_radius = 1.15
+bottom_radius = 1.15
+height = 0.025
+material = SubResource("r2")
+
+[sub_resource type="CylinderMesh" id="r7"]
+top_radius = 1.15
+bottom_radius = 1.15
+height = 0.025
+material = SubResource("r2")
+
+[sub_resource type="BoxMesh" id="r8"]
+size = Vector3(0.04, 0.01, 8)
+material = SubResource("r1")
+
+[sub_resource type="CylinderMesh" id="r9"]
+top_radius = 1.15
+bottom_radius = 1.15
+height = 0.025
+material = SubResource("r3")
+
+[sub_resource type="CylinderMesh" id="r10"]
+top_radius = 1.15
+bottom_radius = 1.15
+height = 0.025
+material = SubResource("r3")
+
+[sub_resource type="BoxMesh" id="r11"]
+size = Vector3(0.04, 0.01, 8)
+material = SubResource("r1")
+
+[node name="Arena" type="Node3D"]
+
+
+[node name="Ground" type="StaticBody3D" parent="."]
+position = Vector3(0, -0.5, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Ground"]
+mesh = SubResource("r4")
+
+[node name="Collision" type="CollisionShape3D" parent="Ground"]
+shape = SubResource("r5")
+
+[node name="Pad1_-5" type="MeshInstance3D" parent="."]
+position = Vector3(-3, 0.015, -5)
+mesh = SubResource("r6")
+
+[node name="Pad1_5" type="MeshInstance3D" parent="."]
+position = Vector3(-3, 0.015, 5)
+mesh = SubResource("r7")
+
+[node name="Goal1" type="Label3D" parent="."]
+position = Vector3(-3, 0.8, -6.8)
+text = "1 · ВЗЯТЬ"
+font_size = 48
+pixel_size = 0.012
+outline_size = 8
+
+[node name="Home1" type="Label3D" parent="."]
+position = Vector3(-3, 0.8, 6.8)
+text = "1 · ДОСТАВИТЬ"
+font_size = 48
+pixel_size = 0.012
+outline_size = 8
+
+[node name="Lane1" type="MeshInstance3D" parent="."]
+position = Vector3(-3, 0.005, 0)
+mesh = SubResource("r8")
+
+[node name="Pad2_-5" type="MeshInstance3D" parent="."]
+position = Vector3(3, 0.015, -5)
+mesh = SubResource("r9")
+
+[node name="Pad2_5" type="MeshInstance3D" parent="."]
+position = Vector3(3, 0.015, 5)
+mesh = SubResource("r10")
+
+[node name="Goal2" type="Label3D" parent="."]
+position = Vector3(3, 0.8, -6.8)
+text = "2 · ВЗЯТЬ"
+font_size = 48
+pixel_size = 0.012
+outline_size = 8
+
+[node name="Home2" type="Label3D" parent="."]
+position = Vector3(3, 0.8, 6.8)
+text = "2 · ДОСТАВИТЬ"
+font_size = 48
+pixel_size = 0.012
+outline_size = 8
+
+[node name="Lane2" type="MeshInstance3D" parent="."]
+position = Vector3(3, 0.005, 0)
+mesh = SubResource("r11")
