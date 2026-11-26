@@ -1,0 +1,201 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://probes/54_platforms/platform.tscn" id="1"]
+
+[sub_resource type="StandardMaterial3D" id="r0"]
+albedo_color = Color(0.12, 0.20, 0.26, 1)
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="r1"]
+albedo_color = Color(0.96, 0.55, 0.16, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="r2"]
+size = Vector3(26, 1, 48)
+material = SubResource("r0")
+
+[sub_resource type="BoxShape3D" id="r3"]
+size = Vector3(26, 1, 48)
+
+[sub_resource type="BoxMesh" id="r4"]
+size = Vector3(6, 3.5, 3)
+material = SubResource("r0")
+
+[sub_resource type="BoxShape3D" id="r5"]
+size = Vector3(6, 3.5, 3)
+
+[sub_resource type="BoxMesh" id="r6"]
+size = Vector3(6, 0.03, 0.12)
+material = SubResource("r1")
+
+[sub_resource type="BoxMesh" id="r7"]
+size = Vector3(6, 3.5, 3)
+material = SubResource("r0")
+
+[sub_resource type="BoxShape3D" id="r8"]
+size = Vector3(6, 3.5, 3)
+
+[sub_resource type="BoxMesh" id="r9"]
+size = Vector3(6, 0.03, 0.12)
+material = SubResource("r1")
+
+[sub_resource type="BoxMesh" id="r10"]
+size = Vector3(6, 3.5, 3)
+material = SubResource("r0")
+
+[sub_resource type="BoxShape3D" id="r11"]
+size = Vector3(6, 3.5, 3)
+
+[sub_resource type="BoxMesh" id="r12"]
+size = Vector3(6, 0.03, 0.12)
+material = SubResource("r1")
+
+[sub_resource type="BoxMesh" id="r13"]
+size = Vector3(6, 3.5, 3)
+material = SubResource("r0")
+
+[sub_resource type="BoxShape3D" id="r14"]
+size = Vector3(6, 3.5, 3)
+
+[sub_resource type="BoxMesh" id="r15"]
+size = Vector3(6, 0.03, 0.12)
+material = SubResource("r1")
+
+[sub_resource type="BoxMesh" id="finish_mesh"]
+size = Vector3(7, 3.5, 7)
+material = SubResource("r0")
+
+[sub_resource type="BoxShape3D" id="finish_shape"]
+size = Vector3(7, 3.5, 7)
+
+[node name="Course" type="Node3D"]
+
+
+[node name="CatchFloor" type="StaticBody3D" parent="."]
+position = Vector3(1, -2.5, -12)
+
+[node name="Mesh" type="MeshInstance3D" parent="CatchFloor"]
+mesh = SubResource("r2")
+
+[node name="Collision" type="CollisionShape3D" parent="CatchFloor"]
+shape = SubResource("r3")
+
+[node name="Shuttle" parent="." instance=ExtResource("1")]
+position = Vector3(0, 1.5, 0)
+motion = 0
+
+[node name="ShuttleSign" type="Label3D" parent="."]
+position = Vector3(4, 3.5, -1)
+text = "01 / ПЕРЕНОС"
+font_size = 48
+pixel_size = 0.008
+outline_size = 8
+
+[node name="ShuttlePier" type="StaticBody3D" parent="."]
+position = Vector3(6.5, -0.25, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="ShuttlePier"]
+mesh = SubResource("r4")
+
+[node name="Collision" type="CollisionShape3D" parent="ShuttlePier"]
+shape = SubResource("r5")
+
+[node name="ShuttleMark" type="MeshInstance3D" parent="."]
+position = Vector3(6.5, 1.52, 1.35)
+mesh = SubResource("r6")
+
+[node name="Rotor" parent="." instance=ExtResource("1")]
+position = Vector3(0, 1.5, -8)
+motion = 1
+
+[node name="RotorSign" type="Label3D" parent="."]
+position = Vector3(4, 3.5, -9)
+text = "02 / ВРАЩЕНИЕ"
+font_size = 48
+pixel_size = 0.008
+outline_size = 8
+
+[node name="RotorPier" type="StaticBody3D" parent="."]
+position = Vector3(6.5, -0.25, -8)
+
+[node name="Mesh" type="MeshInstance3D" parent="RotorPier"]
+mesh = SubResource("r7")
+
+[node name="Collision" type="CollisionShape3D" parent="RotorPier"]
+shape = SubResource("r8")
+
+[node name="RotorMark" type="MeshInstance3D" parent="."]
+position = Vector3(6.5, 1.52, -6.65)
+mesh = SubResource("r9")
+
+[node name="Lift" parent="." instance=ExtResource("1")]
+position = Vector3(0, 1.5, -16)
+motion = 2
+
+[node name="LiftSign" type="Label3D" parent="."]
+position = Vector3(4, 3.5, -17)
+text = "03 / ЛИФТ"
+font_size = 48
+pixel_size = 0.008
+outline_size = 8
+
+[node name="LiftPier" type="StaticBody3D" parent="."]
+position = Vector3(6.5, -0.25, -16)
+
+[node name="Mesh" type="MeshInstance3D" parent="LiftPier"]
+mesh = SubResource("r10")
+
+[node name="Collision" type="CollisionShape3D" parent="LiftPier"]
+shape = SubResource("r11")
+
+[node name="LiftMark" type="MeshInstance3D" parent="."]
+position = Vector3(6.5, 1.52, -14.65)
+mesh = SubResource("r12")
+
+[node name="Drop" parent="." instance=ExtResource("1")]
+position = Vector3(0, 1.5, -24)
+motion = 3
+
+[node name="DropSign" type="Label3D" parent="."]
+position = Vector3(4, 3.5, -25)
+text = "04 / ПАДЕНИЕ"
+font_size = 48
+pixel_size = 0.008
+outline_size = 8
+
+[node name="DropPier" type="StaticBody3D" parent="."]
+position = Vector3(6.5, -0.25, -24)
+
+[node name="Mesh" type="MeshInstance3D" parent="DropPier"]
+mesh = SubResource("r13")
+
+[node name="Collision" type="CollisionShape3D" parent="DropPier"]
+shape = SubResource("r14")
+
+[node name="DropMark" type="MeshInstance3D" parent="."]
+position = Vector3(6.5, 1.52, -22.65)
+mesh = SubResource("r15")
+
+[node name="Start" type="StaticBody3D" parent="."]
+position = Vector3(0, -0.25, 6)
+
+[node name="Mesh" type="MeshInstance3D" parent="Start"]
+mesh = SubResource("r4")
+
+[node name="Collision" type="CollisionShape3D" parent="Start"]
+shape = SubResource("r5")
+
+[node name="Finish" type="StaticBody3D" parent="."]
+position = Vector3(0, -0.25, -33)
+
+[node name="Mesh" type="MeshInstance3D" parent="Finish"]
+mesh = SubResource("finish_mesh")
+
+[node name="Collision" type="CollisionShape3D" parent="Finish"]
+shape = SubResource("finish_shape")
+
+[node name="FinishSign" type="Label3D" parent="."]
+position = Vector3(0, 3, -35)
+text = "ФИНИШ · R / Y повторить"
+font_size = 48
+pixel_size = 0.008

@@ -10,7 +10,7 @@
 Правила проекта — в [PURPOSE.md](PURPOSE.md), стиль кода — в [STYLE.md](STYLE.md),
 формат заметки — в [NOTE.md](NOTE.md), показания на экране — в [HUD.md](HUD.md),
 грабли движка — в [GODOT.md](GODOT.md).
-Сейчас проб 51, закрыто 47, мультипроб 3.
+Сейчас проб 53, закрыто 47, мультипроб 3.
 
 ## Запуск
 
@@ -37,6 +37,10 @@
 (MIT): FFT-океан на compute-шейдерах. Его использует проба 23, где он стоит рядом с
 процедурной волной из пробы 22, и проба 24.
 
+
+`probes/53_animation/assets/AnimationLibrary_Godot_Standard.glb` — модель и анимации
+[Quaternius](https://quaternius.com/) (CC0). Лицензия лежит рядом с GLB;
+пайплайн импорта описан в заметке пробы 53.
 
 ## Пробы
 
@@ -67,7 +71,8 @@
 | <img src="img/probes/46_rocket.jpg" width="440"><br><b>46_rocket</b> — ракета-носитель: тяга, устойчивость, ступени<br><sub><a href="probes/46_rocket/README.md">заметка</a> · эталон: Kerbal Space Program</sub> | <img src="img/probes/47_shoulder.jpg" width="440"><br><b>47_shoulder</b> — пуск с плеча: струя назад, взведение, ведение цели рукой<br><sub><a href="probes/47_shoulder/README.md">заметка</a> · эталон: ArmA</sub> |
 | <br><b>48_split</b> — раздельные миры: одна геометрия, два прочтения<br><sub><a href="probes/48_split/README.md">заметка</a> · эталон: Split Fiction</sub> | <br><b>49_duo</b> — двое за одним экраном: гвоздь и качание<br><sub><a href="probes/49_duo/README.md">заметка</a> · эталон: It Takes Two · не закрыта</sub> |
 | <img src="img/probes/50_bike.jpg" width="440"><br><b>50_bike</b> — эндуро: гребёнка, прыжок и приземление<br><sub><a href="probes/50_bike/README.md">заметка</a> · эталон: грунтовая трасса · не закрыта</sub> | <img src="img/probes/51_session.jpg" width="440"><br><b>51_session</b> — два игрока: устройства, слоты, пауза и возврат<br><sub><a href="probes/51_session/README.md">заметка</a> · эталон: локальный кооператив · не закрыта</sub> |
-| <img src="img/probes/52_traversal.jpg" width="440"><br><b>52_traversal</b> — третье лицо: прыжок, помощь вводу, точность посадки<br><sub><a href="probes/52_traversal/README.md">заметка</a> · эталон: кооперативный платформер · не закрыта</sub> |  |
+| <img src="img/probes/52_traversal.jpg" width="440"><br><b>52_traversal</b> — третье лицо: прыжок, помощь вводу, точность посадки<br><sub><a href="probes/52_traversal/README.md">заметка</a> · эталон: кооперативный платформер · не закрыта</sub> | <img src="img/probes/53_animation.jpg" width="440"><br><b>53_animation</b> — анимация персонажа: переходы и прерывания<br><sub><a href="probes/53_animation/README.md">заметка</a> · эталон: кооперативный платформер · не закрыта</sub> |
+| <img src="img/probes/54_platforms.jpg" width="440"><br><b>54_platforms</b> — движущиеся платформы: перенос, вращение, сход<br><sub><a href="probes/54_platforms/README.md">заметка</a> · эталон: платформер · не закрыта</sub> |  |
 
 ## Мультипробы
 

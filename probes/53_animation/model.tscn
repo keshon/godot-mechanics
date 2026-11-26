@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://probes/53_animation/assets/AnimationLibrary_Godot_Standard.glb" id="1"]
+
+[node name="Model" type="Node3D"]
+
+[node name="Character" parent="." instance=ExtResource("1")]
+rotation = Vector3(0, 3.14159265, 0)
+
+[node name="AnimationPlayer" parent="Character" index="1"]
+deterministic = true
+
+[editable path="Character"]

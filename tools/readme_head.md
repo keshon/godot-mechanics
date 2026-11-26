@@ -37,3 +37,7 @@
 (MIT): FFT-океан на compute-шейдерах. Его использует проба 23, где он стоит рядом с
 процедурной волной из пробы 22, и проба 24.
 
+
+`probes/53_animation/assets/AnimationLibrary_Godot_Standard.glb` — модель и анимации
+[Quaternius](https://quaternius.com/) (CC0). Лицензия лежит рядом с GLB;
+пайплайн импорта описан в заметке пробы 53.
