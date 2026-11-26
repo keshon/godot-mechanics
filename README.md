@@ -10,7 +10,7 @@
 Правила проекта — в [PURPOSE.md](PURPOSE.md), стиль кода — в [STYLE.md](STYLE.md),
 формат заметки — в [NOTE.md](NOTE.md), показания на экране — в [HUD.md](HUD.md),
 грабли движка — в [GODOT.md](GODOT.md).
-Сейчас проб 55, закрыто 47, мультипроб 3.
+Сейчас проб 57, закрыто 47, мультипроб 3.
 
 ## Запуск
 
@@ -73,7 +73,8 @@
 | <img src="img/probes/50_bike.jpg" width="440"><br><b>50_bike</b> — эндуро: гребёнка, прыжок и приземление<br><sub><a href="probes/50_bike/README.md">заметка</a> · эталон: грунтовая трасса · не закрыта</sub> | <img src="img/probes/51_session.jpg" width="440"><br><b>51_session</b> — два игрока: устройства, слоты, пауза и возврат<br><sub><a href="probes/51_session/README.md">заметка</a> · эталон: локальный кооператив · не закрыта</sub> |
 | <img src="img/probes/52_traversal.jpg" width="440"><br><b>52_traversal</b> — третье лицо: прыжок, помощь вводу, точность посадки<br><sub><a href="probes/52_traversal/README.md">заметка</a> · эталон: кооперативный платформер · не закрыта</sub> | <img src="img/probes/53_animation.jpg" width="440"><br><b>53_animation</b> — анимация персонажа: переходы и прерывания<br><sub><a href="probes/53_animation/README.md">заметка</a> · эталон: кооперативный платформер · не закрыта</sub> |
 | <img src="img/probes/54_platforms.jpg" width="440"><br><b>54_platforms</b> — движущиеся платформы: перенос, вращение, сход<br><sub><a href="probes/54_platforms/README.md">заметка</a> · эталон: платформер · не закрыта</sub> | <img src="img/probes/55_composition.jpg" width="440"><br><b>55_composition</b> — две камеры: теснота, высота и раздельные пути<br><sub><a href="probes/55_composition/README.md">заметка</a> · эталон: кооперативный платформер · не закрыта</sub> |
-| <img src="img/probes/56_ownership.jpg" width="440"><br><b>56_ownership</b> — предмет: захват, перенос и освобождение<br><sub><a href="probes/56_ownership/README.md">заметка</a> · эталон: локальный кооператив · не закрыта</sub> |  |
+| <img src="img/probes/56_ownership.jpg" width="440"><br><b>56_ownership</b> — предмет: захват, перенос и освобождение<br><sub><a href="probes/56_ownership/README.md">заметка</a> · эталон: локальный кооператив · не закрыта</sub> | <img src="img/probes/57_recovery.jpg" width="440"><br><b>57_recovery</b> — совместный возврат: один упал, оба упали<br><sub><a href="probes/57_recovery/README.md">заметка</a> · эталон: кооперативный платформер · не закрыта</sub> |
+| <img src="img/probes/58_checkpoints.jpg" width="440"><br><b>58_checkpoints</b> — контрольная точка: игроки, ключ, дверь и таймер<br><sub><a href="probes/58_checkpoints/README.md">заметка</a> · эталон: кооперативная головоломка · не закрыта</sub> |  |
 
 ## Мультипробы
 

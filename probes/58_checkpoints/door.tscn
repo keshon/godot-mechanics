@@ -1,0 +1,24 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/58_checkpoints/door.gd" id="script"]
+
+[sub_resource type="StandardMaterial3D" id="r1"]
+albedo_color = Color(0.8, 0.35, 0.2, 1)
+
+[sub_resource type="BoxMesh" id="r2"]
+size = Vector3(2.8, 3, 0.5)
+material = SubResource("r1")
+
+[sub_resource type="BoxShape3D" id="r3"]
+size = Vector3(2.8, 3, 0.5)
+
+[node name="Door" type="AnimatableBody3D"]
+position = Vector3(0, 1.5, -5)
+sync_to_physics = false
+script = ExtResource("script")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("r2")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("r3")

@@ -1,0 +1,91 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/58_checkpoints/checkpoint.gd" id="checkpoint"]
+[ext_resource type="PackedScene" path="res://probes/58_checkpoints/door.tscn" id="door"]
+
+[ext_resource type="Script" path="res://probes/58_checkpoints/checkpoints.gd" id="rig"]
+
+[ext_resource type="PackedScene" path="res://probes/58_checkpoints/player.tscn" id="player"]
+
+[ext_resource type="PackedScene" path="res://probes/58_checkpoints/core.tscn" id="item"]
+
+[ext_resource type="PackedScene" path="res://probes/58_checkpoints/course.tscn" id="course"]
+
+[sub_resource type="ProceduralSkyMaterial" id="r1"]
+sky_top_color = Color(0.10, 0.20, 0.3, 1)
+sky_horizon_color = Color(0.55, 0.68, 0.72, 1)
+ground_horizon_color = Color(0.55, 0.68, 0.72, 1)
+
+[sub_resource type="Sky" id="r2"]
+sky_material = SubResource("r1")
+
+[sub_resource type="Environment" id="r3"]
+background_mode = 2
+sky = SubResource("r2")
+ambient_light_source = 3
+ambient_light_energy = 0.7
+tonemap_mode = 2
+
+[node name="Checkpoints" type="Node3D"]
+process_physics_priority = -20
+script = ExtResource("rig")
+
+[node name="Course" parent="." instance=ExtResource("course")]
+
+
+[node name="Player1" parent="." instance=ExtResource("player")]
+position = Vector3(-1, 0.1, 3)
+tint = Color(1, 0.55, 0.2, 1)
+
+[node name="Player2" parent="." instance=ExtResource("player")]
+position = Vector3(1, 0.1, 3)
+tint = Color(0.2, 0.75, 1, 1)
+caption = "P2"
+
+[node name="Core" parent="." instance=ExtResource("item")]
+position = Vector3(0, 0.4, 2.5)
+
+[node name="Socket" type="Marker3D" parent="."]
+position = Vector3(0, 0.65, -1)
+
+[node name="Lever" type="Marker3D" parent="."]
+position = Vector3(-4, 0.05, -1)
+
+[node name="Door" parent="." instance=ExtResource("door")]
+
+[node name="Checkpoint" type="Node" parent="."]
+script = ExtResource("checkpoint")
+
+[node name="Camera" type="Camera3D" parent="."]
+position = Vector3(0, 18, 18)
+rotation_degrees = Vector3(-43, 0, 0)
+current = true
+projection = 1
+size = 22.0
+
+[node name="World" type="WorldEnvironment" parent="."]
+environment = SubResource("r3")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-55, -25, 0)
+light_energy = 1.3
+shadow_enabled = true
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+
+[node name="Info" type="RichTextLabel" parent="Ui"]
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_left = 18.0
+offset_top = 14.0
+offset_right = 1250.0
+offset_bottom = -18.0
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = true
+scroll_active = false
