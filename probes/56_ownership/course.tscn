@@ -1,0 +1,100 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="r1"]
+albedo_color = Color(0.17,0.28,0.34, 1)
+roughness = 0.85
+
+[sub_resource type="BoxMesh" id="r2"]
+size = Vector3(20, 1, 20)
+material = SubResource("r1")
+
+[sub_resource type="BoxShape3D" id="r3"]
+size = Vector3(20, 1, 20)
+
+[sub_resource type="StandardMaterial3D" id="r4"]
+albedo_color = Color(0.4,0.48,0.52, 1)
+roughness = 0.85
+
+[sub_resource type="BoxMesh" id="r5"]
+size = Vector3(0.4, 2, 5)
+material = SubResource("r4")
+
+[sub_resource type="BoxShape3D" id="r6"]
+size = Vector3(0.4, 2, 5)
+
+[sub_resource type="StandardMaterial3D" id="r7"]
+albedo_color = Color(0.25,0.65,0.4, 1)
+roughness = 0.85
+
+[sub_resource type="BoxMesh" id="r8"]
+size = Vector3(2, 0.3, 2)
+material = SubResource("r7")
+
+[sub_resource type="BoxShape3D" id="r9"]
+size = Vector3(2, 0.3, 2)
+
+[sub_resource type="StandardMaterial3D" id="r10"]
+albedo_color = Color(0.35,0.43,0.48, 1)
+roughness = 0.85
+
+[sub_resource type="BoxMesh" id="r11"]
+size = Vector3(2, 1.5, 2)
+material = SubResource("r10")
+
+[sub_resource type="BoxShape3D" id="r12"]
+size = Vector3(2, 1.5, 2)
+
+[node name="Course" type="Node3D"]
+
+
+[node name="Floor" type="StaticBody3D" parent="."]
+position = Vector3(0, -0.5, -2)
+
+[node name="Mesh" type="MeshInstance3D" parent="Floor"]
+mesh = SubResource("r2")
+
+[node name="Collision" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("r3")
+
+[node name="Barrier" type="StaticBody3D" parent="."]
+position = Vector3(4, 1, -1)
+
+[node name="Mesh" type="MeshInstance3D" parent="Barrier"]
+mesh = SubResource("r5")
+
+[node name="Collision" type="CollisionShape3D" parent="Barrier"]
+shape = SubResource("r6")
+
+[node name="SocketBase" type="StaticBody3D" parent="."]
+position = Vector3(0, 0.15, -7)
+
+[node name="Mesh" type="MeshInstance3D" parent="SocketBase"]
+mesh = SubResource("r8")
+
+[node name="Collision" type="CollisionShape3D" parent="SocketBase"]
+shape = SubResource("r9")
+
+[node name="Crate" type="StaticBody3D" parent="."]
+position = Vector3(-5, 0.75, -3)
+
+[node name="Mesh" type="MeshInstance3D" parent="Crate"]
+mesh = SubResource("r11")
+
+[node name="Collision" type="CollisionShape3D" parent="Crate"]
+shape = SubResource("r12")
+
+[node name="SocketMark" type="Label3D" parent="."]
+position = Vector3(0, 2, -8)
+text = "РОЗЕТКА / ПРИМЕНИТЬ"
+font_size = 48
+pixel_size = 0.008
+billboard = 1
+modulate = Color(0.9, 0.95, 1, 1)
+
+[node name="BarrierMark" type="Label3D" parent="."]
+position = Vector3(4, 3, -1)
+text = "ПРОВЕРКА СТЕНЫ"
+font_size = 48
+pixel_size = 0.008
+billboard = 1
+modulate = Color(0.9, 0.95, 1, 1)

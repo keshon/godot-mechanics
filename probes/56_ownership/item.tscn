@@ -1,0 +1,35 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://probes/56_ownership/item.gd" id="item"]
+
+[sub_resource type="StandardMaterial3D" id="r1"]
+albedo_color = Color(0.95, 0.75, 0.25, 1)
+metallic = 0.35
+roughness = 0.35
+
+[sub_resource type="BoxMesh" id="r2"]
+size = Vector3(0.65, 0.65, 0.65)
+material = SubResource("r1")
+
+[sub_resource type="BoxShape3D" id="r3"]
+size = Vector3(0.65, 0.65, 0.65)
+
+[node name="Core" type="CharacterBody3D"]
+script = ExtResource("item")
+collision_layer = 4
+collision_mask = 1
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("r3")
+
+[node name="Visual" type="Node3D" parent="."]
+
+
+[node name="Mesh" type="MeshInstance3D" parent="Visual"]
+mesh = SubResource("r2")
+
+[node name="Label" type="Label3D" parent="Visual"]
+position = Vector3(0, 0.7, 0)
+font_size = 40
+pixel_size = 0.007
+billboard = 1

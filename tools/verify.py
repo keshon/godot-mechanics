@@ -26,7 +26,8 @@ def main():
             ('foundation-checks', ['--script', 'res://tools/verify_foundations.gd',
                                    '--fixed-fps', '60']),
             ('camera-checks', ['--script', 'res://tools/verify_camera.gd', '--fixed-fps', '144']),
-            ('motion-checks', ['--script', 'res://tools/verify_motion.gd', '--fixed-fps', '60'])]
+            ('motion-checks', ['--script', 'res://tools/verify_motion.gd', '--fixed-fps', '60']),
+            ('coop-checks', ['--script', 'res://tools/verify_coop.gd', '--fixed-fps', '60'])]
     if args.all:
         for kind in ['probes', 'mixes']:
             for folder in sorted((ROOT / kind).iterdir()):
@@ -44,7 +45,8 @@ def main():
                                     encoding='utf-8', errors='replace', timeout=90)
             output = result.stdout + result.stderr
             passed = result.returncode == 0 and 'ERROR:' not in output
-            if name in ('checks', 'bike-checks', 'foundation-checks', 'camera-checks', 'motion-checks'):
+            if name in ('checks', 'bike-checks', 'foundation-checks', 'camera-checks',
+                        'motion-checks', 'coop-checks'):
                 passed = passed and 'RESULT checks=' in output and 'failures=0' in output
             rows.append({'name': name, 'passed': passed, 'exit': result.returncode,
                          'output': output})
